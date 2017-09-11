@@ -2,6 +2,7 @@
   <div class="dashboard">
     <Header />
     <Carousel />
+    <CommitteesMenu />
     <h1>Projects In Progress</h1>
     <h2>Projects that are currently in progress.</h2>
     <ProjectThumbnail />
@@ -13,13 +14,15 @@
 import Header from './Header'
 import Carousel from './Carousel'
 import ProjectThumbnail from './ProjectThumbnail'
+import CommitteesMenu from './CommitteesMenu'
 
 export default {
   name: 'dashboard',
   components: {
     'Header': Header,
     'Carousel': Carousel,
-    'ProjectThumbnail': ProjectThumbnail
+    'ProjectThumbnail': ProjectThumbnail,
+    'CommitteesMenu': CommitteesMenu
   },
   data () {
     return {
