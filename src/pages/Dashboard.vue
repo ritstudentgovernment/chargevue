@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import Header from './Header'
-import Carousel from './Carousel'
-import ProjectThumbnail from './ProjectThumbnail'
-import CommitteesMenu from './CommitteesMenu'
+import Header from '../components/Header'
+import Carousel from '../components/Carousel'
+import ProjectThumbnail from '../components/ProjectThumbnail'
+import CommitteesMenu from '../components/CommitteesMenu'
 
 export default {
   name: 'dashboard',

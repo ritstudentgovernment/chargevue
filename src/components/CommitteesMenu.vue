@@ -1,7 +1,7 @@
 <template>
   <div id="committee_bar" class="committees-menu">
     <ul>
-			<li>Academic &amp; Coops</li>
+			<li><router-link to="/committee/academicsandcoop">Academic &amp; Coops</router-link></li>
 			<li>Deaf Advocacy</li>
 			<li>Parking &amp; Trans</li>
 			<li>Global SG</li>
@@ -24,6 +24,11 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 #committee_bar {
 	background-color: #ccc;
 	color: #333;

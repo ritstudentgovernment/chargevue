@@ -5,7 +5,7 @@
         <span id="label">Go to Site</span>
       </div>
     </div>
-    <p class="title">TigerTracker</p>
+    <p class="title"><router-link to="/">TigerTracker</router-link></p>
     <div class="right">
       <span class="button" id="label">Login</span>
     </div>
@@ -27,6 +27,11 @@ export default {
 
 body {
 	padding-top: 58px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 header {
