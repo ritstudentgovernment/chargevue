@@ -2,7 +2,7 @@
   <div id="committee_bar" class="committees-menu">
     <ul>
 			<li><router-link to="/committee/academicsandcoop">Academic &amp; Coops</router-link></li>
-			<li>Deaf Advocacy</li>
+			<li><router-link to="/committee/deafadvocacy">Deaf Advocacy</router-link></li>
 			<li>Parking &amp; Trans</li>
 			<li>Global SG</li>
 			<li>Housing &amp; Dining</li>

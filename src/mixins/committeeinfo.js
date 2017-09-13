@@ -1,8 +1,10 @@
 var committees = {
   'committees': {
     'academicsandcoop': {
-      'systemname': 'academicsandcoop',
       'friendlyname': 'Academics & Co-op'
+    },
+    'deafadvocacy': {
+      'friendlyname': 'Deaf Advocacy'
     }
   }
 }
