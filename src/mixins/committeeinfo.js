@@ -3,8 +3,8 @@ var committees = {
     'academicsandcoop': {
       'friendlyname': 'Academics & Co-op'
     },
-    'deafadvocacy': {
-      'friendlyname': 'Deaf Advocacy'
+    'fpat': {
+      'friendlyname': 'Facilities, Parking, and Transportation'
     }
   }
 }

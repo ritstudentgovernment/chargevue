@@ -2,13 +2,14 @@
   <div id="committee_bar" class="committees-menu">
     <ul>
 			<li><router-link to="/committee/academicsandcoop">Academic &amp; Coops</router-link></li>
-			<li><router-link to="/committee/deafadvocacy">Deaf Advocacy</router-link></li>
-			<li>Parking &amp; Trans</li>
+			<li><router-link to="/committee/fpat">FPAT</router-link></li>
 			<li>Global SG</li>
 			<li>Housing &amp; Dining</li>
 			<li>Student Affairs</li>
 			<li>Technology</li>
 			<li>Sustainability</li>
+			<li>Senator</li>
+			<li>RSO</li>
     </ul>
   </div>
 </template>
