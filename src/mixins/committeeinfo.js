@@ -10,7 +10,6 @@ var committees = {
 module.exports = {
   methods: {
     getCommitteeInfo (url) {
-      console.log(committees.committees[url])
       return committees.committees[url]
     }
   }
