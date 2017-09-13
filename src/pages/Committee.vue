@@ -24,6 +24,14 @@ export default {
     return {
       committee: this.getCommitteeInfo(this.$route.params.committee)
     }
+  },
+  /* Since this component is used for each committee page, we have to
+    watch for changes in the URL and update the props on the page
+    when the route changes */
+  watch: {
+    '$route.params.committee': function (committee) {
+      this.committee = this.getCommitteeInfo(committee)
+    }
   }
 }
 </script>
