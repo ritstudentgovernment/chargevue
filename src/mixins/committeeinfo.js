@@ -5,6 +5,12 @@ var committees = {
     },
     'fpat': {
       'friendlyname': 'Facilities, Parking, and Transportation'
+    },
+    'globalsg': {
+      'friendlyname': 'Global SG'
+    },
+    'housinganddining': {
+      'friendlyname': 'Housing & Dining'
     }
   }
 }

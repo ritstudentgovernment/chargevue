@@ -3,8 +3,8 @@
     <ul>
 			<li><router-link to="/committee/academicsandcoop">Academic &amp; Coops</router-link></li>
 			<li><router-link to="/committee/fpat">FPAT</router-link></li>
-			<li>Global SG</li>
-			<li>Housing &amp; Dining</li>
+			<li><router-link to="/committee/globalsg">Global SG</router-link></li>
+			<li><router-link to="/committee/housinganddining">Housing &amp; Dining</router-link></li>
 			<li>Student Affairs</li>
 			<li>Technology</li>
 			<li>Sustainability</li>
