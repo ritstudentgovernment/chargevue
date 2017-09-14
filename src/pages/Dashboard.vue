@@ -3,7 +3,7 @@
     <Header />
     <Carousel />
     <CommitteesMenu />
-    <h1>Projects In Progress</h1>
+    <h1 id="dashboard_title">Projects In Progress</h1>
     <h2>Projects that are currently in progress.</h2>
     <ProjectThumbnail />
     <ProjectThumbnail />
