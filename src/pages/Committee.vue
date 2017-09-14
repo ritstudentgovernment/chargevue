@@ -14,6 +14,11 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="pagename">
       <h1>{{ this.committee.friendlyname }}</h1>
     </div>
+    <div class="columns">
+      <div class="column">test</div>
+      <div class="column">test</div>
+      <div class="column">test</div>
+    </div>
   </div>
 </template>
 
@@ -45,16 +50,18 @@ export default {
 }
 </script>
 
-<style scoped>
-.pagename {
-  background: #000;
-}
+<style lang="sass" scoped>
+@import '../../node_modules/bulma/sass/utilities/_all'
+@import '../../node_modules/bulma/sass/grid/columns'
 
-.pagename h1 {
-  margin: 0;
-  text-align: center;
-  text-transform: uppercase;
-  padding: 75px 0;
-  color: #fff;
-}
+.pagename
+  background: #000
+
+
+.pagename h1
+  margin: 0
+  text-align: center
+  text-transform: uppercase
+  padding: 75px 0
+  color: #fff
 </style>

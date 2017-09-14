@@ -11,6 +11,21 @@ var committees = {
     },
     'housinganddining': {
       'friendlyname': 'Housing & Dining'
+    },
+    'studentaffairs': {
+      'friendlyname': 'Student Affairs'
+    },
+    'technology': {
+      'friendlyname': 'Technology'
+    },
+    'sustainability': {
+      'friendlyname': 'Sustainability'
+    },
+    'senator': {
+      'friendlyname': 'Senator'
+    },
+    'rso': {
+      'friendlyname': 'Representative Student Organization'
     }
   }
 }

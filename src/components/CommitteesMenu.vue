@@ -14,11 +14,11 @@ author: Gabe Landau <gll1872@rit.edu>
 			<li><router-link to="/committee/fpat">FPAT</router-link></li>
 			<li><router-link to="/committee/globalsg">Global SG</router-link></li>
 			<li><router-link to="/committee/housinganddining">Housing &amp; Dining</router-link></li>
-			<li>Student Affairs</li>
-			<li>Technology</li>
-			<li>Sustainability</li>
-			<li>Senator</li>
-			<li>RSO</li>
+			<li><router-link to="/committee/studentaffairs">Student Affairs</router-link></li>
+			<li><router-link to="/committee/technology">Technology</router-link></li>
+			<li><router-link to="/committee/sustainability">Sustainability</router-link></li>
+			<li><router-link to="/committee/senator">Senator</router-link></li>
+			<li><router-link to="/committee/rso">RSO</router-link></li>
     </ul>
   </div>
 </template>
