@@ -1,3 +1,12 @@
+<!--
+
+filename: ProjectThumbnail.vue
+description: Thumbnail component for projects, for use on dashboard and committee pages
+
+author: Gabe Landau <gll1872@rit.edu>
+
+-->
+
 <template>
   <div class="project-thumbnail">
     <div class="project_thumbnail">

@@ -1,3 +1,12 @@
+<!--
+
+filename: Committee.vue
+description: Page for viewing charges assigned to specific committees
+
+author: Gabe Landau <gll1872@rit.edu>
+
+-->
+
 <template>
   <div class="dashboard">
     <Header />

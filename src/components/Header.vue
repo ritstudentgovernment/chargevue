@@ -1,3 +1,12 @@
+<!--
+
+filename: Header.vue
+description: Header component for use across all pages
+
+author: Gabe Landau <gll1872@rit.edu>
+
+-->
+
 <template>
   <header>
     <div class="left">

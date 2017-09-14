@@ -1,3 +1,12 @@
+<!--
+
+filename: CommitteesMenu.vue
+description: Component showing the menu of committees with links to the Committee.vue page
+
+author: Gabe Landau <gll1872@rit.edu>
+
+-->
+
 <template>
   <div id="committee_bar" class="committees-menu">
     <ul>

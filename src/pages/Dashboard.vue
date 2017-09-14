@@ -1,3 +1,12 @@
+<!--
+
+filename: Dashboard.vue
+description: Dashboard/homepage for ChargeTracker application
+
+author: Gabe Landau <gll1872@rit.edu>
+
+-->
+
 <template>
   <div class="dashboard">
     <Header />

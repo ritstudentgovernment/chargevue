@@ -1,3 +1,12 @@
+<!--
+
+filename: Carousel.vue
+description: Component for showing random images of campus as a banner on the Dashboard
+
+author: Gabe Landau <gll1872@rit.edu>
+
+-->
+
 <template>
   <div class="carousel">
     <div id="carousel" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
