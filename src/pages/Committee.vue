@@ -14,11 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="pagename">
       <h1>{{ this.committee.friendlyname }}</h1>
     </div>
-    <div class="columns">
-      <div class="column">test</div>
-      <div class="column">test</div>
-      <div class="column">test</div>
-    </div>
+    <CommitteeOverview inProgressCount="1" incompleteCount="3" completedCount="10" indefiniteCount="3" stoppedCount="2" />
   </div>
 </template>
 
@@ -26,13 +22,15 @@ author: Gabe Landau <gll1872@rit.edu>
 import CommitteeInfo from '../mixins/committeeinfo'
 import Header from '../components/Header'
 import CommitteesMenu from '../components/CommitteesMenu'
+import CommitteeOverview from '../components/CommitteeOverview'
 
 export default {
   name: 'dashboard',
   mixins: [CommitteeInfo],
   components: {
     'Header': Header,
-    'CommitteesMenu': CommitteesMenu
+    'CommitteesMenu': CommitteesMenu,
+    'CommitteeOverview': CommitteeOverview
   },
   data () {
     return {
@@ -50,18 +48,16 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-@import '../../node_modules/bulma/sass/utilities/_all'
-@import '../../node_modules/bulma/sass/grid/columns'
+<style scoped>
+.pagename {
+    background: #000;
+}
 
-.pagename
-  background: #000
-
-
-.pagename h1
-  margin: 0
-  text-align: center
-  text-transform: uppercase
-  padding: 75px 0
-  color: #fff
+.pagename h1 {
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 75px 0;
+  color: #fff;
+}
 </style>
