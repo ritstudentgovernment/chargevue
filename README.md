@@ -1,4 +1,4 @@
-# ChargeTracker
+# ChargeTracker ![Build Status](https://travis-ci.org/ritstudentgovernment/chargevue.svg?branch=master)
 A tracking app for Student Government charges, developed in JavaScript with Vue.js
 
 ## Development Setup
