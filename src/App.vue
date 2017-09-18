@@ -10,18 +10,18 @@ export default {
 }
 </script>
 
-<style>
-@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400');
+<style lang="sass">
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400')
+@import '../node_modules/bulma/sass/utilities/_all'
+@import '../node_modules/bulma/sass/grid/columns'
 
-html, body {
-  padding: 0;
-  margin: 0;
-  background-color: #eee;
-}
+html, body
+  padding: 0
+  margin: 0
+  background-color: #eee
 
-#app {
-  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+#app
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
 </style>

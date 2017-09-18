@@ -50,9 +50,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-@import '../../node_modules/bulma/sass/utilities/_all'
-@import '../../node_modules/bulma/sass/grid/columns'
-
 .columns
   text-align: center
   width: 800px

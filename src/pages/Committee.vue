@@ -15,6 +15,25 @@ author: Gabe Landau <gll1872@rit.edu>
       <h1>{{ this.committee.friendlyname }}</h1>
     </div>
     <CommitteeOverview inProgressCount="1" incompleteCount="3" completedCount="10" indefiniteCount="3" stoppedCount="2" />
+    <h1 id="active_projects_title">Active Projects</h1>
+    <h2>Projects that have been recently updated.</h2>
+    <ProjectThumbnail />
+    <h1 id="active_projects_title">Projects In Progress</h1>
+    <h2>Projects that are currently in progress.</h2>
+    <ProjectThumbnail />
+    <ProjectThumbnail />
+    <h1 id="active_projects_title">Projects Completed</h1>
+    <h2>Projects that have been completed.</h2>
+    <div class="columns">
+      <div class="column"><ProjectThumbnailSmall /></div>
+      <div class="column"><ProjectThumbnailSmall /></div>
+      <div class="column"><ProjectThumbnailSmall /></div>
+    </div>
+    <div class="columns">
+      <div class="column"><ProjectThumbnailSmall /></div>
+      <div class="column"><ProjectThumbnailSmall /></div>
+      <div class="column"><ProjectThumbnailSmall /></div>
+    </div>
   </div>
 </template>
 
@@ -23,6 +42,8 @@ import CommitteeInfo from '../mixins/committeeinfo'
 import Header from '../components/Header'
 import CommitteesMenu from '../components/CommitteesMenu'
 import CommitteeOverview from '../components/CommitteeOverview'
+import ProjectThumbnail from '../components/ProjectThumbnail'
+import ProjectThumbnailSmall from '../components/ProjectThumbnailSmall'
 
 export default {
   name: 'dashboard',
@@ -30,7 +51,9 @@ export default {
   components: {
     'Header': Header,
     'CommitteesMenu': CommitteesMenu,
-    'CommitteeOverview': CommitteeOverview
+    'CommitteeOverview': CommitteeOverview,
+    'ProjectThumbnail': ProjectThumbnail,
+    'ProjectThumbnailSmall': ProjectThumbnailSmall
   },
   data () {
     return {
@@ -49,6 +72,16 @@ export default {
 </script>
 
 <style scoped>
+h1, h2 {
+  font-weight: 300;
+  text-align: center;
+}
+
+.columns {
+  width: 70%;
+  margin: 0 auto;
+}
+
 .pagename {
     background: #000;
 }
