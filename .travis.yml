@@ -10,5 +10,4 @@ install:
 
 script:
   - 'npm run unit'
-  - 'istanbul cover node_modules\jasmine\bin\jasmine.js'
   - 'codecov'
