@@ -22,7 +22,7 @@ To run tests for this application, follow the steps above to get it running for 
 
 ## To-Do & Goals
 ### Web Application
-* [ ] Add travis file for running builds and tests
+* [x] Add travis file for running builds and tests
 * [ ] Continue to build out web components
 * [ ] Connect this application to the Flask API backend
 
