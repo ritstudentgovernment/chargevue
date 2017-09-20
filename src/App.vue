@@ -14,6 +14,8 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400')
 @import '../node_modules/bulma/sass/utilities/_all'
 @import '../node_modules/bulma/sass/grid/columns'
+@import '../node_modules/bulma/sass/components/modal'
+@import '../node_modules/bulma/sass/elements/button'
 
 html, body
   padding: 0

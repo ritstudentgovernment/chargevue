@@ -10,22 +10,42 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <header>
     <div class="left">
-      <div class="button" id="site">
+      <div class="link" id="site">
         <span id="label">Go to Site</span>
       </div>
     </div>
     <p class="title"><router-link to="/">TigerTracker</router-link></p>
     <div class="right">
-      <span class="button" id="label">Login</span>
+      <span class="link" id="label" @click="active = true">Login</span>
+    </div>
+
+    <div>
+      <div class="modal" v-bind:class="{ 'is-active': active }">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <div class="modal-card-head">
+          <p class="modal-card-title">Login</p>
+        </div>
+        <section class="modal-card-body">
+          <!-- Content ... -->
+        </section>
+        <div class="modal-card-foot">
+          <button class="button is-success">Login</button>
+          <button class="button" @click="active = false">Cancel</button>
+        </div>
+      </div>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
+
 export default {
   name: 'header',
   data () {
     return {
+      active: false
     }
   }
 }
@@ -63,7 +83,7 @@ header .title {
 	cursor: default;
 }
 
-header .button {
+header .link {
 	cursor: pointer;
 	font-weight: 300;
 	color: grey;
@@ -97,5 +117,14 @@ header i {
 	.button span {
 		display: none;
 	}
+}
+
+p {
+  padding: 0;
+}
+
+.modal-card-head {
+  padding: 0 0 0 20px;
+  text-align: left;
 }
 </style>
