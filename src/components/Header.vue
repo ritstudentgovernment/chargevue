@@ -8,26 +8,40 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <header>
-    <div class="left">
-      <div class="link" id="site">
-        <span id="label">Go to Site</span>
+  <div>
+    <header>
+      <div class="left">
+        <div class="link" id="site">
+          <span id="label">Go to Site</span>
+        </div>
       </div>
-    </div>
-    <p class="title"><router-link to="/">TigerTracker</router-link></p>
-    <div class="right">
-      <span class="link" id="label" @click="active = true">Login</span>
-    </div>
+      <p class="title"><router-link to="/">TigerTracker</router-link></p>
+      <div class="right">
+        <span class="link" id="label" @click="active = true">Login</span>
+      </div>
+    </header>
 
     <div>
       <div class="modal" v-bind:class="{ 'is-active': active }">
-      <div class="modal-background"></div>
+      <div class="modal-background" @click="active = false"></div>
       <div class="modal-card">
         <div class="modal-card-head">
           <p class="modal-card-title">Login</p>
         </div>
         <section class="modal-card-body">
-          <!-- Content ... -->
+          <div class="field">
+            <label class="label">Username</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="RIT Username">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+              <input class="input" type="password" placeholder="RIT Password">
+            </div>
+          </div>
         </section>
         <div class="modal-card-foot">
           <button class="button is-success">Login</button>
@@ -36,7 +50,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
       </div>
     </div>
-  </header>
+  </div>
 </template>
 
 <script>
@@ -126,5 +140,9 @@ p {
 .modal-card-head {
   padding: 0 0 0 20px;
   text-align: left;
+}
+
+.control {
+  padding-right: 20px;
 }
 </style>
