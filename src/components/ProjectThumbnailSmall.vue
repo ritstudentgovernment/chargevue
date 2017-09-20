@@ -37,7 +37,6 @@ export default {
 }
 
 .project_thumbnail_small_tag {
-
   color: #fff;
   font-size: 14pt;
   font-weight: 300;
