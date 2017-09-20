@@ -10,7 +10,7 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <div class="project_thumbnail_small">
 		<div class="project_thumbnail_small_header">Gender Neutral Bathrooms</div>
-    <div class="project_thumbnail_small_tag">Student Affairs</div>
+    <div class="project_thumbnail_small_tag"><span>Student Affairs</span></div>
 	</div>
 </template>
 
@@ -37,11 +37,15 @@ export default {
 }
 
 .project_thumbnail_small_tag {
-  background-color: #FD9131;
+
   color: #fff;
   font-size: 14pt;
   font-weight: 300;
-  padding: 10px;
   margin-top: 50px;
+}
+
+.project_thumbnail_small_tag span {
+  background-color: #FD9131;
+  padding: 5px;
 }
 </style>
