@@ -10,15 +10,9 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <div id="committee_bar" class="committees-menu">
     <ul>
-			<li><router-link to="/committee/academicsandcoop">Academic &amp; Coops</router-link></li>
-			<li><router-link to="/committee/fpat">FPAT</router-link></li>
-			<li><router-link to="/committee/globalsg">Global SG</router-link></li>
-			<li><router-link to="/committee/housinganddining">Housing &amp; Dining</router-link></li>
-			<li><router-link to="/committee/studentaffairs">Student Affairs</router-link></li>
-			<li><router-link to="/committee/technology">Technology</router-link></li>
-			<li><router-link to="/committee/sustainability">Sustainability</router-link></li>
-			<li><router-link to="/committee/senator">Senator</router-link></li>
-			<li><router-link to="/committee/rso">RSO</router-link></li>
+      <li v-for="(item, index) in committees">
+        <router-link :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link>
+      </li>
     </ul>
   </div>
 </template>
@@ -28,7 +22,16 @@ export default {
   name: 'committees-menu',
   data () {
     return {
+      committees: null
     }
+  },
+  sockets: {
+    get_committees: function (data) {
+      this.committees = data
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_committees')
   }
 }
 </script>
