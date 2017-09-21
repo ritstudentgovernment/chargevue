@@ -12,7 +12,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <Header />
     <CommitteesMenu />
     <div class="pagename">
-      <h1>{{ this.committee.friendlyname }}</h1>
+      <h1>{{ committee }}</h1>
     </div>
     <CommitteeOverview inProgressCount="1" incompleteCount="3" completedCount="10" indefiniteCount="3" stoppedCount="2" />
     <h1 id="active_projects_title">Active Projects</h1>
@@ -57,7 +57,7 @@ export default {
   },
   data () {
     return {
-      committee: this.getCommitteeInfo(this.$route.params.committee)
+      committee: this.$router.history.current.params['committee']
     }
   },
   /* Since this component is used for each committee page, we have to
@@ -65,7 +65,7 @@ export default {
     when the route changes */
   watch: {
     '$route.params.committee': function (committee) {
-      this.committee = this.getCommitteeInfo(committee)
+      this.committee = committee
     }
   }
 }
