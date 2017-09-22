@@ -9,7 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div class="dashboard">
-    <Header />
+    <HeaderMenu />
     <Carousel />
     <CommitteesMenu />
     <h1 id="dashboard_title">Projects In Progress</h1>
@@ -20,7 +20,7 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-import Header from '../components/Header'
+import HeaderMenu from '../components/HeaderMenu'
 import Carousel from '../components/Carousel'
 import ProjectThumbnail from '../components/ProjectThumbnail'
 import CommitteesMenu from '../components/CommitteesMenu'
@@ -28,7 +28,7 @@ import CommitteesMenu from '../components/CommitteesMenu'
 export default {
   name: 'dashboard',
   components: {
-    'Header': Header,
+    'HeaderMenu': HeaderMenu,
     'Carousel': Carousel,
     'ProjectThumbnail': ProjectThumbnail,
     'CommitteesMenu': CommitteesMenu

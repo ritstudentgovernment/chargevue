@@ -9,7 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div class="dashboard">
-    <Header />
+    <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename">
       <h1>{{ committee.description }}</h1>
@@ -39,7 +39,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <script>
 import CommitteeInfo from '../mixins/committeeinfo'
-import Header from '../components/Header'
+import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import CommitteeOverview from '../components/CommitteeOverview'
 import ProjectThumbnail from '../components/ProjectThumbnail'
@@ -49,7 +49,7 @@ export default {
   name: 'dashboard',
   mixins: [CommitteeInfo],
   components: {
-    'Header': Header,
+    'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
     'CommitteeOverview': CommitteeOverview,
     'ProjectThumbnail': ProjectThumbnail,
@@ -57,7 +57,7 @@ export default {
   },
   data () {
     return {
-      committee: null
+      committee: {'description': 'committee'}
     }
   },
   sockets: {

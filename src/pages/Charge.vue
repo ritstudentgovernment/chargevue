@@ -9,7 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div>
-    <Header />
+    <HeaderMenu />
     <CommitteesMenu />
     <div class="charge_header">
       <div class="charge_header_text">Gender Neutral Bathrooms</div>
@@ -32,14 +32,14 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-import Header from '../components/Header'
+import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import ChargeStatusBar from '../components/ChargeStatusBar'
 
 export default {
   name: 'dashboard',
   components: {
-    'Header': Header,
+    'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
     'ChargeStatusBar': ChargeStatusBar
   },

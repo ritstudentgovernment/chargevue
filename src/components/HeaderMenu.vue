@@ -1,6 +1,6 @@
 <!--
 
-filename: Header.vue
+filename: HeaderMenu.vue
 description: Header component for use across all pages
 
 author: Gabe Landau <gll1872@rit.edu>
@@ -56,7 +56,7 @@ author: Gabe Landau <gll1872@rit.edu>
 <script>
 
 export default {
-  name: 'header',
+  name: 'headermenu',
   data () {
     return {
       active: false
