@@ -12,17 +12,17 @@ author: Gabe Landau <gll1872@rit.edu>
     <Header />
     <CommitteesMenu />
     <div class="pagename">
-      <h1>{{ committee }}</h1>
+      <h1>{{ committee.description }}</h1>
     </div>
     <CommitteeOverview inProgressCount="1" incompleteCount="3" completedCount="10" indefiniteCount="3" stoppedCount="2" />
     <h1 id="active_projects_title">Active Projects</h1>
     <h2>Projects that have been recently updated.</h2>
     <ProjectThumbnail />
-    <h1 id="active_projects_title">Projects In Progress</h1>
+    <h1>Projects In Progress</h1>
     <h2>Projects that are currently in progress.</h2>
     <ProjectThumbnail />
     <ProjectThumbnail />
-    <h1 id="active_projects_title">Projects Completed</h1>
+    <h1>Projects Completed</h1>
     <h2>Projects that have been completed.</h2>
     <div class="columns">
       <div class="column"><ProjectThumbnailSmall /></div>
@@ -57,15 +57,23 @@ export default {
   },
   data () {
     return {
-      committee: this.$router.history.current.params['committee']
+      committee: null
     }
+  },
+  sockets: {
+    get_committee: function (data) {
+      this.committee = data
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
   },
   /* Since this component is used for each committee page, we have to
     watch for changes in the URL and update the props on the page
     when the route changes */
   watch: {
     '$route.params.committee': function (committee) {
-      this.committee = committee
+      this.$socket.emit('get_committee', committee)
     }
   }
 }
