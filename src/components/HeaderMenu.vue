@@ -17,19 +17,20 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
       <div class="right">
-        <span class="link" @click="showForm = true" v-if="showLoginLink">Login</span>
+        <span class="link" @click="showLoginForm = true" v-if="!authenticated">Login</span>
+        <span class="link" @click="submitLogout()" v-if="authenticated">Logout</span>
       </div>
     </header>
 
     <div>
-      <div class="modal" v-bind:class="{ 'is-active': showForm }">
-      <div class="modal-background" @click="showForm = false"></div>
+      <div class="modal" v-bind:class="{ 'is-active': showLoginForm }">
+      <div class="modal-background" @click="showLoginForm = false"></div>
       <div class="modal-card">
         <div class="modal-card-head">
           <p class="modal-card-title">Login</p>
         </div>
         <section class="modal-card-body">
-          <article class="message is-danger" v-if="authError">
+          <article class="message is-danger" v-if="showAuthError">
             <div class="message-body">Oops! Username or password was incorrect. Please try again.</div>
           </article>
 
@@ -48,8 +49,8 @@ author: Gabe Landau <gll1872@rit.edu>
           </div>
         </section>
         <div class="modal-card-foot">
-          <button class="button is-success" @click="login()" v-bind:class="{ 'is-loading': loginLoading }">Login</button>
-          <button class="button" @click="showForm = false">Cancel</button>
+          <button class="button is-success" @click="submitLogin()" v-bind:class="{ 'is-loading': showLoginLoading }">Login</button>
+          <button class="button" @click="showLoginForm = false">Cancel</button>
         </div>
       </div>
       </div>
@@ -58,35 +59,44 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
+import Auth from '../mixins/auth'
 
 export default {
   name: 'headermenu',
+  mixins: [Auth],
   data () {
     return {
-      showForm: false,
-      loginLoading: false,
-      authError: false,
-      showLoginLink: true,
+      authenticated: false,
+      showLoginForm: false,
+      showLoginLoading: false,
+      showAuthError: false,
       username: '',
       password: ''
     }
   },
-  sockets: {
-    auth: function (data) {
-      console.log(data)
-      if (data.error) {
-        this.authError = true
-      } else if (data.token) {
-        this.showForm = false
-        this.showLoginLink = false
+  methods: {
+    submitLogin () {
+      this.showAuthError = false
+      this.showLoginLoading = true
+      this.login(this.username, this.password)
+      if (this.checkAuth()) {
+        this.showAuthError = false
+        this.showLoginForm = false
+        this.showLoginLoading = false
+        this.authenticated = true
+      } else {
+        this.showLoginLoading = false
+        this.showAuthError = true
       }
-      this.loginLoading = false
+    },
+    submitLogout () {
+      this.logout()
+      this.authenticated = false
     }
   },
-  methods: {
-    login () {
-      this.$socket.emit('auth', {username: this.username, password: this.password})
-      this.loginLoading = true
+  beforeMount () {
+    if (this.checkAuth()) {
+      this.authenticated = true
     }
   }
 }
