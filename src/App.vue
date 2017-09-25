@@ -15,6 +15,7 @@ export default {
 @import '../node_modules/bulma/sass/utilities/_all'
 @import '../node_modules/bulma/sass/grid/columns'
 @import '../node_modules/bulma/sass/components/modal'
+@import '../node_modules/bulma/sass/components/message'
 @import '../node_modules/bulma/sass/elements/form'
 @import '../node_modules/bulma/sass/elements/button'
 

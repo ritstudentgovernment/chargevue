@@ -12,40 +12,44 @@ author: Gabe Landau <gll1872@rit.edu>
     <header>
       <div class="left">
         <div class="link" id="site">
-          <span id="label">Go to Site</span>
+          <span>Go to Site</span>
         </div>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
       <div class="right">
-        <span class="link" id="label" @click="active = true">Login</span>
+        <span class="link" @click="showForm = true" v-if="showLoginLink">Login</span>
       </div>
     </header>
 
     <div>
-      <div class="modal" v-bind:class="{ 'is-active': active }">
-      <div class="modal-background" @click="active = false"></div>
+      <div class="modal" v-bind:class="{ 'is-active': showForm }">
+      <div class="modal-background" @click="showForm = false"></div>
       <div class="modal-card">
         <div class="modal-card-head">
           <p class="modal-card-title">Login</p>
         </div>
         <section class="modal-card-body">
+          <article class="message is-danger" v-if="authError">
+            <div class="message-body">Oops! Username or password was incorrect. Please try again.</div>
+          </article>
+
           <div class="field">
             <label class="label">Username</label>
             <div class="control">
-              <input class="input" type="text" placeholder="RIT Username">
+              <input class="input" type="text" placeholder="RIT Username" v-model="username">
             </div>
           </div>
 
           <div class="field">
             <label class="label">Password</label>
             <div class="control">
-              <input class="input" type="password" placeholder="RIT Password">
+              <input class="input" type="password" placeholder="RIT Password" v-model="password">
             </div>
           </div>
         </section>
         <div class="modal-card-foot">
-          <button class="button is-success">Login</button>
-          <button class="button" @click="active = false">Cancel</button>
+          <button class="button is-success" @click="login()" v-bind:class="{ 'is-loading': loginLoading }">Login</button>
+          <button class="button" @click="showForm = false">Cancel</button>
         </div>
       </div>
       </div>
@@ -59,7 +63,30 @@ export default {
   name: 'headermenu',
   data () {
     return {
-      active: false
+      showForm: false,
+      loginLoading: false,
+      authError: false,
+      showLoginLink: true,
+      username: '',
+      password: ''
+    }
+  },
+  sockets: {
+    auth: function (data) {
+      console.log(data)
+      if (data.error) {
+        this.authError = true
+      } else if (data.token) {
+        this.showForm = false
+        this.showLoginLink = false
+      }
+      this.loginLoading = false
+    }
+  },
+  methods: {
+    login () {
+      this.$socket.emit('auth', {username: this.username, password: this.password})
+      this.loginLoading = true
     }
   }
 }
