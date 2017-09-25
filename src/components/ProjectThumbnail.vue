@@ -31,6 +31,10 @@ export default {
   width: 70%;
   margin: 15px auto;
   padding: 20px;
+  -webkit-animation: pop-in 0.5s;
+  -moz-animation: pop-in 0.5s;
+  -ms-animation: pop-in 0.5s;
+  animation: pop-in 0.5s;
 }
 
 .project_thumbnail_header {
@@ -52,5 +56,18 @@ export default {
   font-weight: 300;
   font-family: Verdana;
   margin-top: 10px;
+}
+
+@-webkit-keyframes pop-in {
+  0% { opacity: 0; -webkit-transform: scale(0.5); }
+  100% { opacity: 1; -webkit-transform: scale(1); }
+}
+@-moz-keyframes pop-in {
+  0% { opacity: 0; -moz-transform: scale(0.5); }
+  100% { opacity: 1; -moz-transform: scale(1); }
+}
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
 }
 </style>
