@@ -28,6 +28,9 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="divider"></div>
       <div class="description_content">Students gender neutral bathrooms. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</div>
     </div>
+    <div class="tasks">
+
+    </div>
   </div>
 </template>
 
@@ -54,8 +57,8 @@ export default {
 .description {
   background-color: #fff;
   border: 1px solid #ddd;
-  width: 80%;
-  margin: 50px auto;
+  width: 70%;
+  margin: 50px auto 0 auto;
   padding: 10px;
 }
 
@@ -96,7 +99,7 @@ export default {
 }
 
 .description_content {
-  font-size: 14pt;
+  font-size: 13pt;
   padding: 10px;
 }
 
@@ -107,5 +110,13 @@ export default {
 
 .divider {
   border-top: 1px solid #000;
+}
+
+.tasks {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  width: 70%;
+  margin: 20px auto;
+  padding: 10px;
 }
 </style>
