@@ -8,7 +8,9 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <div class="charge_status_bar">In Progress</div>
+  <div>
+    <div class="charge_status_bar">In Progress</div>
+  </div>
 </template>
 
 <script>
