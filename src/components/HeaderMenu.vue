@@ -19,6 +19,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="right">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated">Logout</span>
+        <router-link to="/admin" class="link" v-if="authenticated">Admin</router-link>
       </div>
     </header>
 
@@ -140,6 +141,7 @@ header .link {
 	color: grey;
 	text-align: right;
 	display: inline-block;
+  padding-left: 20px;
 }
 
 header .left {
