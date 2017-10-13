@@ -25,49 +25,63 @@ export default {
 }
 </script>
 
-<style scoped>
-.project_thumbnail {
-  background-color: #fff;
-  width: 70%;
-  margin: 15px auto;
-  padding: 20px;
-  -webkit-animation: pop-in 0.5s;
-  -moz-animation: pop-in 0.5s;
-  -ms-animation: pop-in 0.5s;
-  animation: pop-in 0.5s;
-}
+<style scoped lang="sass">
+@import '../assets/vars.sass'
 
-.project_thumbnail_header {
-  color: #FD9131;
-  font-size: 16pt;
-  font-weight: 300;
-}
+.project_thumbnail
+  background-color: #fff
+  width: 70%
+  margin: 15px auto
+  padding: 20px
+  -webkit-animation: pop-in 0.5s
+  -moz-animation: pop-in 0.5s
+  -ms-animation: pop-in 0.5s
+  animation: pop-in 0.5s
 
-.project_thumbnail_subheader {
-  color: #333;
-  font-size: 10pt;
-  font-weight: 300;
-  font-family: Verdana;
-}
+.project_thumbnail_header
+  color: $primary
+  font-size: 16pt
+  font-weight: 300
 
-.project_thumbnail_description {
-  color: #333;
-  font-size: 10pt;
-  font-weight: 300;
-  font-family: Verdana;
-  margin-top: 10px;
-}
+.project_thumbnail_subheader
+  color: #333
+  font-size: 10pt
+  font-weight: 300
+  font-family: Verdana
 
-@-webkit-keyframes pop-in {
-  0% { opacity: 0; -webkit-transform: scale(0.5); }
-  100% { opacity: 1; -webkit-transform: scale(1); }
-}
-@-moz-keyframes pop-in {
-  0% { opacity: 0; -moz-transform: scale(0.5); }
-  100% { opacity: 1; -moz-transform: scale(1); }
-}
-@keyframes pop-in {
-  0% { opacity: 0; transform: scale(0.5); }
-  100% { opacity: 1; transform: scale(1); }
-}
+.project_thumbnail_description
+  color: #333
+  font-size: 10pt
+  font-weight: 300
+  font-family: Verdana
+  margin-top: 10px
+
+@-webkit-keyframes pop-in
+  0%
+    opacity: 0
+    -webkit-transform: scale(0.5)
+
+100%
+  opacity: 1
+  -webkit-transform: scale(1)
+
+
+@-moz-keyframes pop-in
+  0%
+    opacity: 0
+    -moz-transform: scale(0.5)
+
+  100%
+    opacity: 1
+    -moz-transform: scale(1)
+
+
+@keyframes pop-in
+  0%
+    opacity: 0
+    transform: scale(0.5)
+
+  100%
+    opacity: 1
+    transform: scale(1)
 </style>
