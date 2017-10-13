@@ -79,16 +79,15 @@ export default {
     submitLogin () {
       this.showAuthError = false
       this.showLoginLoading = true
-      this.login(this.username, this.password)
-      if (this.checkAuth()) {
+      this.login(this.username, this.password).then(() => {
         this.showAuthError = false
         this.showLoginForm = false
         this.showLoginLoading = false
         this.authenticated = true
-      } else {
+      }).catch(() => {
         this.showLoginLoading = false
         this.showAuthError = true
-      }
+      })
     },
     submitLogout () {
       this.logout()
@@ -128,7 +127,7 @@ header {
 header .title {
 	margin: 0;
 	padding: 0;
-	color: #EF6C20;
+	color: #f36e21;
 	font-size: 20px;
 	font-weight: 300;
 	display: inline;
