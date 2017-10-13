@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     getRandomImage () {
-      var images = ['http://i63.tinypic.com/qqbc6o.png', 'http://i64.tinypic.com/2yy34m9.png', 'http://i68.tinypic.com/wrxlc2.png']
+      var images = ['http://i63.tinypic.com/qqbc6o.png', 'http://i68.tinypic.com/wrxlc2.png']
       var random = Math.floor(Math.random() * images.length)
       return images[random]
     }
