@@ -25,7 +25,7 @@ author: Gabe Landau <gll1872@rit.edu>
               <tr v-for="committee in committees">
                 <td>{{ committee.id }}</td>
                 <td>{{ committee.title }}</td>
-                <td><button class="button edit-button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-danger">Delete</button></td>
+                <td><button class="button edit-button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-danger">Deactivate</button></td>
               </tr>
               </tbody>
             </table>
@@ -40,8 +40,8 @@ author: Gabe Landau <gll1872@rit.edu>
               </ul>
               <p class="menu-label">Members</p>
               <ul class="menu-list">
-                <li><a>Add Member to Committee</a></li>
-                <li><a>Remove Member from Committee</a></li>
+                <li><a v-on:click="showAddMemberToCommitteeForm = true">Add Member to Committee</a></li>
+                <li><a v-on:click="showRemoveMemberFromCommitteeForm = true">Remove Member from Committee</a></li>
               </ul>
             </aside>
           </div>
@@ -81,7 +81,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Meeting Time</label>
               <div class="control">
-                <input class="input" type="time" placeholder="Meeting Time" v-model="createMeetingTime">
+                <input class="input" type="text" placeholder="Meeting Time" v-model="createMeetingTime">
               </div>
             </div>
 
@@ -130,9 +130,9 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
 
             <div class="field">
-              <label class="label">Meeting Time (Current Time: {{this.hours}}:{{this.minutes}} {{this.twelvehour}})</label>
+              <label class="label">Meeting Time</label>
               <div class="control">
-                <input class="input" type="time" placeholder="Meeting Time" v-model="editMeetingTime">
+                <input class="input" type="text" placeholder="Meeting Time" v-model="editMeetingTime">
               </div>
             </div>
 
@@ -152,6 +152,79 @@ author: Gabe Landau <gll1872@rit.edu>
 
 
 
+      <div class="modal" v-bind:class="{ 'is-active': showAddMemberToCommitteeForm }">
+        <div class="modal-background" v-on:click="showAddMemberToCommitteeForm = false"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Add Member to Committee</p>
+          </header>
+          <section class="modal-card-body">
+            <div class="field">
+              <label class="label">Member</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="RIT Username" v-model="addMemberMember">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Committee</label>
+              <div class="control">
+                <div class="select">
+                  <select v-model="addMemberCommittee">
+                    <option v-for="committee in committees" v-bind:value="committee.id">{{committee.title}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" v-on:click="addMemberToCommittee()">Add Member</button>
+            <button class="button" v-on:click="showAddMemberToCommitteeForm = false">Cancel</button>
+          </footer>
+        </div>
+      </div>
+
+
+
+      <div class="modal" v-bind:class="{ 'is-active': showRemoveMemberFromCommitteeForm }">
+        <div class="modal-background" v-on:click="showRemoveMemberFromCommitteeForm = false"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Remove Member from Committee</p>
+          </header>
+          <section class="modal-card-body">
+            <div class="field">
+              <label class="label">Committee</label>
+              <div class="control">
+                <div class="select">
+                  <select v-model="removeMemberCommittee" v-on:change="generateCommitteeMembers()">
+                    <option selected disabled></option>
+                    <option v-for="committee in committees" v-bind:value="committee.id">{{committee.title}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="field" v-show="showRemoveMemberDropdown">
+              <label class="label">Member</label>
+              <div class="control">
+                <div class="select">
+                  <select v-model="removeMemberMember">
+                    <option selected disabled></option>
+                    <option v-for="member in members" v-bind:value="member.id">{{member.id}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary">Remove Member</button>
+            <button class="button" v-on:click="showRemoveMemberFromCommitteeForm = false">Cancel</button>
+          </footer>
+        </div>
+      </div>
+
+
 
     </div>
 </template>
@@ -167,8 +240,12 @@ author: Gabe Landau <gll1872@rit.edu>
     data () {
       return {
         committees: null,
+        members: null,
         showCreateCommitteeForm: false,
         showEditCommitteeForm: false,
+        showAddMemberToCommitteeForm: false,
+        showRemoveMemberFromCommitteeForm: false,
+        showRemoveMemberDropdown: false,
         createTitle: null,
         createDescription: null,
         createLocation: null,
@@ -179,9 +256,10 @@ author: Gabe Landau <gll1872@rit.edu>
         editLocation: null,
         editMeetingTime: null,
         editCommitteeHead: null,
-        hours: null,
-        minutes: null,
-        twelvehour: null
+        addMemberMember: null,
+        addMemberCommittee: null,
+        removeMemberCommittee: null,
+        removeMemberMember: null
       }
     },
     methods: {
@@ -191,13 +269,25 @@ author: Gabe Landau <gll1872@rit.edu>
           title: this.createTitle,
           description: this.createDescription,
           location: this.createLocation,
-          meeting_time: new Date(1, 1, 1, this.createMeetingTime),
+          meeting_time: this.createMeetingTime,
           head: this.createCommitteeHead
         })
-        console.log(new Date(1, 1, 1, this.createMeetingTime).getHours())
       },
       openEditCommitteeForm (id) {
         this.$socket.emit('get_committee', id)
+      },
+      addMemberToCommittee () {
+        console.log(this.addMemberCommittee)
+        this.$socket.emit('add_member_committee', {
+          token: localStorage.getItem('authToken'),
+          user_id: this.addMemberMember,
+          committee_id: this.addMemberCommittee
+        })
+      },
+      generateCommitteeMembers () {
+        if (this.removeMemberCommittee) {
+          this.$socket.emit('get_members', this.removeMemberCommittee)
+        }
       }
     },
     sockets: {
@@ -206,22 +296,7 @@ author: Gabe Landau <gll1872@rit.edu>
       },
       get_committee: function (data) {
         console.log(data)
-        let time = new Date(data.meeting_time)
-        this.hours = time.getHours()
-        this.minutes = time.getMinutes()
-
-        if (this.hours > 11) {
-          this.hours = this.hours - 11
-          this.twelvehour = 'PM'
-        } else {
-          this.hours--
-          this.twelvehour = 'AM'
-        }
-
-        if (this.minutes === 0) {
-          this.minutes = '00'
-        }
-
+        this.editMeetingTime = data.meeting_time
         this.editTitle = data.title
         this.editDescription = data.description
         this.editLocation = data.location
@@ -230,6 +305,14 @@ author: Gabe Landau <gll1872@rit.edu>
       },
       create_committee: function (data) {
         console.log(data)
+      },
+      add_member_committee: function (data) {
+        console.log(data)
+      },
+      get_members: function (data) {
+        console.log(data)
+        this.members = data.members
+        this.showRemoveMemberDropdown = true
       }
     },
     beforeMount () {
