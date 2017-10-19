@@ -20,7 +20,8 @@
     "socket.io-client": "^2.0.3",
     "vue": "^2.4.2",
     "vue-router": "^2.7.0",
-    "vue-socket.io": "^2.1.1-a"
+    "vue-socket.io": "^2.1.1-a",
+    "vuex": "^3.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
