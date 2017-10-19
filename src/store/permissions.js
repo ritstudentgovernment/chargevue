@@ -5,16 +5,24 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    name: ''
+    token: null
   },
   mutations: {
-    SET_NAME: (state, name) => {
-      state.name = name
+    SET_TOKEN: (state, token) => {
+      state.token = token
+    },
+    CLEAR_TOKEN: state => {
+      state.token = null
     }
   },
   getters: {
-    GET_NAME: state => {
-      return state.name
+    IS_AUTHENTICATED: state => {
+      if (state.token) {
+        return true
+      }
+    },
+    GET_TOKEN: state => {
+      return state.token
     }
   }
 })

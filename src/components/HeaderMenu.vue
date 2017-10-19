@@ -92,10 +92,11 @@ export default {
     submitLogout () {
       this.logout()
       this.authenticated = false
+      this.$router.push({ path: '/' })
     }
   },
   beforeMount () {
-    if (this.checkAuth()) {
+    if (this.checkUserIsLoggedIn()) {
       this.authenticated = true
     }
   }

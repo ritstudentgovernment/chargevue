@@ -7,6 +7,7 @@ let functions = {
           console.log(data)
           if (data.token) {
             localStorage.setItem('authToken', data.token)
+            this.$store.commit('SET_TOKEN', data.token)
             resolve()
           } else {
             reject()
@@ -16,9 +17,10 @@ let functions = {
     },
     logout () {
       localStorage.removeItem('authToken')
+      this.$store.commit('CLEAR_TOKEN')
     },
-    checkAuth () {
-      if (localStorage.getItem('authToken')) {
+    checkUserIsLoggedIn () {
+      if (localStorage.getItem('authToken') && this.$store.getters.IS_AUTHENTICATED) {
         return true
       } else {
         return false

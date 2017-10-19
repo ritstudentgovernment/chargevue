@@ -230,95 +230,100 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  import HeaderMenu from '@/components/HeaderMenu.vue'
+import HeaderMenu from '@/components/HeaderMenu.vue'
+import Auth from '../mixins/auth'
 
-  export default {
-    name: 'admin',
-    components: {
-      HeaderMenu: HeaderMenu
-    },
-    data () {
-      return {
-        committees: null,
-        members: null,
-        showCreateCommitteeForm: false,
-        showEditCommitteeForm: false,
-        showAddMemberToCommitteeForm: false,
-        showRemoveMemberFromCommitteeForm: false,
-        showRemoveMemberDropdown: false,
-        createTitle: null,
-        createDescription: null,
-        createLocation: null,
-        createMeetingTime: null,
-        createCommitteeHead: null,
-        editTitle: null,
-        editDescription: null,
-        editLocation: null,
-        editMeetingTime: null,
-        editCommitteeHead: null,
-        addMemberMember: null,
-        addMemberCommittee: null,
-        removeMemberCommittee: null,
-        removeMemberMember: null
-      }
-    },
-    methods: {
-      createNewCommittee () {
-        this.$socket.emit('create_committee', {
-          token: localStorage.getItem('authToken'),
-          title: this.createTitle,
-          description: this.createDescription,
-          location: this.createLocation,
-          meeting_time: this.createMeetingTime,
-          head: this.createCommitteeHead
-        })
-      },
-      openEditCommitteeForm (id) {
-        this.$socket.emit('get_committee', id)
-      },
-      addMemberToCommittee () {
-        console.log(this.addMemberCommittee)
-        this.$socket.emit('add_member_committee', {
-          token: localStorage.getItem('authToken'),
-          user_id: this.addMemberMember,
-          committee_id: this.addMemberCommittee
-        })
-      },
-      generateCommitteeMembers () {
-        if (this.removeMemberCommittee) {
-          this.$socket.emit('get_members', this.removeMemberCommittee)
-        }
-      }
-    },
-    sockets: {
-      get_committees: function (data) {
-        this.committees = data
-      },
-      get_committee: function (data) {
-        console.log(data)
-        this.editMeetingTime = data.meeting_time
-        this.editTitle = data.title
-        this.editDescription = data.description
-        this.editLocation = data.location
-        this.editCommitteeHead = data.head
-        this.showEditCommitteeForm = true
-      },
-      create_committee: function (data) {
-        console.log(data)
-      },
-      add_member_committee: function (data) {
-        console.log(data)
-      },
-      get_members: function (data) {
-        console.log(data)
-        this.members = data.members
-        this.showRemoveMemberDropdown = true
-      }
-    },
-    beforeMount () {
-      this.$socket.emit('get_committees')
+export default {
+  name: 'admin',
+  mixins: [Auth],
+  components: {
+    HeaderMenu: HeaderMenu
+  },
+  data () {
+    return {
+      committees: null,
+      members: null,
+      showCreateCommitteeForm: false,
+      showEditCommitteeForm: false,
+      showAddMemberToCommitteeForm: false,
+      showRemoveMemberFromCommitteeForm: false,
+      showRemoveMemberDropdown: false,
+      createTitle: null,
+      createDescription: null,
+      createLocation: null,
+      createMeetingTime: null,
+      createCommitteeHead: null,
+      editTitle: null,
+      editDescription: null,
+      editLocation: null,
+      editMeetingTime: null,
+      editCommitteeHead: null,
+      addMemberMember: null,
+      addMemberCommittee: null,
+      removeMemberCommittee: null,
+      removeMemberMember: null
     }
+  },
+  methods: {
+    createNewCommittee () {
+      this.$socket.emit('create_committee', {
+        token: localStorage.getItem('authToken'),
+        title: this.createTitle,
+        description: this.createDescription,
+        location: this.createLocation,
+        meeting_time: this.createMeetingTime,
+        head: this.createCommitteeHead
+      })
+    },
+    openEditCommitteeForm (id) {
+      this.$socket.emit('get_committee', id)
+    },
+    addMemberToCommittee () {
+      console.log(this.addMemberCommittee)
+      this.$socket.emit('add_member_committee', {
+        token: localStorage.getItem('authToken'),
+        user_id: this.addMemberMember,
+        committee_id: this.addMemberCommittee
+      })
+    },
+    generateCommitteeMembers () {
+      if (this.removeMemberCommittee) {
+        this.$socket.emit('get_members', this.removeMemberCommittee)
+      }
+    }
+  },
+  sockets: {
+    get_committees: function (data) {
+      this.committees = data
+    },
+    get_committee: function (data) {
+      console.log(data)
+      this.editMeetingTime = data.meeting_time
+      this.editTitle = data.title
+      this.editDescription = data.description
+      this.editLocation = data.location
+      this.editCommitteeHead = data.head
+      this.showEditCommitteeForm = true
+    },
+    create_committee: function (data) {
+      console.log(data)
+    },
+    add_member_committee: function (data) {
+      console.log(data)
+    },
+    get_members: function (data) {
+      console.log(data)
+      this.members = data.members
+      this.showRemoveMemberDropdown = true
+    }
+  },
+  beforeMount () {
+    if (!(this.checkUserIsLoggedIn())) {
+      this.$router.push({ path: '/' })
+    }
+    this.$socket.emit('get_committees')
   }
+}
 </script>
 
 <style scoped>
