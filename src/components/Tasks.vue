@@ -24,21 +24,21 @@ author: Gabe Landau <gll1872@rit.edu>
       <span class="icon"><i class="mdi mdi-pause-circle-outline"></i> 1 On Hold</span>
       <span class="icon"><i class="mdi mdi-information-outline"></i> 1 Indefinite</span>
     </div>
-    <TaskThumbnail status="inProgress" title="In progress task for a project." subtitle="In progress since 3/17/2017"/>
-    <TaskThumbnail status="stop" title="Stopped task for a project." subtitle="Stopped on 3/17/2017"/>
-    <TaskThumbnail status="complete" title="Completed task for a project." subtitle="Completed on 3/17/2017"/>
-    <TaskThumbnail status="onHold" title="On hold task for a project." subtitle="On hold since 3/17/2017"/>
-    <TaskThumbnail status="indefinite" title="Indefinite task for a project." subtitle="Indefinite since 3/17/2017"/>
+    <Task status="inProgress" title="In progress task for a project." subtitle="In progress since 3/17/2017"/>
+    <Task status="stop" title="Stopped task for a project." subtitle="Stopped on 3/17/2017"/>
+    <Task status="complete" title="Completed task for a project." subtitle="Completed on 3/17/2017"/>
+    <Task status="onHold" title="On hold task for a project." subtitle="On hold since 3/17/2017"/>
+    <Task status="indefinite" title="Indefinite task for a project." subtitle="Indefinite since 3/17/2017"/>
   </div>
 </template>
 
 <script>
-  import TaskThumbnail from './TaskThumbnail'
+  import Task from './Task'
 
   export default {
     name: 'tasks',
     components: {
-      'TaskThumbnail': TaskThumbnail
+      'Task': Task
     },
     data () {
       return {
