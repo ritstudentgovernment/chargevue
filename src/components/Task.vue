@@ -26,6 +26,34 @@ author: Gabe Landau <gll1872@rit.edu>
             </span>
           </div>
           <p>Hello this is a description of the task on this charge.</p>
+          <p class="updates-header">Updates (2)</p>
+
+          <div class="update">
+            <div class="update-image">
+              <img src="../assets/avatar.png" />
+            </div>
+            <div class="update-body">
+              <div class="update-header">
+                <span class="update-name">Gabe Landau</span>
+                <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
+              </div>
+              <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
+            </div>
+          </div>
+
+          <div class="update">
+            <div class="update-image">
+              <img src="../assets/avatar.png" />
+            </div>
+            <div class="update-body">
+              <div class="update-header">
+                <span class="update-name">Gabe Landau</span>
+                <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
+              </div>
+              <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
+            </div>
+          </div>
+
           <div class="field">
             <div class="control">
               <textarea class="textarea" placeholder="Write a comment or update..."></textarea>
@@ -143,11 +171,59 @@ author: Gabe Landau <gll1872@rit.edu>
     color: #7f7f7f;
   }
 
+  .updates-header {
+    font-weight: 700;
+  }
+
   .link {
     text-decoration: underline;
   }
 
   .control {
     padding-right: 20px;
+  }
+
+  .update {
+    overflow: hidden;
+    padding-left: 10px;
+    padding-bottom: 10px;
+  }
+
+  .update-image {
+    float: left;
+  }
+
+  .update-body {
+    padding-left: 20px;
+    padding-bottom: 10px;
+    overflow:hidden;
+    word-wrap: break-word;
+    float:none
+  }
+
+  .update-body-text {
+    font-size: 11pt;
+  }
+
+  .update-header {
+    line-height: 16pt;
+  }
+
+  .update-name {
+    font-size: 16pt;
+  }
+
+  .update-timestamp {
+    vertical-align: top;
+    font-size: 10pt;
+    text-decoration: underline;
+  }
+
+  .update-image img {
+    height: 65px;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border: 1px solid #404040;
   }
 </style>

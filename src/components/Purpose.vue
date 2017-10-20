@@ -54,7 +54,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
   .description_content {
     font-size: 13pt;
-    padding: 10px;
+    padding: 20px;
   }
 
   .columns {
