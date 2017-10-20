@@ -267,7 +267,7 @@ export default {
   methods: {
     createNewCommittee () {
       this.$socket.emit('create_committee', {
-        token: localStorage.getItem('authToken'),
+        token: this.getToken(),
         title: this.createTitle,
         description: this.createDescription,
         location: this.createLocation,
@@ -281,7 +281,7 @@ export default {
     addMemberToCommittee () {
       console.log(this.addMemberCommittee)
       this.$socket.emit('add_member_committee', {
-        token: localStorage.getItem('authToken'),
+        token: this.getToken(),
         user_id: this.addMemberMember,
         committee_id: this.addMemberCommittee
       })
@@ -318,7 +318,7 @@ export default {
     }
   },
   beforeMount () {
-    if (!(this.checkUserIsLoggedIn())) {
+    if (!(this.isAuthenticated())) {
       this.$router.push({ path: '/' })
     }
     this.$socket.emit('get_committees')

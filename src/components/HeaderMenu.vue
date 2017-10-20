@@ -96,7 +96,7 @@ export default {
     }
   },
   beforeMount () {
-    if (this.checkUserIsLoggedIn()) {
+    if (this.isAuthenticated()) {
       this.authenticated = true
     }
   }

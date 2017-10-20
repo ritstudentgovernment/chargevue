@@ -5,11 +5,8 @@
 </template>
 
 <script>
-import Store from './store/permissions'
-
 export default {
-  name: 'app',
-  store: Store
+  name: 'app'
 }
 </script>
 
