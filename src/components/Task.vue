@@ -15,7 +15,7 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
 
     <div class="task modal" v-bind:class="{ 'is-active': active }">
-      <div class="modal-background"></div>
+      <div class="modal-background" @click="active = false"></div>
       <div class="modal-content">
         <div class="box">
           <div class="modal-header">
@@ -26,6 +26,12 @@ author: Gabe Landau <gll1872@rit.edu>
             </span>
           </div>
           <p>Hello this is a description of the task on this charge.</p>
+          <div class="field">
+            <div class="control">
+              <textarea class="textarea" placeholder="Write a comment or update..."></textarea>
+            </div>
+          </div>
+          <button class="button is-primary">Submit Comment</button>
         </div>
       </div>
       <button class="modal-close is-large" @click="active = false"></button>
@@ -139,5 +145,9 @@ author: Gabe Landau <gll1872@rit.edu>
 
   .link {
     text-decoration: underline;
+  }
+
+  .control {
+    padding-right: 20px;
   }
 </style>
