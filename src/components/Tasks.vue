@@ -14,7 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="tasks_title">Tasks</div>
       </div>
       <div class="column">
-        <div class="tasks_button">New</div>
+        <div class="tasks_button" @click="showAddTaskForm = true">New</div>
       </div>
     </div>
     <div class="taskbar">
@@ -29,6 +29,20 @@ author: Gabe Landau <gll1872@rit.edu>
     <Task status="complete" title="Completed task for a project." subtitle="Completed on 3/17/2017"/>
     <Task status="onHold" title="On hold task for a project." subtitle="On hold since 3/17/2017"/>
     <Task status="indefinite" title="Indefinite task for a project." subtitle="Indefinite since 3/17/2017"/>
+
+
+
+    <div class="add-task modal" v-bind:class="{ 'is-active': showAddTaskForm }">
+      <div class="modal-background" @click="showAddTaskForm = false"></div>
+      <div class="modal-content">
+        <div class="box">
+        </div>
+      </div>
+      <button class="modal-close is-large" @click="showAddTaskForm = false"></button>
+    </div>
+
+
+
   </div>
 </template>
 
@@ -42,6 +56,7 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     data () {
       return {
+        showAddTaskForm: false
       }
     }
   }
@@ -68,6 +83,7 @@ author: Gabe Landau <gll1872@rit.edu>
     font-size: 14pt;
     color: #555;
     padding: 10px;
+    text-decoration: underline;
   }
 
   .columns, .column {
@@ -88,5 +104,9 @@ author: Gabe Landau <gll1872@rit.edu>
 
   .active_task {
     color: #000 !important;
+  }
+
+  .modal-content {
+    width: 60%;
   }
 </style>
