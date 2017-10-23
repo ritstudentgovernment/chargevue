@@ -11,7 +11,7 @@ author: Gabe Landau <gll1872@rit.edu>
   <div>
     <HeaderMenu />
       <div class="columns">
-        <div class="column">
+        <div class="column is-two-thirds">
           <div class="box" id="committee_table">
             <table class="table is-fullwidth is-striped">
               <thead>
@@ -25,7 +25,7 @@ author: Gabe Landau <gll1872@rit.edu>
               <tr v-for="committee in committees">
                 <td>{{ committee.id }}</td>
                 <td>{{ committee.title }}</td>
-                <td><button class="button edit-button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-danger">Deactivate</button></td>
+                <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button class="button is-danger">Deactivate</button></td>
               </tr>
               </tbody>
             </table>
@@ -37,11 +37,6 @@ author: Gabe Landau <gll1872@rit.edu>
               <p class="menu-label">Committee</p>
               <ul class="menu-list">
                 <li><a v-on:click="showCreateCommitteeForm = true">Create Committee</a></li>
-              </ul>
-              <p class="menu-label">Members</p>
-              <ul class="menu-list">
-                <li><a v-on:click="showAddMemberToCommitteeForm = true">Add Member to Committee</a></li>
-                <li><a v-on:click="showRemoveMemberFromCommitteeForm = true">Remove Member from Committee</a></li>
               </ul>
             </aside>
           </div>
@@ -159,21 +154,14 @@ author: Gabe Landau <gll1872@rit.edu>
             <p class="modal-card-title">Add Member to Committee</p>
           </header>
           <section class="modal-card-body">
+            <article class="message" v-if="addMemberResponse.show" v-bind:class="addMemberResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ addMemberResponse.message }}</div>
+            </article>
+
             <div class="field">
               <label class="label">Member</label>
               <div class="control">
                 <input class="input" type="text" placeholder="RIT Username" v-model="addMemberMember">
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Committee</label>
-              <div class="control">
-                <div class="select">
-                  <select v-model="addMemberCommittee">
-                    <option v-for="committee in committees" v-bind:value="committee.id">{{committee.title}}</option>
-                  </select>
-                </div>
               </div>
             </div>
           </section>
@@ -193,22 +181,10 @@ author: Gabe Landau <gll1872@rit.edu>
             <p class="modal-card-title">Remove Member from Committee</p>
           </header>
           <section class="modal-card-body">
-            <div class="field">
-              <label class="label">Committee</label>
-              <div class="control">
-                <div class="select">
-                  <select v-model="removeMemberCommittee" v-on:change="generateCommitteeMembers()">
-                    <option selected disabled></option>
-                    <option v-for="committee in committees" v-bind:value="committee.id">{{committee.title}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
             <div class="field" v-show="showRemoveMemberDropdown">
               <label class="label">Member</label>
               <div class="control">
-                <div class="select">
+                <div class="select" v-bind:class="{ 'is-loading': showRemoveMemberDropdownLoading }">
                   <select v-model="removeMemberMember">
                     <option selected disabled></option>
                     <option v-for="member in members" v-bind:value="member.id">{{member.id}}</option>
@@ -248,6 +224,13 @@ export default {
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
       showRemoveMemberDropdown: false,
+      showRemoveMemberDropdownLoading: true,
+      addMemberResponse: {
+        show: false,
+        message: null,
+        success: null
+      },
+      removeMemberResponse: null,
       createTitle: null,
       createDescription: null,
       createLocation: null,
@@ -278,8 +261,18 @@ export default {
     openEditCommitteeForm (id) {
       this.$socket.emit('get_committee', id)
     },
+    openAddMemberToCommitteeForm (id) {
+      this.showAddMemberToCommitteeForm = true
+      this.addMemberCommittee = id
+    },
+    openRemoveMemberFromCommitteeForm (id) {
+      this.$socket.emit('get_members', id)
+      this.showRemoveMemberFromCommitteeForm = true
+      this.removeMemberCommittee = id
+    },
     addMemberToCommittee () {
       console.log(this.addMemberCommittee)
+      console.log(this.addMemberMember)
       this.$socket.emit('add_member_committee', {
         token: this.getToken(),
         user_id: this.addMemberMember,
@@ -297,7 +290,6 @@ export default {
       this.committees = data
     },
     get_committee: function (data) {
-      console.log(data)
       this.editMeetingTime = data.meeting_time
       this.editTitle = data.title
       this.editDescription = data.description
@@ -309,12 +301,20 @@ export default {
       console.log(data)
     },
     add_member_committee: function (data) {
-      console.log(data)
+      if (data.success) {
+        this.addMemberResponse.show = true
+        this.addMemberResponse.success = true
+        this.addMemberResponse.message = data.success
+      } else if (data.error) {
+        this.addMemberResponse.show = true
+        this.addMemberResponse.success = false
+        this.addMemberResponse.message = data.error
+      }
     },
     get_members: function (data) {
-      console.log(data)
       this.members = data.members
       this.showRemoveMemberDropdown = true
+      this.showRemoveMemberDropdownLoading = false
     }
   },
   beforeMount () {
@@ -327,12 +327,12 @@ export default {
 </script>
 
 <style scoped>
-  .columns {
-    margin: 10px;
+  .action-buttons button {
+    margin-right: 10px;
   }
 
-  .edit-button {
-    margin-right: 10px;
+  .columns {
+    margin: 10px;
   }
 
   table {
