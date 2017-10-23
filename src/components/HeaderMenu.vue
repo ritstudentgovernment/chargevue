@@ -8,7 +8,7 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <div>
+  <div @keyup.enter="submitLogin()">
     <header>
       <div class="left">
         <div class="link" id="site">
