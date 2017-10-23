@@ -36,6 +36,21 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="modal-background" @click="showAddTaskForm = false"></div>
       <div class="modal-content">
         <div class="box">
+          <div class="field">
+            <label class="label">Task Name</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Task Name">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Task Description</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Purpose and description of this task..."></textarea>
+            </div>
+          </div>
+
+          <button class="button is-primary">Create Task</button>
         </div>
       </div>
       <button class="modal-close is-large" @click="showAddTaskForm = false"></button>
@@ -64,6 +79,10 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <style scoped>
   @import "../../node_modules/mdi/css/materialdesignicons.css";
+
+  .control {
+    padding-right: 20px;
+  }
 
   .tasks {
     background-color: #fff;
