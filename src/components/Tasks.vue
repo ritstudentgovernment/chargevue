@@ -14,7 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="tasks_title">Tasks</div>
       </div>
       <div class="column">
-        <div class="tasks_button">New</div>
+        <div class="tasks_button" @click="showAddTaskForm = true">New</div>
       </div>
     </div>
     <div class="taskbar">
@@ -24,24 +24,54 @@ author: Gabe Landau <gll1872@rit.edu>
       <span class="icon"><i class="mdi mdi-pause-circle-outline"></i> 1 On Hold</span>
       <span class="icon"><i class="mdi mdi-information-outline"></i> 1 Indefinite</span>
     </div>
-    <TaskThumbnail status="inProgress" title="In progress task for a project." subtitle="In progress since 3/17/2017"/>
-    <TaskThumbnail status="stop" title="Stopped task for a project." subtitle="Stopped on 3/17/2017"/>
-    <TaskThumbnail status="complete" title="Completed task for a project." subtitle="Completed on 3/17/2017"/>
-    <TaskThumbnail status="onHold" title="On hold task for a project." subtitle="On hold since 3/17/2017"/>
-    <TaskThumbnail status="indefinite" title="Indefinite task for a project." subtitle="Indefinite since 3/17/2017"/>
+    <Task status="inProgress" title="In progress task for a project." subtitle="In progress since 3/17/2017"/>
+    <Task status="stop" title="Stopped task for a project." subtitle="Stopped on 3/17/2017"/>
+    <Task status="complete" title="Completed task for a project." subtitle="Completed on 3/17/2017"/>
+    <Task status="onHold" title="On hold task for a project." subtitle="On hold since 3/17/2017"/>
+    <Task status="indefinite" title="Indefinite task for a project." subtitle="Indefinite since 3/17/2017"/>
+
+
+
+    <div class="add-task modal" v-bind:class="{ 'is-active': showAddTaskForm }">
+      <div class="modal-background" @click="showAddTaskForm = false"></div>
+      <div class="modal-content">
+        <div class="box">
+          <div class="field">
+            <label class="label">Task Name</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Task Name">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Task Description</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Purpose and description of this task..."></textarea>
+            </div>
+          </div>
+
+          <button class="button is-primary">Create Task</button>
+        </div>
+      </div>
+      <button class="modal-close is-large" @click="showAddTaskForm = false"></button>
+    </div>
+
+
+
   </div>
 </template>
 
 <script>
-  import TaskThumbnail from './TaskThumbnail'
+  import Task from './Task'
 
   export default {
     name: 'tasks',
     components: {
-      'TaskThumbnail': TaskThumbnail
+      'Task': Task
     },
     data () {
       return {
+        showAddTaskForm: false
       }
     }
   }
@@ -49,6 +79,10 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <style scoped>
   @import "../../node_modules/mdi/css/materialdesignicons.css";
+
+  .control {
+    padding-right: 20px;
+  }
 
   .tasks {
     background-color: #fff;
@@ -68,6 +102,7 @@ author: Gabe Landau <gll1872@rit.edu>
     font-size: 14pt;
     color: #555;
     padding: 10px;
+    text-decoration: underline;
   }
 
   .columns, .column {
@@ -88,5 +123,9 @@ author: Gabe Landau <gll1872@rit.edu>
 
   .active_task {
     color: #000 !important;
+  }
+
+  .modal-content {
+    width: 60%;
   }
 </style>
