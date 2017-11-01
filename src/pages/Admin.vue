@@ -67,16 +67,44 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
 
             <div class="field">
-              <label class="label">Location</label>
+              <label class="label">Meeting Location</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Location" v-model="createLocation">
+                <input class="input" type="text" placeholder="Meeting Location" v-model="createLocation">
               </div>
             </div>
 
-            <div class="field">
-              <label class="label">Meeting Time</label>
+            <label class="label">Meeting Time</label>
+            <div class="field is-grouped">
               <div class="control">
-                <input class="input" type="text" placeholder="Meeting Time" v-model="createMeetingTime">
+                <div class="select">
+                  <select v-model="createMeetingDay">
+                    <option>Sunday</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control">
+                <div class="select">
+                  <select v-model="createMeetingHour">
+                    <option v-for="x in 12">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="createMeetingMinute">
+                    <option v-for="x in minutes">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="createMeetingAmPm">
+                    <option>AM</option>
+                    <option>PM</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -86,6 +114,8 @@ author: Gabe Landau <gll1872@rit.edu>
                 <input class="input" type="text" placeholder="Committee Head (RIT Username)" v-model="createCommitteeHead">
               </div>
             </div>
+
+
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="createNewCommittee()">Create Committee</button>
@@ -118,16 +148,44 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
 
             <div class="field">
-              <label class="label">Location</label>
+              <label class="label">Meeting Location</label>
               <div class="control">
                 <input class="input" type="text" placeholder="Location" v-model="editLocation">
               </div>
             </div>
 
-            <div class="field">
-              <label class="label">Meeting Time</label>
+            <label class="label">Meeting Time</label>
+            <div class="field is-grouped">
               <div class="control">
-                <input class="input" type="text" placeholder="Meeting Time" v-model="editMeetingTime">
+                <div class="select">
+                  <select v-model="editMeetingDay">
+                    <option>Sunday</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control">
+                <div class="select">
+                  <select v-model="editMeetingHour">
+                    <option v-for="x in 12">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="editMeetingMinute">
+                    <option v-for="x in minutes">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="editMeetingAmPm">
+                    <option>AM</option>
+                    <option>PM</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -234,27 +292,70 @@ export default {
       createTitle: null,
       createDescription: null,
       createLocation: null,
-      createMeetingTime: null,
       createCommitteeHead: null,
+      createMeetingDay: null,
+      createMeetingAmPm: null,
+      createMeetingHour: null,
+      createMeetingMinute: null,
       editTitle: null,
       editDescription: null,
       editLocation: null,
-      editMeetingTime: null,
+      editMeetingDay: null,
+      editMeetingHour: null,
+      editMeetingMinute: null,
+      editMeetingAmPm: null,
       editCommitteeHead: null,
       addMemberMember: null,
       addMemberCommittee: null,
       removeMemberCommittee: null,
-      removeMemberMember: null
+      removeMemberMember: null,
+      minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
     }
   },
   methods: {
     createNewCommittee () {
+      let time = ''
+      if (this.createMeetingAmPm === 'PM') {
+        time = parseInt(this.createMeetingHour) + 12
+        time += '' + this.createMeetingMinute
+      } else {
+        time = '' + this.createMeetingHour + this.createMeetingMinute
+      }
+
+      let day = 0
+      switch (this.createMeetingDay) {
+        case 'Sunday':
+          day = 0
+          break
+        case 'Monday':
+          day = 1
+          break
+        case 'Tuesday':
+          day = 2
+          break
+        case 'Wednesday':
+          day = 3
+          break
+        case 'Thursday':
+          day = 4
+          break
+        case 'Friday':
+          day = 5
+          break
+        case 'Saturday':
+          day = 6
+          break
+        default:
+          day = 0
+      }
+
       this.$socket.emit('create_committee', {
         token: this.getToken(),
         title: this.createTitle,
         description: this.createDescription,
         location: this.createLocation,
-        meeting_time: this.createMeetingTime,
+        meeting_time: time,
+        meeting_day: day,
         head: this.createCommitteeHead
       })
     },
@@ -290,7 +391,47 @@ export default {
       this.committees = data
     },
     get_committee: function (data) {
-      this.editMeetingTime = data.meeting_time
+      console.log(data)
+
+      let day = ''
+      switch (data.meeting_day) {
+        case 0:
+          day = 'Sunday'
+          break
+        case 1:
+          day = 'Monday'
+          break
+        case 2:
+          day = 'Tuesday'
+          break
+        case 3:
+          day = 'Wednesday'
+          break
+        case 4:
+          day = 'Thursday'
+          break
+        case 5:
+          day = 'Friday'
+          break
+        case 6:
+          day = 'Saturday'
+          break
+        default:
+          day = 'Sunday'
+      }
+
+      let hour = parseInt(data.meeting_time.substr(0, 2))
+      if (hour > 12) {
+        hour = hour - 12 + ''
+        this.editMeetingAmPm = 'PM'
+      } else {
+        hour = hour + ''
+        this.editMeetingAmPm = 'AM'
+      }
+
+      this.editMeetingHour = hour
+      this.editMeetingMinute = data.meeting_time.substring(2, 5)
+      this.editMeetingDay = day
       this.editTitle = data.title
       this.editDescription = data.description
       this.editLocation = data.location
