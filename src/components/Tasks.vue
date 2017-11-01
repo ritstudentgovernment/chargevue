@@ -80,6 +80,10 @@ author: Gabe Landau <gll1872@rit.edu>
 <style scoped>
   @import "../../node_modules/mdi/css/materialdesignicons.css";
 
+  html, body {
+    overflow: hidden !important;
+  }
+
   .control {
     padding-right: 20px;
   }

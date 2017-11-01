@@ -11,7 +11,7 @@ author: Gabe Landau <gll1872@rit.edu>
   <div>
     <HeaderMenu />
       <div class="columns">
-        <div class="column">
+        <div class="column is-two-thirds">
           <div class="box" id="committee_table">
             <table class="table is-fullwidth is-striped">
               <thead>
@@ -25,7 +25,7 @@ author: Gabe Landau <gll1872@rit.edu>
               <tr v-for="committee in committees">
                 <td>{{ committee.id }}</td>
                 <td>{{ committee.title }}</td>
-                <td><button class="button edit-button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-danger">Deactivate</button></td>
+                <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button class="button is-danger">Deactivate</button></td>
               </tr>
               </tbody>
             </table>
@@ -37,11 +37,6 @@ author: Gabe Landau <gll1872@rit.edu>
               <p class="menu-label">Committee</p>
               <ul class="menu-list">
                 <li><a v-on:click="showCreateCommitteeForm = true">Create Committee</a></li>
-              </ul>
-              <p class="menu-label">Members</p>
-              <ul class="menu-list">
-                <li><a v-on:click="showAddMemberToCommitteeForm = true">Add Member to Committee</a></li>
-                <li><a v-on:click="showRemoveMemberFromCommitteeForm = true">Remove Member from Committee</a></li>
               </ul>
             </aside>
           </div>
@@ -72,16 +67,44 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
 
             <div class="field">
-              <label class="label">Location</label>
+              <label class="label">Meeting Location</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Location" v-model="createLocation">
+                <input class="input" type="text" placeholder="Meeting Location" v-model="createLocation">
               </div>
             </div>
 
-            <div class="field">
-              <label class="label">Meeting Time</label>
+            <label class="label">Meeting Time</label>
+            <div class="field is-grouped">
               <div class="control">
-                <input class="input" type="text" placeholder="Meeting Time" v-model="createMeetingTime">
+                <div class="select">
+                  <select v-model="createMeetingDay">
+                    <option>Sunday</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control">
+                <div class="select">
+                  <select v-model="createMeetingHour">
+                    <option v-for="x in 12">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="createMeetingMinute">
+                    <option v-for="x in minutes">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="createMeetingAmPm">
+                    <option>AM</option>
+                    <option>PM</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -91,6 +114,8 @@ author: Gabe Landau <gll1872@rit.edu>
                 <input class="input" type="text" placeholder="Committee Head (RIT Username)" v-model="createCommitteeHead">
               </div>
             </div>
+
+
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="createNewCommittee()">Create Committee</button>
@@ -123,16 +148,44 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
 
             <div class="field">
-              <label class="label">Location</label>
+              <label class="label">Meeting Location</label>
               <div class="control">
                 <input class="input" type="text" placeholder="Location" v-model="editLocation">
               </div>
             </div>
 
-            <div class="field">
-              <label class="label">Meeting Time</label>
+            <label class="label">Meeting Time</label>
+            <div class="field is-grouped">
               <div class="control">
-                <input class="input" type="text" placeholder="Meeting Time" v-model="editMeetingTime">
+                <div class="select">
+                  <select v-model="editMeetingDay">
+                    <option>Sunday</option>
+                    <option>Monday</option>
+                    <option>Tuesday</option>
+                    <option>Wednesday</option>
+                    <option>Thursday</option>
+                    <option>Friday</option>
+                    <option>Saturday</option>
+                  </select>
+                </div>
+              </div>
+              <div class="control">
+                <div class="select">
+                  <select v-model="editMeetingHour">
+                    <option v-for="x in 12">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="editMeetingMinute">
+                    <option v-for="x in minutes">{{x}}</option>
+                  </select>
+                </div>
+                <div class="select">
+                  <select v-model="editMeetingAmPm">
+                    <option>AM</option>
+                    <option>PM</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -159,21 +212,14 @@ author: Gabe Landau <gll1872@rit.edu>
             <p class="modal-card-title">Add Member to Committee</p>
           </header>
           <section class="modal-card-body">
+            <article class="message" v-if="addMemberResponse.show" v-bind:class="addMemberResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ addMemberResponse.message }}</div>
+            </article>
+
             <div class="field">
               <label class="label">Member</label>
               <div class="control">
                 <input class="input" type="text" placeholder="RIT Username" v-model="addMemberMember">
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Committee</label>
-              <div class="control">
-                <div class="select">
-                  <select v-model="addMemberCommittee">
-                    <option v-for="committee in committees" v-bind:value="committee.id">{{committee.title}}</option>
-                  </select>
-                </div>
               </div>
             </div>
           </section>
@@ -193,22 +239,10 @@ author: Gabe Landau <gll1872@rit.edu>
             <p class="modal-card-title">Remove Member from Committee</p>
           </header>
           <section class="modal-card-body">
-            <div class="field">
-              <label class="label">Committee</label>
-              <div class="control">
-                <div class="select">
-                  <select v-model="removeMemberCommittee" v-on:change="generateCommitteeMembers()">
-                    <option selected disabled></option>
-                    <option v-for="committee in committees" v-bind:value="committee.id">{{committee.title}}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
             <div class="field" v-show="showRemoveMemberDropdown">
               <label class="label">Member</label>
               <div class="control">
-                <div class="select">
+                <div class="select" v-bind:class="{ 'is-loading': showRemoveMemberDropdownLoading }">
                   <select v-model="removeMemberMember">
                     <option selected disabled></option>
                     <option v-for="member in members" v-bind:value="member.id">{{member.id}}</option>
@@ -248,38 +282,98 @@ export default {
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
       showRemoveMemberDropdown: false,
+      showRemoveMemberDropdownLoading: true,
+      addMemberResponse: {
+        show: false,
+        message: null,
+        success: null
+      },
+      removeMemberResponse: null,
       createTitle: null,
       createDescription: null,
       createLocation: null,
-      createMeetingTime: null,
       createCommitteeHead: null,
+      createMeetingDay: null,
+      createMeetingAmPm: null,
+      createMeetingHour: null,
+      createMeetingMinute: null,
       editTitle: null,
       editDescription: null,
       editLocation: null,
-      editMeetingTime: null,
+      editMeetingDay: null,
+      editMeetingHour: null,
+      editMeetingMinute: null,
+      editMeetingAmPm: null,
       editCommitteeHead: null,
       addMemberMember: null,
       addMemberCommittee: null,
       removeMemberCommittee: null,
-      removeMemberMember: null
+      removeMemberMember: null,
+      minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
     }
   },
   methods: {
     createNewCommittee () {
+      let time = ''
+      if (this.createMeetingAmPm === 'PM') {
+        time = parseInt(this.createMeetingHour) + 12
+        time += '' + this.createMeetingMinute
+      } else {
+        time = '' + this.createMeetingHour + this.createMeetingMinute
+      }
+
+      let day = 0
+      switch (this.createMeetingDay) {
+        case 'Sunday':
+          day = 0
+          break
+        case 'Monday':
+          day = 1
+          break
+        case 'Tuesday':
+          day = 2
+          break
+        case 'Wednesday':
+          day = 3
+          break
+        case 'Thursday':
+          day = 4
+          break
+        case 'Friday':
+          day = 5
+          break
+        case 'Saturday':
+          day = 6
+          break
+        default:
+          day = 0
+      }
+
       this.$socket.emit('create_committee', {
         token: this.getToken(),
         title: this.createTitle,
         description: this.createDescription,
         location: this.createLocation,
-        meeting_time: this.createMeetingTime,
+        meeting_time: time,
+        meeting_day: day,
         head: this.createCommitteeHead
       })
     },
     openEditCommitteeForm (id) {
       this.$socket.emit('get_committee', id)
     },
+    openAddMemberToCommitteeForm (id) {
+      this.showAddMemberToCommitteeForm = true
+      this.addMemberCommittee = id
+    },
+    openRemoveMemberFromCommitteeForm (id) {
+      this.$socket.emit('get_members', id)
+      this.showRemoveMemberFromCommitteeForm = true
+      this.removeMemberCommittee = id
+    },
     addMemberToCommittee () {
       console.log(this.addMemberCommittee)
+      console.log(this.addMemberMember)
       this.$socket.emit('add_member_committee', {
         token: this.getToken(),
         user_id: this.addMemberMember,
@@ -298,7 +392,46 @@ export default {
     },
     get_committee: function (data) {
       console.log(data)
-      this.editMeetingTime = data.meeting_time
+
+      let day = ''
+      switch (data.meeting_day) {
+        case 0:
+          day = 'Sunday'
+          break
+        case 1:
+          day = 'Monday'
+          break
+        case 2:
+          day = 'Tuesday'
+          break
+        case 3:
+          day = 'Wednesday'
+          break
+        case 4:
+          day = 'Thursday'
+          break
+        case 5:
+          day = 'Friday'
+          break
+        case 6:
+          day = 'Saturday'
+          break
+        default:
+          day = 'Sunday'
+      }
+
+      let hour = parseInt(data.meeting_time.substr(0, 2))
+      if (hour > 12) {
+        hour = hour - 12 + ''
+        this.editMeetingAmPm = 'PM'
+      } else {
+        hour = hour + ''
+        this.editMeetingAmPm = 'AM'
+      }
+
+      this.editMeetingHour = hour
+      this.editMeetingMinute = data.meeting_time.substring(2, 5)
+      this.editMeetingDay = day
       this.editTitle = data.title
       this.editDescription = data.description
       this.editLocation = data.location
@@ -309,12 +442,20 @@ export default {
       console.log(data)
     },
     add_member_committee: function (data) {
-      console.log(data)
+      if (data.success) {
+        this.addMemberResponse.show = true
+        this.addMemberResponse.success = true
+        this.addMemberResponse.message = data.success
+      } else if (data.error) {
+        this.addMemberResponse.show = true
+        this.addMemberResponse.success = false
+        this.addMemberResponse.message = data.error
+      }
     },
     get_members: function (data) {
-      console.log(data)
       this.members = data.members
       this.showRemoveMemberDropdown = true
+      this.showRemoveMemberDropdownLoading = false
     }
   },
   beforeMount () {
@@ -327,12 +468,12 @@ export default {
 </script>
 
 <style scoped>
-  .columns {
-    margin: 10px;
+  .action-buttons button {
+    margin-right: 10px;
   }
 
-  .edit-button {
-    margin-right: 10px;
+  .columns {
+    margin: 10px;
   }
 
   table {

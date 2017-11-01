@@ -8,7 +8,7 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <div>
+  <div @keyup.enter="submitLogin()">
     <header>
       <div class="left">
         <div class="link" id="site">
@@ -50,7 +50,7 @@ author: Gabe Landau <gll1872@rit.edu>
           </div>
         </section>
         <div class="modal-card-foot">
-          <button class="button is-success" @click="submitLogin()" v-bind:class="{ 'is-loading': showLoginLoading }">Login</button>
+          <button class="button is-primary" @click="submitLogin()" v-bind:class="{ 'is-loading': showLoginLoading }">Login</button>
           <button class="button" @click="showLoginForm = false">Cancel</button>
         </div>
       </div>
