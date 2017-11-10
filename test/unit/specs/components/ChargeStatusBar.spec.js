@@ -5,7 +5,7 @@ describe('ChargeStatusBar.vue', () => {
   it('should render correct contents', () => {
     const Constructor = Vue.extend(ChargeStatusBar)
     const vm = new Constructor().$mount()
-    expect(vm.$el.querySelector('.charge_status_bar').tagName)
+    expect(vm.$el.querySelector('.bar').tagName)
       .to.equal('DIV')
   })
 })
