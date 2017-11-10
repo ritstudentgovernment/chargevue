@@ -442,11 +442,6 @@ export default {
         user_id: this.removeMemberMember,
         committee_id: this.removeMemberCommittee
       })
-    },
-    generateCommitteeMembers () {
-      if (this.removeMemberCommittee) {
-        this.$socket.emit('get_members', this.removeMemberCommittee)
-      }
     }
   },
   sockets: {

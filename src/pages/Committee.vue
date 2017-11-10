@@ -38,7 +38,6 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-import CommitteeInfo from '../mixins/committeeinfo'
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import CommitteeOverview from '../components/CommitteeOverview'
@@ -47,7 +46,6 @@ import ProjectThumbnailSmall from '../components/ProjectThumbnailSmall'
 
 export default {
   name: 'dashboard',
-  mixins: [CommitteeInfo],
   components: {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
