@@ -11,7 +11,7 @@ author: Gabe Landau <gll1872@rit.edu>
   <div class="dashboard">
     <HeaderMenu />
     <CommitteesMenu />
-    <div class="pagename">
+    <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.description }}</h1>
     </div>
     <CommitteeOverview inProgressCount="1" incompleteCount="3" completedCount="10" indefiniteCount="3" stoppedCount="2" />
@@ -57,12 +57,28 @@ export default {
   },
   data () {
     return {
-      committee: {'description': 'committee'}
+      committee: {'description': 'committee'},
+      backgroundImage: null
     }
   },
   sockets: {
     get_committee: function (data) {
+      console.log(data)
       this.committee = data
+
+      let image = data.committee_img
+      if (image) {
+        if (image.charAt(0) === '/') {
+          image = 'data:image/jpeg;base64,' + image
+        } else if (image.charAt(0) === 'R') {
+          image = 'data:image/gif;base64,' + image
+        } else if (image.charAt(0) === 'i') {
+          image = 'data:image/png;base64,' + image
+        }
+        this.backgroundImage = image
+      } else {
+        this.backgroundImage = null
+      }
     }
   },
   beforeMount () {
@@ -91,7 +107,11 @@ h1, h2 {
 }
 
 .pagename {
-    background: #000;
+  background: #000;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .pagename h1 {
