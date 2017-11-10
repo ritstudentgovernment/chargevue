@@ -38,7 +38,7 @@ author: Gabe Landau <gll1872@rit.edu>
     background-color: #fff;
     border: 1px solid #ddd;
     width: 70%;
-    margin: 50px auto 0 auto;
+    margin: 25px auto 10px auto;
   }
 
   .description_title {
