@@ -292,10 +292,11 @@ author: Gabe Landau <gll1872@rit.edu>
 import HeaderMenu from '@/components/HeaderMenu.vue'
 import Auth from '../mixins/auth'
 import Base64 from '../mixins/base64'
+import Time from '../mixins/time'
 
 export default {
   name: 'admin',
-  mixins: [Auth, Base64],
+  mixins: [Auth, Base64, Time],
   components: {
     HeaderMenu: HeaderMenu
   },
@@ -369,40 +370,9 @@ export default {
       })
     },
     createNewCommittee () {
-      let time = ''
-      if (this.createMeetingAmPm === 'PM') {
-        time = parseInt(this.createMeetingHour) + 12
-        time += '' + this.createMeetingMinute
-      } else {
-        time = '' + this.createMeetingHour + this.createMeetingMinute
-      }
-
-      let day = 0
-      switch (this.createMeetingDay) {
-        case 'Sunday':
-          day = 0
-          break
-        case 'Monday':
-          day = 1
-          break
-        case 'Tuesday':
-          day = 2
-          break
-        case 'Wednesday':
-          day = 3
-          break
-        case 'Thursday':
-          day = 4
-          break
-        case 'Friday':
-          day = 5
-          break
-        case 'Saturday':
-          day = 6
-          break
-        default:
-          day = 0
-      }
+      let timeDateObj = this.convertFrontendToBackend(this.createMeetingAmPm, this.createMeetingHour, this.createMeetingMinute, this.createMeetingDay)
+      let time = timeDateObj.time
+      let day = timeDateObj.day
 
       if (this.createImage) {
         this.$socket.emit('create_committee', {
@@ -429,40 +399,9 @@ export default {
     },
     editCommittee () {
       this.editCommitteeResponse.show = false
-      let time = ''
-      if (this.editMeetingAmPm === 'PM') {
-        time = parseInt(this.editMeetingHour) + 12
-        time += '' + this.editMeetingMinute
-      } else {
-        time = '0' + this.editMeetingHour + this.editMeetingMinute
-      }
-
-      let day = 0
-      switch (this.editMeetingDay) {
-        case 'Sunday':
-          day = 0
-          break
-        case 'Monday':
-          day = 1
-          break
-        case 'Tuesday':
-          day = 2
-          break
-        case 'Wednesday':
-          day = 3
-          break
-        case 'Thursday':
-          day = 4
-          break
-        case 'Friday':
-          day = 5
-          break
-        case 'Saturday':
-          day = 6
-          break
-        default:
-          day = 0
-      }
+      let timeDateObj = this.convertFrontendToBackend(this.editMeetingAmPm, this.editMeetingHour, this.editMeetingMinute, this.editMeetingDay)
+      let time = timeDateObj.time
+      let day = timeDateObj.day
 
       this.$socket.emit('edit_committee', {
         token: this.getToken(),
@@ -517,45 +456,12 @@ export default {
     get_committee: function (data) {
       console.log(data)
 
-      let day = ''
-      switch (data.meeting_day) {
-        case 0:
-          day = 'Sunday'
-          break
-        case 1:
-          day = 'Monday'
-          break
-        case 2:
-          day = 'Tuesday'
-          break
-        case 3:
-          day = 'Wednesday'
-          break
-        case 4:
-          day = 'Thursday'
-          break
-        case 5:
-          day = 'Friday'
-          break
-        case 6:
-          day = 'Saturday'
-          break
-        default:
-          day = 'Sunday'
-      }
+      let dateTimeObj = this.convertBackendToFrontend(data.meeting_day, data.meeting_time)
 
-      let hour = parseInt(data.meeting_time.substr(0, 2))
-      if (hour > 12) {
-        hour = hour - 12 + ''
-        this.editMeetingAmPm = 'PM'
-      } else {
-        hour = hour + ''
-        this.editMeetingAmPm = 'AM'
-      }
-
-      this.editMeetingHour = hour
-      this.editMeetingMinute = data.meeting_time.substring(2, 5)
-      this.editMeetingDay = day
+      this.editMeetingHour = dateTimeObj.hour
+      this.editMeetingMinute = dateTimeObj.minute
+      this.editMeetingDay = dateTimeObj.day
+      this.editMeetingAmPm = dateTimeObj.ampm
       this.editTitle = data.title
       this.editDescription = data.description
       this.editLocation = data.location
