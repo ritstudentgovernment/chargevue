@@ -11,8 +11,9 @@ author: Gabe Landau <gll1872@rit.edu>
   <div>
     <HeaderMenu />
       <div class="columns">
-        <div class="column is-two-thirds">
+        <div class="column">
           <div class="box" id="committee_table">
+            <h3 class="title is-3">Manage Committees</h3>
             <table class="table is-fullwidth is-striped">
               <thead>
               <tr>
@@ -31,14 +32,18 @@ author: Gabe Landau <gll1872@rit.edu>
             </table>
           </div>
         </div>
+      </div>
+      <div class="columns">
         <div class="column">
           <div class="box" id="admin_forms">
-            <aside class="menu">
-              <p class="menu-label">Committee</p>
-              <ul class="menu-list">
-                <li><a v-on:click="showCreateCommitteeForm = true">Create Committee</a></li>
-              </ul>
-            </aside>
+            <h3 class="title is-3">Actions</h3>
+            <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
+          </div>
+        </div>
+        <div class="column is-two-thirds">
+          <div class="box">
+            <h3 class="title is-3">Committees</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam viverra nibh eu faucibus feugiat. Proin gravida nibh neque, aliquam gravida erat rutrum vel. Integer urna elit, tincidunt et ornare quis, bibendum nec massa. Proin nunc metus, ultrices eu purus quis, ornare commodo dolor. Vivamus et risus eu ipsum suscipit vestibulum. Etiam rhoncus nisl sit amet porttitor dignissim. Phasellus convallis erat at felis hendrerit, in vehicula est dapibus. Sed vulputate finibus libero et tristique. Nullam dignissim eu ipsum vel faucibus.</p>
           </div>
         </div>
       </div>
@@ -51,7 +56,11 @@ author: Gabe Landau <gll1872@rit.edu>
           <header class="modal-card-head">
             <p class="modal-card-title">Create Committee</p>
           </header>
-          <section class="modal-card-body">
+          <section class="modal-card-body" @keyup.enter="createNewCommittee()">
+            <article class="message" v-if="createCommitteeResponse.show" v-bind:class="createCommitteeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ createCommitteeResponse.message }}</div>
+            </article>
+
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
@@ -115,10 +124,18 @@ author: Gabe Landau <gll1872@rit.edu>
               </div>
             </div>
 
+            <label class="label">Committee Image</label>
+            <div class="file has-name">
+              <label class="file-label">
+                <input class="file-input" type="file" @change="fileSelected($event.target.files)">
+                <span class="file-cta"><span class="file-label">Choose a file...</span></span>
+                <span class="file-name">{{createImageName}}</span>
+              </label>
+            </div>
 
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="createNewCommittee()">Create Committee</button>
+            <button class="button is-primary" v-on:click="createNewCommittee()" v-bind:class="{ 'is-loading' : createDisabled }">Create Committee</button>
             <button class="button" v-on:click="showCreateCommitteeForm = false">Cancel</button>
           </footer>
         </div>
@@ -132,7 +149,11 @@ author: Gabe Landau <gll1872@rit.edu>
           <header class="modal-card-head">
             <p class="modal-card-title">Edit Committee</p>
           </header>
-          <section class="modal-card-body">
+          <section class="modal-card-body" @keyup.enter="editCommittee()">
+            <article class="message" v-if="editCommitteeResponse.show" v-bind:class="editCommitteeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ editCommitteeResponse.message }}</div>
+            </article>
+
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
@@ -197,7 +218,7 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary">Edit Committee</button>
+            <button class="button is-primary" v-on:click="editCommittee()">Edit Committee</button>
             <button class="button" v-on:click="showEditCommitteeForm = false">Cancel</button>
           </footer>
         </div>
@@ -211,7 +232,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <header class="modal-card-head">
             <p class="modal-card-title">Add Member to Committee</p>
           </header>
-          <section class="modal-card-body">
+          <section class="modal-card-body" @keyup.enter="addMemberToCommittee()">
             <article class="message" v-if="addMemberResponse.show" v-bind:class="addMemberResponse.success ? 'is-success' : 'is-danger'">
               <div class="message-body">{{ addMemberResponse.message }}</div>
             </article>
@@ -238,7 +259,11 @@ author: Gabe Landau <gll1872@rit.edu>
           <header class="modal-card-head">
             <p class="modal-card-title">Remove Member from Committee</p>
           </header>
-          <section class="modal-card-body">
+          <section class="modal-card-body" @keyup.enter="removeMemberFromCommittee()">
+            <article class="message" v-if="removeMemberResponse.show" v-bind:class="removeMemberResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ removeMemberResponse.message }}</div>
+            </article>
+
             <div class="field" v-show="showRemoveMemberDropdown">
               <label class="label">Member</label>
               <div class="control">
@@ -252,7 +277,7 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary">Remove Member</button>
+            <button class="button is-primary" v-on:click="removeMemberFromCommittee()">Remove Member</button>
             <button class="button" v-on:click="showRemoveMemberFromCommitteeForm = false">Cancel</button>
           </footer>
         </div>
@@ -266,10 +291,11 @@ author: Gabe Landau <gll1872@rit.edu>
 <script>
 import HeaderMenu from '@/components/HeaderMenu.vue'
 import Auth from '../mixins/auth'
+import Base64 from '../mixins/base64'
 
 export default {
   name: 'admin',
-  mixins: [Auth],
+  mixins: [Auth, Base64],
   components: {
     HeaderMenu: HeaderMenu
   },
@@ -283,12 +309,26 @@ export default {
       showRemoveMemberFromCommitteeForm: false,
       showRemoveMemberDropdown: false,
       showRemoveMemberDropdownLoading: true,
+      createCommitteeResponse: {
+        show: false,
+        message: null,
+        success: null
+      },
       addMemberResponse: {
         show: false,
         message: null,
         success: null
       },
-      removeMemberResponse: null,
+      removeMemberResponse: {
+        show: false,
+        message: null,
+        success: null
+      },
+      editCommitteeResponse: {
+        show: false,
+        message: null,
+        success: null
+      },
       createTitle: null,
       createDescription: null,
       createLocation: null,
@@ -297,6 +337,9 @@ export default {
       createMeetingAmPm: null,
       createMeetingHour: null,
       createMeetingMinute: null,
+      createImage: null,
+      createImageName: '(no file selected)',
+      createDisabled: null,
       editTitle: null,
       editDescription: null,
       editLocation: null,
@@ -313,6 +356,18 @@ export default {
     }
   },
   methods: {
+    fileSelected (file) {
+      this.createDisabled = true
+
+      this.createImageName = file[file.length - 1].name
+      this.convert(file).then((image) => {
+        this.createImage = image
+        this.createDisabled = false
+      }).catch((error) => {
+        this.createDisabled = false
+        console.log(error)
+      })
+    },
     createNewCommittee () {
       let time = ''
       if (this.createMeetingAmPm === 'PM') {
@@ -349,14 +404,74 @@ export default {
           day = 0
       }
 
-      this.$socket.emit('create_committee', {
+      if (this.createImage) {
+        this.$socket.emit('create_committee', {
+          token: this.getToken(),
+          title: this.createTitle,
+          description: this.createDescription,
+          location: this.createLocation,
+          meeting_time: time,
+          meeting_day: day,
+          head: this.createCommitteeHead,
+          committee_img: this.createImage
+        })
+      } else {
+        this.$socket.emit('create_committee', {
+          token: this.getToken(),
+          title: this.createTitle,
+          description: this.createDescription,
+          location: this.createLocation,
+          meeting_time: time,
+          meeting_day: day,
+          head: this.createCommitteeHead
+        })
+      }
+    },
+    editCommittee () {
+      this.editCommitteeResponse.show = false
+      let time = ''
+      if (this.editMeetingAmPm === 'PM') {
+        time = parseInt(this.editMeetingHour) + 12
+        time += '' + this.editMeetingMinute
+      } else {
+        time = '0' + this.editMeetingHour + this.editMeetingMinute
+      }
+
+      let day = 0
+      switch (this.editMeetingDay) {
+        case 'Sunday':
+          day = 0
+          break
+        case 'Monday':
+          day = 1
+          break
+        case 'Tuesday':
+          day = 2
+          break
+        case 'Wednesday':
+          day = 3
+          break
+        case 'Thursday':
+          day = 4
+          break
+        case 'Friday':
+          day = 5
+          break
+        case 'Saturday':
+          day = 6
+          break
+        default:
+          day = 0
+      }
+
+      this.$socket.emit('edit_committee', {
         token: this.getToken(),
-        title: this.createTitle,
-        description: this.createDescription,
-        location: this.createLocation,
+        id: this.editTitle.toLowerCase(),
+        description: this.editDescription,
+        location: this.editLocation,
         meeting_time: time,
         meeting_day: day,
-        head: this.createCommitteeHead
+        head: this.editCommitteeHead
       })
     },
     openEditCommitteeForm (id) {
@@ -378,6 +493,15 @@ export default {
         token: this.getToken(),
         user_id: this.addMemberMember,
         committee_id: this.addMemberCommittee
+      })
+    },
+    removeMemberFromCommittee () {
+      console.log(this.removeMemberCommittee)
+      console.log(this.removeMemberMember)
+      this.$socket.emit('remove_member_committee', {
+        token: this.getToken(),
+        user_id: this.removeMemberMember,
+        committee_id: this.removeMemberCommittee
       })
     },
     generateCommitteeMembers () {
@@ -440,6 +564,27 @@ export default {
     },
     create_committee: function (data) {
       console.log(data)
+      if (data.success) {
+        this.createCommitteeResponse.show = true
+        this.createCommitteeResponse.success = true
+        this.createCommitteeResponse.message = data.success
+      } else if (data.error) {
+        this.createCommitteeResponse.show = true
+        this.createCommitteeResponse.success = false
+        this.createCommitteeResponse.message = data.error
+      }
+    },
+    edit_committee: function (data) {
+      console.log(data)
+      if (data.success) {
+        this.editCommitteeResponse.show = true
+        this.editCommitteeResponse.success = true
+        this.editCommitteeResponse.message = data.success
+      } else if (data.error) {
+        this.editCommitteeResponse.show = true
+        this.editCommitteeResponse.success = false
+        this.editCommitteeResponse.message = data.error
+      }
     },
     add_member_committee: function (data) {
       if (data.success) {
@@ -450,6 +595,18 @@ export default {
         this.addMemberResponse.show = true
         this.addMemberResponse.success = false
         this.addMemberResponse.message = data.error
+      }
+    },
+    remove_member_committee: function (data) {
+      console.log(data)
+      if (data.success) {
+        this.removeMemberResponse.show = true
+        this.removeMemberResponse.success = true
+        this.removeMemberResponse.message = data.success
+      } else if (data.error) {
+        this.removeMemberResponse.show = true
+        this.removeMemberResponse.success = false
+        this.removeMemberResponse.message = data.error
       }
     },
     get_members: function (data) {
@@ -491,5 +648,9 @@ export default {
 
   ul li {
     list-style-type: none;
+  }
+
+  .file-name {
+    display: inherit;
   }
 </style>
