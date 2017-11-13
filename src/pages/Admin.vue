@@ -127,7 +127,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <label class="label">Committee Image</label>
             <div class="file has-name">
               <label class="file-label">
-                <input class="file-input" type="file" @change="fileSelected($event.target.files)">
+                <input class="file-input" type="file" @change="createFileSelected($event.target.files)">
                 <span class="file-cta"><span class="file-label">Choose a file...</span></span>
                 <span class="file-name">{{createImageName}}</span>
               </label>
@@ -216,9 +216,18 @@ author: Gabe Landau <gll1872@rit.edu>
                 <input class="input" type="text" placeholder="Committee Head" v-model="editCommitteeHead">
               </div>
             </div>
+
+            <label class="label">Committee Image</label>
+            <div class="file has-name">
+              <label class="file-label">
+                <input class="file-input" type="file" @change="editFileSelected($event.target.files)">
+                <span class="file-cta"><span class="file-label">Choose a file...</span></span>
+                <span class="file-name">{{editImageName}}</span>
+              </label>
+            </div>
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="editCommittee()">Edit Committee</button>
+            <button class="button is-primary" v-on:click="editCommittee()" v-bind:class="{ 'is-loading' : editDisabled }">Edit Committee</button>
             <button class="button" v-on:click="showEditCommitteeForm = false">Cancel</button>
           </footer>
         </div>
@@ -341,6 +350,7 @@ export default {
       createImage: null,
       createImageName: '(no file selected)',
       createDisabled: null,
+      editDisabled: null,
       editTitle: null,
       editDescription: null,
       editLocation: null,
@@ -349,6 +359,8 @@ export default {
       editMeetingMinute: null,
       editMeetingAmPm: null,
       editCommitteeHead: null,
+      editImage: null,
+      editImageName: '(no file selected)',
       addMemberMember: null,
       addMemberCommittee: null,
       removeMemberCommittee: null,
@@ -357,7 +369,7 @@ export default {
     }
   },
   methods: {
-    fileSelected (file) {
+    createFileSelected (file) {
       this.createDisabled = true
 
       this.createImageName = file[file.length - 1].name
@@ -366,6 +378,18 @@ export default {
         this.createDisabled = false
       }).catch((error) => {
         this.createDisabled = false
+        console.log(error)
+      })
+    },
+    editFileSelected (file) {
+      this.editDisabled = true
+
+      this.editImageName = file[file.length - 1].name
+      this.convert(file).then((image) => {
+        this.editImage = image
+        this.editDisabled = false
+      }).catch((error) => {
+        this.editDisabled = false
         console.log(error)
       })
     },
@@ -403,15 +427,28 @@ export default {
       let time = timeDateObj.time
       let day = timeDateObj.day
 
-      this.$socket.emit('edit_committee', {
-        token: this.getToken(),
-        id: this.editTitle.toLowerCase(),
-        description: this.editDescription,
-        location: this.editLocation,
-        meeting_time: time,
-        meeting_day: day,
-        head: this.editCommitteeHead
-      })
+      if (this.editImage) {
+        this.$socket.emit('edit_committee', {
+          token: this.getToken(),
+          id: this.editTitle.toLowerCase(),
+          description: this.editDescription,
+          location: this.editLocation,
+          meeting_time: time,
+          meeting_day: day,
+          head: this.editCommitteeHead,
+          committee_img: this.editImage
+        })
+      } else {
+        this.$socket.emit('edit_committee', {
+          token: this.getToken(),
+          id: this.editTitle.toLowerCase(),
+          description: this.editDescription,
+          location: this.editLocation,
+          meeting_time: time,
+          meeting_day: day,
+          head: this.editCommitteeHead
+        })
+      }
     },
     openEditCommitteeForm (id) {
       this.$socket.emit('get_committee', id)

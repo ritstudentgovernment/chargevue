@@ -9,6 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div class="dashboard">
+    <LoadingIndicator v-if="false"/>
     <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
@@ -43,6 +44,7 @@ import CommitteesMenu from '../components/CommitteesMenu'
 import CommitteeOverview from '../components/CommitteeOverview'
 import ProjectThumbnail from '../components/ProjectThumbnail'
 import ProjectThumbnailSmall from '../components/ProjectThumbnailSmall'
+import LoadingIndicator from '../components/LoadingIndicator'
 
 export default {
   name: 'dashboard',
@@ -51,17 +53,18 @@ export default {
     'CommitteesMenu': CommitteesMenu,
     'CommitteeOverview': CommitteeOverview,
     'ProjectThumbnail': ProjectThumbnail,
-    'ProjectThumbnailSmall': ProjectThumbnailSmall
+    'ProjectThumbnailSmall': ProjectThumbnailSmall,
+    'LoadingIndicator': LoadingIndicator
   },
   data () {
     return {
       committee: {'description': 'committee'},
-      backgroundImage: null
+      backgroundImage: null,
+      showLoadingIndicator: true
     }
   },
   sockets: {
     get_committee: function (data) {
-      console.log(data)
       this.committee = data
 
       let image = data.committee_img
@@ -77,6 +80,8 @@ export default {
       } else {
         this.backgroundImage = null
       }
+
+      this.showLoadingIndicator = false
     }
   },
   beforeMount () {
