@@ -8,4 +8,10 @@ describe('CommitteesMenu.vue', () => {
     expect(vm.$el.querySelector('.menu').tagName)
       .to.equal('UL')
   })
+
+  describe('Sockets', () => {
+    it('Should have correct data', () => {
+      expect(typeof CommitteesMenu.sockets.get_committees).to.equal('function')
+    })
+  })
 })
