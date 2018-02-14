@@ -18,19 +18,14 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div class="taskbar">
-      <span class="icon active_task"><i class="mdi mdi-play-circle-outline"></i> 1 In Progress</span>
-      <span class="icon"><i class="mdi mdi-minus-circle-outline"></i> 1 Stopped</span>
-      <span class="icon"><i class="mdi mdi-checkbox-marked-circle-outline"></i> 1 Completed</span>
-      <span class="icon"><i class="mdi mdi-pause-circle-outline"></i> 1 On Hold</span>
-      <span class="icon"><i class="mdi mdi-information-outline"></i> 1 Indefinite</span>
+      <span class="icon" v-bind:class="{ active_task:mockTasks[0].active }" @click="setActive(mockTasks[0].status)"><i class="mdi mdi-play-circle-outline"></i> 1 In Progress</span>
+      <span class="icon" v-bind:class="{ active_task:mockTasks[1].active }" @click="setActive(mockTasks[1].status)"><i class="mdi mdi-minus-circle-outline"></i> 1 Stopped</span>
+      <span class="icon" v-bind:class="{ active_task:mockTasks[2].active }" @click="setActive(mockTasks[2].status)"><i class="mdi mdi-checkbox-marked-circle-outline"></i> 1 Completed</span>
+      <span class="icon" v-bind:class="{ active_task:mockTasks[3].active }" @click="setActive(mockTasks[3].status)"><i class="mdi mdi-pause-circle-outline"></i> 1 On Hold</span>
+      <span class="icon" v-bind:class="{ active_task:mockTasks[4].active }" @click="setActive(mockTasks[4].status)"><i class="mdi mdi-information-outline"></i> 1 Indefinite</span>
     </div>
-    <Task status="inProgress" title="In progress task for a project." subtitle="In progress since 3/17/2017"/>
-    <Task status="stop" title="Stopped task for a project." subtitle="Stopped on 3/17/2017"/>
-    <Task status="complete" title="Completed task for a project." subtitle="Completed on 3/17/2017"/>
-    <Task status="onHold" title="On hold task for a project." subtitle="On hold since 3/17/2017"/>
-    <Task status="indefinite" title="Indefinite task for a project." subtitle="Indefinite since 3/17/2017"/>
 
-
+    <Task v-for="task in mockTasks" v-if="task.active" :key="task.status" v-bind:status="task.status" v-bind:title="task.title" v-bind:subtitle="task.subtitle"/>
 
     <div class="add-task modal" v-bind:class="{ 'is-active': showAddTaskForm }">
       <div class="modal-background" @click="showAddTaskForm = false"></div>
@@ -71,7 +66,62 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     data () {
       return {
-        showAddTaskForm: false
+        showAddTaskForm: false,
+        mockTasks: [
+          {
+            'title': 'In progress task for a project.',
+            'subtitle': 'In progress since 3/17/2017',
+            'status': 'inProgress',
+            'active': true
+          },
+          {
+            'title': 'Stopped task for a project.',
+            'subtitle': 'Stopped since 3/17/2017',
+            'status': 'stop',
+            'active': false
+          },
+          {
+            'title': 'Completed task for a project.',
+            'subtitle': 'Completed since 3/17/2017',
+            'status': 'complete',
+            'active': false
+          },
+          {
+            'title': 'On hold task for a project.',
+            'subtitle': 'On hold since 3/17/2017',
+            'status': 'onHold',
+            'active': false
+          },
+          {
+            'title': 'Indefinite task for a project.',
+            'subtitle': 'Indefinite since 3/17/2017',
+            'status': 'indefinite',
+            'active': false
+          },
+          {
+            'title': 'In progress task 2',
+            'subtitle': 'In progress since 2/14/2017',
+            'status': 'inProgress',
+            'active': true
+          },
+          {
+            'title': 'On hold task 2',
+            'subtitle': 'On hold since 2/14/2017',
+            'status': 'onHold',
+            'active': true
+          }
+        ]
+      }
+    },
+    methods: {
+      setActive: function (status) {
+        for (let k of this.mockTasks) {
+          if (k.status === status) {
+            k.active = true
+          } else {
+            k.active = false
+          }
+        }
       }
     }
   }
