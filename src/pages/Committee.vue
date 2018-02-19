@@ -16,6 +16,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <h1>{{ committee.description }}</h1>
     </div>
     <CommitteeOverview inProgressCount="1" incompleteCount="3" completedCount="10" indefiniteCount="3" stoppedCount="2" />
+    <CommitteeMembers />
     <h1 id="active_projects_title">Active Projects</h1>
     <h2>Projects that have been recently updated.</h2>
     <ProjectThumbnail />
@@ -45,6 +46,7 @@ import CommitteeOverview from '../components/CommitteeOverview'
 import ProjectThumbnail from '../components/ProjectThumbnail'
 import ProjectThumbnailSmall from '../components/ProjectThumbnailSmall'
 import LoadingIndicator from '../components/LoadingIndicator'
+import CommitteeMembers from '../components/CommitteeMembers'
 
 export default {
   name: 'dashboard',
@@ -54,7 +56,8 @@ export default {
     'CommitteeOverview': CommitteeOverview,
     'ProjectThumbnail': ProjectThumbnail,
     'ProjectThumbnailSmall': ProjectThumbnailSmall,
-    'LoadingIndicator': LoadingIndicator
+    'LoadingIndicator': LoadingIndicator,
+    'CommitteeMembers': CommitteeMembers
   },
   data () {
     return {
