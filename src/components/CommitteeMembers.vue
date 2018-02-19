@@ -7,7 +7,10 @@
 
 <template>
   <div class = 'committee_members_list'>
-    <h2 class = 'committee_members_header'>Members</h2>
+    <div class = 'committee_members_header'>
+      <h2>Members</h2>
+      <h4>{{ committee.description }}</h4>
+    </div>
     <div class = 'committee_members_member' v-for='member in members'>
       <span>{{ member }}</span>
     </div>
@@ -30,7 +33,24 @@
           'Member H',
           'Member I',
           'Member K'
-        ]
+        ],
+        committee: {'description': 'committee'}
+      }
+    },
+    sockets: {
+      get_committee: function (data) {
+        this.committee = data
+      }
+    },
+    beforeMount () {
+      this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+    },
+    /* Since this component is used for each committee page, we have to
+    watch for changes in the URL and update the props on the page
+    when the route changes */
+    watch: {
+      '$route.params.committee': function (committee) {
+        this.$socket.emit('get_committee', committee)
       }
     }
   }
@@ -64,4 +84,9 @@
     border-bottom: 1px solid #555
     color: #555
     margin-top: 0
+    h4
+      margin-top: 0
+      margin-bottom: 1%
+    h2
+      margin-bottom: 1%
 </style>
