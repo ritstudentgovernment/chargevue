@@ -87,6 +87,9 @@
     h4
       margin-top: 0
       margin-bottom: 1%
+      font-weight: 300
     h2
       margin-bottom: 1%
+      font-weight: 300
+      margin-top: 0
 </style>
