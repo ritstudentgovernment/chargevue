@@ -77,9 +77,11 @@ export default {
   },
   methods: {
     submitLogin () {
+      console.log('submit')
       this.showAuthError = false
       this.showLoginLoading = true
       this.login(this.username, this.password).then(() => {
+        console.log('authenticated')
         this.showAuthError = false
         this.showLoginForm = false
         this.showLoginLoading = false

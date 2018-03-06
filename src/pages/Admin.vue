@@ -26,7 +26,7 @@ author: Gabe Landau <gll1872@rit.edu>
               <tr v-for="committee in committees">
                 <td>{{ committee.id }}</td>
                 <td>{{ committee.title }}</td>
-                <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button class="button is-danger">Deactivate</button></td>
+                <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button v-if="committee.enabled" class="button is-danger" @click="changeCommitteeActivation(committee.id)">Deactivate</button><button v-if="!committee.enabled" class="button reactivate" @click="changeCommitteeActivation(committee.id)">Reactivate</button></td>
               </tr>
               </tbody>
             </table>
@@ -254,7 +254,8 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="addMemberToCommittee()">Add Member</button>
+            <button class="button is-primary" v-on:click="addMemberToCommittee()">Add
+              Member</button>
             <button class="button" v-on:click="showAddMemberToCommitteeForm = false">Cancel</button>
           </footer>
         </div>
@@ -450,6 +451,12 @@ export default {
         })
       }
     },
+    changeCommitteeActivation (id) {
+      this.$socket.emit('change_committee_activation', {
+        token: this.getToken(),
+        id: id
+      })
+    },
     openEditCommitteeForm (id) {
       this.$socket.emit('get_committee', id)
     },
@@ -470,6 +477,7 @@ export default {
         user_id: this.addMemberMember,
         committee_id: this.addMemberCommittee
       })
+      console.log(this.addMemberResponse.show)
     },
     removeMemberFromCommittee () {
       console.log(this.removeMemberCommittee)
@@ -485,9 +493,11 @@ export default {
     get_committees: function (data) {
       this.committees = data
     },
-    get_committee: function (data) {
+    get_all_committees: function (data) {
       console.log(data)
-
+      this.committees = data
+    },
+    get_committee: function (data) {
       let dateTimeObj = this.convertBackendToFrontend(data.meeting_day, data.meeting_time)
 
       this.editMeetingHour = dateTimeObj.hour
@@ -501,7 +511,6 @@ export default {
       this.showEditCommitteeForm = true
     },
     create_committee: function (data) {
-      console.log(data)
       if (data.success) {
         this.createCommitteeResponse.show = true
         this.createCommitteeResponse.success = true
@@ -513,7 +522,6 @@ export default {
       }
     },
     edit_committee: function (data) {
-      console.log(data)
       if (data.success) {
         this.editCommitteeResponse.show = true
         this.editCommitteeResponse.success = true
@@ -557,7 +565,7 @@ export default {
     if (!(this.isAuthenticated())) {
       this.$router.push({ path: '/' })
     }
-    this.$socket.emit('get_committees')
+    this.$socket.emit('get_all_committees')
   }
 }
 </script>
@@ -590,5 +598,9 @@ export default {
 
   .file-name {
     display: inherit;
+  }
+
+  .reactivate {
+    background-color: hsl(141, 71%, 48%);
   }
 </style>

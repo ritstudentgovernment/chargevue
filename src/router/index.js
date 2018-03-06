@@ -4,6 +4,7 @@ import Dashboard from '@/pages/Dashboard'
 import Committee from '@/pages/Committee'
 import Charge from '@/pages/Charge'
 import Admin from '@/pages/Admin'
+import Invitation from '@/pages/Invitation'
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
     {
       path: '/admin',
       component: Admin,
+      refresh: true
+    },
+    {
+      path: '/invitation/:id',
+      component: Invitation,
       refresh: true
     }
   ]
