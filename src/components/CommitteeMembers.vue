@@ -12,7 +12,7 @@
       <h4>{{ committee.description }}</h4>
     </div>
     <div class = 'committee_members_member' v-for='member in members'>
-      <span>{{ member }}</span>
+      <span>{{ member.id }}</span>
     </div>
   </div>
 </template>
@@ -22,28 +22,21 @@
     name: 'committee-members',
     data () {
       return {
-        members: [
-          'Member A',
-          'Member B',
-          'Member C',
-          'Member D',
-          'Member E',
-          'Member F',
-          'Member G',
-          'Member H',
-          'Member I',
-          'Member K'
-        ],
+        members: null,
         committee: {'description': 'committee'}
       }
     },
     sockets: {
       get_committee: function (data) {
         this.committee = data
+      },
+      get_members: function (data) {
+        this.members = data.members
       }
     },
     beforeMount () {
       this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+      this.$socket.emit('get_members', this.$router.history.current.params['committee'])
     },
     /* Since this component is used for each committee page, we have to
     watch for changes in the URL and update the props on the page

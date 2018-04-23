@@ -14,8 +14,8 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <h1 id="dashboard_title">Projects In Progress</h1>
     <h2>Projects that are currently in progress.</h2>
-    <ProjectThumbnail />
-    <ProjectThumbnail />
+    <!-- <ProjectThumbnail />
+    <ProjectThumbnail /> -->
   </div>
 </template>
 

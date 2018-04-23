@@ -64,6 +64,7 @@ author: Gabe Landau <gll1872@rit.edu>
     components: {
       'Task': Task
     },
+    props: [ 'tasks' ],
     data () {
       return {
         showAddTaskForm: false,

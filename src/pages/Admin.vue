@@ -14,7 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="column">
           <div class="box" id="committee_table">
             <h3 class="title is-3">Manage Committees</h3>
-            <table class="table is-fullwidth is-striped">
+            <table class="table is-three-quarters is-striped">
               <thead>
               <tr>
                 <td>Committee ID</td>
@@ -26,32 +26,25 @@ author: Gabe Landau <gll1872@rit.edu>
               <tr v-for="committee in committees">
                 <td>{{ committee.id }}</td>
                 <td>{{ committee.title }}</td>
-                <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button v-if="committee.enabled" class="button is-danger" @click="changeCommitteeActivation(committee.id)">Deactivate</button><button v-if="!committee.enabled" class="button reactivate" @click="changeCommitteeActivation(committee.id)">Reactivate</button></td>
+                <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button v-if="committee.enabled" class="button is-danger" @click="deactivateCommittee(committee.id)">Deactivate</button><button v-if="!committee.enabled" class="button reactivate" @click="activateCommittee(committee.id)">Reactivate</button></td>
               </tr>
               </tbody>
             </table>
           </div>
         </div>
-      </div>
-      <div class="columns">
-        <div class="column">
+        <div class="column is-one-quarter">
           <div class="box" id="admin_forms">
             <h3 class="title is-3">Actions</h3>
             <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
           </div>
         </div>
-        <div class="column is-two-thirds">
-          <div class="box">
-            <h3 class="title is-3">Committees</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam viverra nibh eu faucibus feugiat. Proin gravida nibh neque, aliquam gravida erat rutrum vel. Integer urna elit, tincidunt et ornare quis, bibendum nec massa. Proin nunc metus, ultrices eu purus quis, ornare commodo dolor. Vivamus et risus eu ipsum suscipit vestibulum. Etiam rhoncus nisl sit amet porttitor dignissim. Phasellus convallis erat at felis hendrerit, in vehicula est dapibus. Sed vulputate finibus libero et tristique. Nullam dignissim eu ipsum vel faucibus.</p>
-          </div>
-        </div>
       </div>
 
 
 
+
       <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
-        <div class="modal-background" v-on:click="showCreateCommitteeForm = false"></div>
+        <div class="modal-background" v-on:click="closeCreateCommittee()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Create Committee</p>
@@ -136,7 +129,7 @@ author: Gabe Landau <gll1872@rit.edu>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="createNewCommittee()" v-bind:class="{ 'is-loading' : createDisabled }">Create Committee</button>
-            <button class="button" v-on:click="showCreateCommitteeForm = false">Cancel</button>
+            <button class="button" v-on:click="closeCreateCommittee()">Cancel</button>
           </footer>
         </div>
       </div>
@@ -236,7 +229,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 
       <div class="modal" v-bind:class="{ 'is-active': showAddMemberToCommitteeForm }">
-        <div class="modal-background" v-on:click="showAddMemberToCommitteeForm = false"></div>
+        <div class="modal-background" v-on:click="closeAddMember()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Add Member to Committee</p>
@@ -256,7 +249,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="addMemberToCommittee()">Add
               Member</button>
-            <button class="button" v-on:click="showAddMemberToCommitteeForm = false">Cancel</button>
+            <button class="button" v-on:click="closeAddMember()">Cancel</button>
           </footer>
         </div>
       </div>
@@ -422,6 +415,20 @@ export default {
         })
       }
     },
+    closeCreateCommittee () {
+      this.createTitle = null
+      this.createDescription = null
+      this.createLocation = null
+      this.createCommitteeHead = null
+      this.createMeetingDay = null
+      this.createMeetingAmPm = null
+      this.createMeetingHour = null
+      this.createMeetingMinute = null
+      this.createImage = null
+      this.createImageName = '(no file selected)'
+      this.createCommitteeResponse.show = false
+      this.showCreateCommitteeForm = false
+    },
     editCommittee () {
       this.editCommitteeResponse.show = false
       let timeDateObj = this.convertFrontendToBackend(this.editMeetingAmPm, this.editMeetingHour, this.editMeetingMinute, this.editMeetingDay)
@@ -451,10 +458,18 @@ export default {
         })
       }
     },
-    changeCommitteeActivation (id) {
-      this.$socket.emit('change_committee_activation', {
+    deactivateCommittee (id) {
+      this.$socket.emit('edit_committee', {
         token: this.getToken(),
-        id: id
+        id: id,
+        enabled: false
+      })
+    },
+    activateCommittee (id) {
+      this.$socket.emit('edit_committee', {
+        token: this.getToken(),
+        id: id,
+        enabled: true
       })
     },
     openEditCommitteeForm (id) {
@@ -479,6 +494,13 @@ export default {
       })
       console.log(this.addMemberResponse.show)
     },
+    closeAddMember () {
+      this.addMemberResponse.show = false
+      this.addMemberResponse.message = null
+      this.addMemberResponse.success = null
+      this.addMemberMember = null
+      this.showAddMemberToCommitteeForm = false
+    },
     removeMemberFromCommittee () {
       console.log(this.removeMemberCommittee)
       console.log(this.removeMemberMember)
@@ -491,10 +513,6 @@ export default {
   },
   sockets: {
     get_committees: function (data) {
-      this.committees = data
-    },
-    get_all_committees: function (data) {
-      console.log(data)
       this.committees = data
     },
     get_committee: function (data) {
@@ -565,7 +583,7 @@ export default {
     if (!(this.isAuthenticated())) {
       this.$router.push({ path: '/' })
     }
-    this.$socket.emit('get_all_committees')
+    this.$socket.emit('get_committees')
   }
 }
 </script>
@@ -602,5 +620,9 @@ export default {
 
   .reactivate {
     background-color: hsl(141, 71%, 48%);
+  }
+
+  .is-one-quarter {
+    width: 20%;
   }
 </style>
