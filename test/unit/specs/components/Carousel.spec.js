@@ -8,4 +8,11 @@ describe('Carousel.vue', () => {
     expect(vm.$el.querySelector('#carousel').tagName)
       .to.equal('DIV')
   })
+
+  describe('getRandomImage()', () => {
+    it('should return a random image URL', () => {
+      const image = Carousel.methods.getRandomImage()
+      expect(typeof image).to.equal('string')
+    })
+  })
 })

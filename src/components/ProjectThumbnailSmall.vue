@@ -20,6 +20,10 @@ export default {
   data () {
     return {
     }
+  },
+  sockets: {
+  },
+  beforeMount () {
   }
 }
 </script>

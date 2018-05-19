@@ -9,4 +9,13 @@ describe('Dashboard.vue', () => {
     expect(vm.$el.querySelector('#dashboard_title').textContent)
       .to.equal('Projects In Progress')
   })
+
+  it('returns a function', () => {
+    expect(typeof Dashboard.data).to.equal('function')
+  })
+
+  it('sets the correct default data', () => {
+    const defaultData = Dashboard.data()
+    expect(defaultData.title).to.equal('Charge Tracker')
+  })
 })

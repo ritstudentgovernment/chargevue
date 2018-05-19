@@ -20,7 +20,7 @@ let functions = {
       return localStorage.getItem('token')
     },
     isAuthenticated () {
-      return !!localStorage.getItem
+      return !!localStorage.getItem('token')
     }
   }
 }

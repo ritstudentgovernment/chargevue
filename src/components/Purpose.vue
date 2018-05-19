@@ -18,13 +18,14 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div class="divider"></div>
-    <div class="description_content">Students gender neutral bathrooms. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</div>
+    <div class="description_content">{{ chargeDesc }}</div>
   </div>
 </template>
 
 <script>
   export default {
     name: 'purpose',
+    props: ['chargeDesc'],
     components: {},
     data () {
       return {
@@ -38,7 +39,7 @@ author: Gabe Landau <gll1872@rit.edu>
     background-color: #fff;
     border: 1px solid #ddd;
     width: 70%;
-    margin: 50px auto 0 auto;
+    margin: 25px auto 10px auto;
   }
 
   .description_title {

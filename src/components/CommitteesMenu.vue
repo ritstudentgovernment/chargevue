@@ -9,9 +9,10 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div id="committee_bar" class="committees-menu">
-    <ul>
+    <ul class="menu">
+      <li v-if="loading">Loading...</li>
       <li v-for="(item, index) in committees">
-        <router-link :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link>
+        <router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link>
       </li>
     </ul>
   </div>
@@ -22,12 +23,14 @@ export default {
   name: 'committees-menu',
   data () {
     return {
-      committees: null
+      committees: null,
+      loading: true
     }
   },
   sockets: {
     get_committees: function (data) {
       this.committees = data
+      this.loading = false
     }
   },
   beforeMount () {

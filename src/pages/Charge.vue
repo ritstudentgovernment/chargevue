@@ -12,12 +12,12 @@ author: Gabe Landau <gll1872@rit.edu>
     <HeaderMenu />
     <CommitteesMenu />
     <div class="charge_header">
-      <div class="charge_header_text">Gender Neutral Bathrooms</div>
-      <div class="charge_header_tag"><span>Student Affairs</span></div>
+      <div class="charge_header_text">{{ this.charge.title }}</div>
+      <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
     </div>
     <ChargeStatusBar />
-    <Purpose />
-    <Tasks />
+    <Purpose v-bind:chargeDesc="this.charge.description" />
+    <Tasks v-bind:tasks="this.actions" />
   </div>
 </template>
 
@@ -39,7 +39,24 @@ export default {
   },
   data () {
     return {
+      charge: null,
+      actions: null
     }
+  },
+  sockets: {
+    get_charge: function (data) {
+      this.charge = data
+      console.log(this.charge)
+    },
+    get_actions: function (data) {
+      this.actions = data
+      console.log(this.actions)
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_charge', this.$router.history.current.params['charge'])
+    // get all the actions associated with the charge
+    this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
   }
 }
 </script>

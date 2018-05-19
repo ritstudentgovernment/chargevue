@@ -12,6 +12,36 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="task" @click="active = true">
       <div><span class="icon active_task thumbnail"><i class="mdi" v-bind:class="[style, icon]"></i> {{title}}</span></div>
       <div class="subtitle">{{subtitle}}</div>
+      <div class="taskList">
+        <p>Hello this is a description of the task on this charge.</p>
+        <p class="updates-header">Notes (2)</p>
+
+        <div class="update">
+          <div class="update-image">
+            <img src="../assets/avatar.png" />
+          </div>
+          <div class="update-body">
+            <div class="update-header">
+              <span class="update-name">Gabe Landau</span>
+              <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
+            </div>
+            <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
+          </div>
+        </div>
+
+        <div class="update">
+          <div class="update-image">
+            <img src="../assets/avatar.png" />
+          </div>
+          <div class="update-body">
+            <div class="update-header">
+              <span class="update-name">Gabe Landau</span>
+              <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
+            </div>
+            <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="task modal" v-bind:class="{ 'is-active': active }">

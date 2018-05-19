@@ -21,19 +21,18 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-import Images from '../mixins/images'
-
 export default {
   name: 'carousel',
-  mixins: [Images],
   data () {
     return {
-      backgroundImage: this.getRandomImage()
+      backgroundImage: this.getRandomImage(),
+      image1: null,
+      image2: null
     }
   },
   methods: {
     getRandomImage () {
-      let images = this.getImages()
+      let images = ['../static/carousel/gpc.png', '../static/carousel/gv.png']
       let random = Math.floor(Math.random() * images.length)
       return images[random]
     }
