@@ -55,7 +55,6 @@ export default {
   },
   beforeMount () {
     this.$socket.emit('get_charge', this.$router.history.current.params['charge'])
-    // get all the actions associated with the charge
     this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
   }
 }

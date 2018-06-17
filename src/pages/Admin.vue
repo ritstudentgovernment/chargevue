@@ -14,7 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="column">
           <div class="box" id="committee_table">
             <h3 class="title is-3">Manage Committees</h3>
-            <table class="table is-three-quarters is-striped">
+            <table class="table is-fullwidth is-striped">
               <thead>
               <tr>
                 <td>Committee ID</td>
@@ -23,7 +23,7 @@ author: Gabe Landau <gll1872@rit.edu>
               </tr>
               </thead>
               <tbody>
-              <tr v-for="committee in committees">
+              <tr v-for="committee in committees" :key="committee.id">
                 <td>{{ committee.id }}</td>
                 <td>{{ committee.title }}</td>
                 <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button v-if="committee.enabled" class="button is-danger" @click="deactivateCommittee(committee.id)">Deactivate</button><button v-if="!committee.enabled" class="button reactivate" @click="activateCommittee(committee.id)">Reactivate</button></td>
@@ -93,12 +93,12 @@ author: Gabe Landau <gll1872@rit.edu>
               <div class="control">
                 <div class="select">
                   <select v-model="createMeetingHour">
-                    <option v-for="x in 12">{{x}}</option>
+                    <option v-for="x in 12" :key="x">{{x}}</option>
                   </select>
                 </div>
                 <div class="select">
                   <select v-model="createMeetingMinute">
-                    <option v-for="x in minutes">{{x}}</option>
+                    <option v-for="x in minutes" :key="x">{{x}}</option>
                   </select>
                 </div>
                 <div class="select">
@@ -186,12 +186,12 @@ author: Gabe Landau <gll1872@rit.edu>
               <div class="control">
                 <div class="select">
                   <select v-model="editMeetingHour">
-                    <option v-for="x in 12">{{x}}</option>
+                    <option v-for="x in 12" :key="x">{{x}}</option>
                   </select>
                 </div>
                 <div class="select">
                   <select v-model="editMeetingMinute">
-                    <option v-for="x in minutes">{{x}}</option>
+                    <option v-for="x in minutes" :key="x">{{x}}</option>
                   </select>
                 </div>
                 <div class="select">
@@ -273,7 +273,7 @@ author: Gabe Landau <gll1872@rit.edu>
                 <div class="select" v-bind:class="{ 'is-loading': showRemoveMemberDropdownLoading }">
                   <select v-model="removeMemberMember">
                     <option selected disabled></option>
-                    <option v-for="member in members" v-bind:value="member.id">{{member.id}}</option>
+                    <option v-for="member in members" :key="member.id" v-bind:value="member.id"><span>{{member.id}}</span></option>
                   </select>
                 </div>
               </div>
