@@ -69,23 +69,11 @@ author: Gabe Landau <gll1872@rit.edu>
     <h2>Projects that have been recently updated.</h2>
     <h1>Projects In Progress</h1>
     <h2>Projects that are currently in progress.</h2>
-    <div v-for="charge in charges">
+    <div v-for="charge in charges" :key="charge.id">
       <ProjectThumbnail v-if="charge.status != 5" v-bind:charge="charge" />
     </div>
     <h1>Projects Completed</h1>
     <h2>Projects that have been completed.</h2>
-
-    <div class="columns">
-      <div class="column"><ProjectThumbnailSmall /></div>
-      <div class="column"><ProjectThumbnailSmall /></div>
-      <div class="column"><ProjectThumbnailSmall /></div>
-    </div>
-
-    <div class="columns">
-      <div class="column"><ProjectThumbnailSmall /></div>
-      <div class="column"><ProjectThumbnailSmall /></div>
-      <div class="column"><ProjectThumbnailSmall /></div>
-    </div>
   </div>
 </template>
 

@@ -17,7 +17,7 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
     <ChargeStatusBar />
     <Purpose v-bind:chargeDesc="this.charge.description" />
-    <Tasks v-bind:tasks="this.actions" />
+    <Tasks />
   </div>
 </template>
 
@@ -39,7 +39,10 @@ export default {
   },
   data () {
     return {
-      charge: null,
+      charge: {
+        title: '',
+        committee: ''
+      },
       actions: null
     }
   },
