@@ -9,87 +9,69 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div>
-    <div class="task" @click="active = true">
-      <div><span class="icon active_task thumbnail"><i class="mdi" v-bind:class="[style, icon]"></i> {{title}}</span></div>
-      <div class="subtitle">{{subtitle}}</div>
+    <div class="task" @click="openModal()">
+      <div><h3 class="title is-3">{{task.title}}</h3></div>
       <div class="taskList">
-        <p>Hello this is a description of the task on this charge.</p>
-        <p class="updates-header">Notes (2)</p>
-
-        <div class="update">
-          <div class="update-image">
-            <img src="../assets/avatar.png" />
-          </div>
-          <div class="update-body">
-            <div class="update-header">
-              <span class="update-name">Gabe Landau</span>
-              <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
-            </div>
-            <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
-          </div>
-        </div>
-
-        <div class="update">
-          <div class="update-image">
-            <img src="../assets/avatar.png" />
-          </div>
-          <div class="update-body">
-            <div class="update-header">
-              <span class="update-name">Gabe Landau</span>
-              <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
-            </div>
-            <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
-          </div>
-        </div>
+        <p>{{task.description}}</p>
       </div>
     </div>
 
     <div class="task modal" v-bind:class="{ 'is-active': active }">
       <div class="modal-background" @click="active = false"></div>
-      <div class="modal-content">
-        <div class="box">
-          <div class="modal-header">
-            <span class="icon"><i class="mdi header-icon" v-bind:class="[style, icon]"></i></span>
-            <span class="modal-titles">
-              <span class="modal-title">{{title}}</span><br />
-              <span class="modal-subtitle">{{subtitle}} | Assigned to <span class="link">gll1872</span></span>
-            </span>
-          </div>
-          <p>Hello this is a description of the task on this charge.</p>
-          <p class="updates-header">Updates (2)</p>
+        <div class="modal-content">
+          <div class="box">
+            <div class="modal-header">
+              <span class="icon"><i class="mdi header-icon" v-bind:class="[style, icon]"></i></span>
+              <span class="modal-titles">
+                <span class="modal-title">{{task.title}}</span><br />
+                <span class="modal-subtitle">Assigned to <span class="link">gll1872</span></span>
+              </span>
+            </div>
+            <p>{{task.description}}</p>
+            <p class="updates-header">Updates ({{notes.length}})</p>
 
-          <div class="update">
+            <div class="update" v-for="note in notes" :key="note.id">
             <div class="update-image">
               <img src="../assets/avatar.png" />
             </div>
             <div class="update-body">
               <div class="update-header">
-                <span class="update-name">Gabe Landau</span>
+                <span class="update-name">{{note.author}}</span>
                 <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
               </div>
-              <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
+              <p class="update-body-text">{{note.description}}</p>
             </div>
           </div>
 
-          <div class="update">
-            <div class="update-image">
-              <img src="../assets/avatar.png" />
-            </div>
-            <div class="update-body">
-              <div class="update-header">
-                <span class="update-name">Gabe Landau</span>
-                <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
+          <div class="modalForm">
+            <div class="field">
+              <div class="control">
+                <textarea class="textarea" placeholder="Write a comment or update..."></textarea>
               </div>
-              <p class="update-body-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin feugiat pretium sem, id accumsan mauris consequat at. Nam dolor velit, efficitur id malesuada ac, sodales at ligula. Vivamus convallis enim id risus elementum, eget mattis ante hendrerit.</p>
+            </div>
+            <div class="field">
+              <button class="button is-primary" id="submitCommentButton" v-on:click="createNote()">Submit Comment</button>
+            </div>
+            <p class="updates-header">Admin</p>
+            <div class="field">
+              <div class="field has-addons">
+                <div class="control">
+                  <div class="select">
+                    <select name="country" v-model="status">
+                      <option value="0" selected>In Progress</option>
+                      <option value="1">Stopped</option>
+                      <option value="2">Complete</option>
+                      <option value="3">On Hold</option>
+                      <option value="4">Indefinite</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="control">
+                  <button type="button" class="button is-primary" v-on:click="changeStatus()">Change Status</button>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div class="field">
-            <div class="control">
-              <textarea class="textarea" placeholder="Write a comment or update..."></textarea>
-            </div>
-          </div>
-          <button class="button is-primary">Submit Comment</button>
         </div>
       </div>
       <button class="modal-close is-large" @click="active = false"></button>
@@ -98,34 +80,77 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
+  import Auth from '../mixins/auth'
+
   export default {
     name: 'tasks',
     components: {},
-    props: ['status', 'title', 'subtitle'],
+    props: ['task'],
+    mixins: [Auth],
     data () {
       return {
-        active: false
+        active: false,
+        style: '',
+        icon: '',
+        id: null,
+        notes: [],
+        status: -1
+      }
+    },
+    sockets: {
+      create_note: function (data) {
+        console.log('CREATED NOTE: ', data)
+      },
+      get_notes: function (data) {
+        if (data[data.length - 1] === this.task.id) {
+          data.pop()
+          this.notes = data
+        }
+      },
+      edit_action: function (data) {
+        console.log('EDITED ACTION: ', data)
+      }
+    },
+    methods: {
+      createNote () {
+        this.$socket.emit('create_note', {
+          token: this.getToken(),
+          action: this.task.id,
+          description: 'hello this is a test note!'
+        })
+      },
+      changeStatus () {
+        this.$socket.emit('edit_action', {
+          token: this.getToken(),
+          id: this.task.id,
+          status: this.status
+        })
+      },
+      openModal () {
+        this.active = true
+        this.$socket.emit('get_notes', this.task.id)
       }
     },
     beforeMount () {
-      switch (this.status) {
-        case 'inProgress':
+      this.status = this.task.status
+      switch (this.task.status) {
+        case 0:
           this.style = 'in-progress'
           this.icon = 'mdi-play-circle-outline'
           break
-        case 'stop':
+        case 1:
           this.style = 'stop'
           this.icon = 'mdi-minus-circle-outline'
           break
-        case 'complete':
+        case 2:
           this.style = 'complete'
           this.icon = 'mdi-checkbox-marked-circle-outline'
           break
-        case 'onHold':
+        case 3:
           this.style = 'on-hold'
           this.icon = 'mdi-pause-circle-outline'
           break
-        case 'indefinite':
+        case 4:
           this.style = 'indefinite'
           this.icon = 'mdi-information-outline'
           break
@@ -167,6 +192,10 @@ author: Gabe Landau <gll1872@rit.edu>
     padding-left: 15px;
   }
 
+  h3 {
+    margin-top: 0;
+  }
+
   .subtitle {
     padding-left: 40px;
     color: #7f7f7f;
@@ -174,6 +203,14 @@ author: Gabe Landau <gll1872@rit.edu>
   }
 
   /* Modal styles */
+  .modalForm {
+    padding-right: 20px;
+  }
+
+  .modal {
+    z-index: 100000;
+  }
+
   .modal-content {
     width: 60%;
   }
@@ -209,8 +246,8 @@ author: Gabe Landau <gll1872@rit.edu>
     text-decoration: underline;
   }
 
-  .control {
-    padding-right: 20px;
+  #submitCommentButton {
+    margin-right: 20px;
   }
 
   .update {

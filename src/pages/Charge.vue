@@ -17,7 +17,7 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
     <ChargeStatusBar />
     <Purpose v-bind:chargeDesc="this.charge.description" />
-    <Tasks />
+    <Tasks v-bind:tasks="actions" />
   </div>
 </template>
 
@@ -43,17 +43,15 @@ export default {
         title: '',
         committee: ''
       },
-      actions: null
+      actions: []
     }
   },
   sockets: {
     get_charge: function (data) {
       this.charge = data
-      console.log(this.charge)
     },
     get_actions: function (data) {
       this.actions = data
-      console.log(this.actions)
     }
   },
   beforeMount () {

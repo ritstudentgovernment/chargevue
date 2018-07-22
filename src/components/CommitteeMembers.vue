@@ -6,12 +6,12 @@
 -->
 
 <template>
-  <div class = 'committee_members_list'>
-    <div class = 'committee_members_header'>
+  <div class="committee_members_list">
+    <div class="committee_members_header">
       <h2>Members</h2>
       <h4>{{ committee.description }}</h4>
     </div>
-    <div class = 'committee_members_member' v-for='member in members'>
+    <div class="committee_members_member" v-for="member in members" :key="member.id">
       <span>{{ member.id }}</span>
     </div>
   </div>
@@ -23,7 +23,7 @@
     data () {
       return {
         members: null,
-        committee: {'description': 'committee'}
+        committee: { 'description': 'committee' }
       }
     },
     sockets: {
@@ -49,40 +49,47 @@
   }
 </script>
 
-<style scoped lang="sass">
-  @import '../assets/vars.sass'
+<style scoped>
+  .committee_members_list {
+    background-color: #fff;
+    width: 70%;
+    margin: 15px auto;
+    padding: 20px;
+  }
 
-  .committee_members_list
-    background-color: #fff
-    width: 70%
-    margin: 15px auto
-    padding: 20px
+  .committee_members_member {
+    color: #fff;
+    font-size: 14pt;
+    font-weight: 300;
+    display: inline-block;
+    width: 25%;
+  }
 
-  .committee_members_member
-    color: #fff
-    font-size: 14pt
-    font-weight: 300
-    display: inline-block
-    width: 25%
-    span
-      background-color: $primary
-      padding: 10px
-      margin: 10px
-      display: inline-block
-      width: 80%
-      text-align: center
+  .committee_members_member span {
+    background-color: #f36e21;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 80%;
+    text-align: center;
+  }
+      
+  .committee_members_header {
+    width: 100%;
+    border-bottom: 1px solid #555;
+    color: #555;
+    margin-top: 0;
+  }
 
-  .committee_members_header
-    width: 100%
-    border-bottom: 1px solid #555
-    color: #555
-    margin-top: 0
-    h4
-      margin-top: 0
-      margin-bottom: 1%
-      font-weight: 300
-    h2
-      margin-bottom: 1%
-      font-weight: 300
-      margin-top: 0
+  .committee_members_header h4 {
+    margin-top: 0;
+    margin-bottom: 1%;
+    font-weight: 300;
+  }
+
+  .committee_members_header h2 {
+    margin-bottom: 1%;
+    font-weight: 300;
+    margin-top: 0;
+  }
 </style>
