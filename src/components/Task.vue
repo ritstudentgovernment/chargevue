@@ -9,10 +9,24 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div>
-    <div class="task" @click="openModal()">
+    <div class="task" @click="active = true">
       <div><h3 class="title is-3">{{task.title}}</h3></div>
       <div class="taskList">
         <p>{{task.description}}</p>
+      </div>
+
+      <p class="updates-header">Notes ({{task.notes ? task.notes.length : 0}})</p>
+      <div class="update" v-for="note in recentNotes" :key="note.id">
+        <div class="update-image">
+          <img src="../assets/avatar.png" />
+        </div>
+        <div class="update-body">
+          <div class="update-header">
+            <span class="update-name">{{note.author}}</span>
+            <span class="update-timestamp">Posted on {{note.created_at}}</span>
+          </div>
+          <p class="update-body-text">{{note.description}}</p>
+        </div>
       </div>
     </div>
 
@@ -28,16 +42,16 @@ author: Gabe Landau <gll1872@rit.edu>
               </span>
             </div>
             <p>{{task.description}}</p>
-            <p class="updates-header">Updates ({{notes.length}})</p>
+            <p class="updates-header">Updates ({{task.notes ? task.notes.length : 0}})</p>
 
-            <div class="update" v-for="note in notes" :key="note.id">
+          <div class="update" v-for="note in task.notes" :key="note.id">
             <div class="update-image">
               <img src="../assets/avatar.png" />
             </div>
             <div class="update-body">
               <div class="update-header">
                 <span class="update-name">{{note.author}}</span>
-                <span class="update-timestamp">Posted on 3/10/2017 at 5:23PM</span>
+                <span class="update-timestamp">Posted on {{note.created_at}}</span>
               </div>
               <p class="update-body-text">{{note.description}}</p>
             </div>
@@ -46,7 +60,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="modalForm">
             <div class="field">
               <div class="control">
-                <textarea class="textarea" placeholder="Write a comment or update..."></textarea>
+                <textarea class="textarea" placeholder="Write a comment or update..." v-model="createNoteText"></textarea>
               </div>
             </div>
             <div class="field">
@@ -93,19 +107,13 @@ author: Gabe Landau <gll1872@rit.edu>
         style: '',
         icon: '',
         id: null,
-        notes: [],
-        status: -1
+        status: -1,
+        createNoteText: ''
       }
     },
     sockets: {
       create_note: function (data) {
         console.log('CREATED NOTE: ', data)
-      },
-      get_notes: function (data) {
-        if (data[data.length - 1] === this.task.id) {
-          data.pop()
-          this.notes = data
-        }
       },
       edit_action: function (data) {
         console.log('EDITED ACTION: ', data)
@@ -116,7 +124,7 @@ author: Gabe Landau <gll1872@rit.edu>
         this.$socket.emit('create_note', {
           token: this.getToken(),
           action: this.task.id,
-          description: 'hello this is a test note!'
+          description: this.createNoteText
         })
       },
       changeStatus () {
@@ -125,10 +133,15 @@ author: Gabe Landau <gll1872@rit.edu>
           id: this.task.id,
           status: this.status
         })
-      },
-      openModal () {
-        this.active = true
-        this.$socket.emit('get_notes', this.task.id)
+      }
+    },
+    computed: {
+      recentNotes: function () {
+        if (this.task.notes) {
+          return this.task.notes.slice(this.task.notes.length - 2, this.task.notes.length)
+        } else {
+          return []
+        }
       }
     },
     beforeMount () {

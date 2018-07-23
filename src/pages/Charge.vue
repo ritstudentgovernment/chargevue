@@ -52,6 +52,18 @@ export default {
     },
     get_actions: function (data) {
       this.actions = data
+      for (let action of this.actions) {
+        this.$socket.emit('get_notes', action.id)
+      }
+    },
+    get_notes: function (data) {
+      if (data.length > 0) {
+        for (let action of this.actions) {
+          if (action.id === data[0].action) {
+            this.$set(action, 'notes', data)
+          }
+        }
+      }
     }
   },
   beforeMount () {
