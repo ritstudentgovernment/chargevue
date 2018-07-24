@@ -18,7 +18,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div class="taskbar">
-      <span class="icon" v-bind:class="{ 'active_task': active_task === 0 }" v-on:click="makeActive(0)"><i class="mdi mdi-play-circle-outline" v-bind:class="{ 'in-progress': active_task === 0 }"></i> 1 In Progress</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 0 }" v-on:click="makeActive(0)"><i class="mdi mdi-play-circle-outline" v-bind:class="{ 'in-progress': active_task === 0 }"></i> {{ tasks.filter(task => task.status == 0).length }} In Progress</span>
       <span class="icon" v-bind:class="{ 'active_task': active_task === 1 }" v-on:click="makeActive(1)"><i class="mdi mdi-minus-circle-outline" v-bind:class="{ 'stop': active_task === 1 }"></i> 1 Stopped</span>
       <span class="icon" v-bind:class="{ 'active_task': active_task === 2 }" v-on:click="makeActive(2)"><i class="mdi mdi-checkbox-marked-circle-outline" v-bind:class="{ 'complete': active_task === 2 }"></i> 1 Completed</span>
       <span class="icon" v-bind:class="{ 'active_task': active_task === 3 }" v-on:click="makeActive(3)"><i class="mdi mdi-pause-circle-outline" v-bind:class="{ 'on-hold': active_task === 3 }"></i> 1 On Hold</span>
@@ -135,6 +135,10 @@ author: Gabe Landau <gll1872@rit.edu>
 
   html, body {
     overflow: hidden !important;
+  }
+
+  .add-task {
+    z-index: 1000;
   }
 
   .control {
