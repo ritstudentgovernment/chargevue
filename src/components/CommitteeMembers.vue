@@ -6,13 +6,13 @@
 -->
 
 <template>
-  <div class="committee_members_list">
-    <div class="committee_members_header">
-      <h2>Members</h2>
-      <h4>{{ committee.description }}</h4>
-    </div>
-    <div class="committee_members_member" v-for="member in members" :key="member.id">
-      <span>{{ member.id }}</span>
+  <div class="committee_members">
+    <div class="title">Committee Members</div>
+    <div class="divider"></div>
+    <div class="content">
+      <div class="member" v-for="member in members" :key="member.id">
+        <span>{{ member.id }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -50,14 +50,24 @@
 </script>
 
 <style scoped>
-  .committee_members_list {
+  .committee_members {
     background-color: #fff;
+    border: 1px solid #ddd;
     width: 70%;
-    margin: 15px auto;
-    padding: 20px;
+    margin: 25px auto 10px auto;
   }
 
-  .committee_members_member {
+  .title {
+    text-align: left;
+    font-size: 18pt;
+    margin: 10px;
+  }
+
+  .divider {
+    border-top: 1px solid #000;
+  }
+
+  .member {
     color: #fff;
     font-size: 14pt;
     font-weight: 300;
@@ -65,7 +75,7 @@
     width: 25%;
   }
 
-  .committee_members_member span {
+  .member span {
     background-color: #f36e21;
     padding: 10px;
     margin: 10px;
@@ -73,23 +83,8 @@
     width: 80%;
     text-align: center;
   }
-      
-  .committee_members_header {
-    width: 100%;
-    border-bottom: 1px solid #555;
-    color: #555;
-    margin-top: 0;
-  }
 
-  .committee_members_header h4 {
-    margin-top: 0;
-    margin-bottom: 1%;
-    font-weight: 300;
-  }
-
-  .committee_members_header h2 {
-    margin-bottom: 1%;
-    font-weight: 300;
-    margin-top: 0;
+  .content {
+    padding: 10px;
   }
 </style>

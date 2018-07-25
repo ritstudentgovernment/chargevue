@@ -15,6 +15,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="charge_header_text">{{ this.charge.title }}</div>
       <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
     </div>
+    <ChargeAdmin />
     <ChargeStatusBar />
     <Purpose v-bind:chargeDesc="this.charge.description" />
     <Tasks v-bind:tasks="actions" />
@@ -27,6 +28,7 @@ import CommitteesMenu from '../components/CommitteesMenu'
 import ChargeStatusBar from '../components/ChargeStatusBar'
 import Tasks from '../components/Tasks'
 import Purpose from '../components/Purpose'
+import ChargeAdmin from '../components/ChargeAdmin'
 
 export default {
   name: 'dashboard',
@@ -35,7 +37,8 @@ export default {
     'CommitteesMenu': CommitteesMenu,
     'ChargeStatusBar': ChargeStatusBar,
     'Tasks': Tasks,
-    'Purpose': Purpose
+    'Purpose': Purpose,
+    'ChargeAdmin': ChargeAdmin
   },
   data () {
     return {

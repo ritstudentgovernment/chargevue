@@ -19,10 +19,10 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
     <div class="taskbar">
       <span class="icon" v-bind:class="{ 'active_task': active_task === 0 }" v-on:click="makeActive(0)"><i class="mdi mdi-play-circle-outline" v-bind:class="{ 'in-progress': active_task === 0 }"></i> {{ tasks.filter(task => task.status == 0).length }} In Progress</span>
-      <span class="icon" v-bind:class="{ 'active_task': active_task === 1 }" v-on:click="makeActive(1)"><i class="mdi mdi-minus-circle-outline" v-bind:class="{ 'stop': active_task === 1 }"></i> 1 Stopped</span>
-      <span class="icon" v-bind:class="{ 'active_task': active_task === 2 }" v-on:click="makeActive(2)"><i class="mdi mdi-checkbox-marked-circle-outline" v-bind:class="{ 'complete': active_task === 2 }"></i> 1 Completed</span>
-      <span class="icon" v-bind:class="{ 'active_task': active_task === 3 }" v-on:click="makeActive(3)"><i class="mdi mdi-pause-circle-outline" v-bind:class="{ 'on-hold': active_task === 3 }"></i> 1 On Hold</span>
-      <span class="icon" v-bind:class="{ 'active_task': active_task === 4 }" v-on:click="makeActive(4)"><i class="mdi mdi-information-outline" v-bind:class="{ 'indefinite': active_task === 4 }"></i> 1 Indefinite</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 1 }" v-on:click="makeActive(1)"><i class="mdi mdi-minus-circle-outline" v-bind:class="{ 'stop': active_task === 1 }"></i> {{ tasks.filter(task => task.status == 1).length }} Stopped</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 2 }" v-on:click="makeActive(2)"><i class="mdi mdi-checkbox-marked-circle-outline" v-bind:class="{ 'complete': active_task === 2 }"></i> {{ tasks.filter(task => task.status == 2).length }} Completed</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 3 }" v-on:click="makeActive(3)"><i class="mdi mdi-pause-circle-outline" v-bind:class="{ 'on-hold': active_task === 3 }"></i> {{ tasks.filter(task => task.status == 3).length }} On Hold</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 4 }" v-on:click="makeActive(4)"><i class="mdi mdi-information-outline" v-bind:class="{ 'indefinite': active_task === 4 }"></i> {{ tasks.filter(task => task.status == 4).length }} Indefinite</span>
     </div>
 
     <Task v-for="task in filteredTasks" :key="task.id" v-bind:task="task"/>
