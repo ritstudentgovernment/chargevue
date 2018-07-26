@@ -29,6 +29,7 @@ import ChargeStatusBar from '../components/ChargeStatusBar'
 import Tasks from '../components/Tasks'
 import Purpose from '../components/Purpose'
 import ChargeAdmin from '../components/ChargeAdmin'
+import moment from 'moment'
 
 export default {
   name: 'dashboard',
@@ -56,10 +57,13 @@ export default {
     get_actions: function (data) {
       this.actions = data
       for (let action of this.actions) {
+        console.log(action)
         this.$socket.emit('get_notes', action.id)
       }
     },
     get_notes: function (data) {
+      console.log(moment(data[0].created_at).format('L @ '))
+      console.log(moment().format('L'))
       if (data.length > 0) {
         for (let action of this.actions) {
           if (action.id === data[0].action) {

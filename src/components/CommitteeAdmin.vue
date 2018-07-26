@@ -145,4 +145,8 @@ author: Gabe Landau <gll1872@rit.edu>
   .content {
     padding: 20px;
   }
+
+  .field {
+    padding-right: 20px;
+  }
 </style>

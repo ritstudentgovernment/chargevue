@@ -38,7 +38,7 @@ author: Gabe Landau <gll1872@rit.edu>
               <span class="icon"><i class="mdi header-icon" v-bind:class="[style, icon]"></i></span>
               <span class="modal-titles">
                 <span class="modal-title">{{task.title}}</span><br />
-                <span class="modal-subtitle">Assigned to <span class="link">gll1872</span></span>
+                <span class="modal-subtitle">Assigned to <span class="link">{{task.assigned_to}}</span></span>
               </span>
             </div>
             <p>{{task.description}}</p>

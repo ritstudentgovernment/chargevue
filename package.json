@@ -17,6 +17,7 @@
     "babel-polyfill": "^6.26.0",
     "bulma": "^0.5.2",
     "mdi": "^2.0.46",
+    "moment": "^2.22.2",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "vue": "^2.4.2",

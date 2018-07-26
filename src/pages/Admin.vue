@@ -10,38 +10,36 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <div>
     <HeaderMenu />
-      <div class="columns">
-        <div class="column">
-          <div class="box" id="committee_table">
-            <h3 class="title is-3">Manage Committees</h3>
-            <table class="table is-fullwidth is-striped">
-              <thead>
-              <tr>
-                <td>Committee ID</td>
-                <td>Committee Name</td>
-                <td>Actions</td>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="committee in committees" :key="committee.id">
-                <td>{{ committee.id }}</td>
-                <td>{{ committee.title }}</td>
-                <td class="action-buttons"><button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button> <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button> <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button> <button v-if="committee.enabled" class="button is-danger" @click="deactivateCommittee(committee.id)">Deactivate</button><button v-if="!committee.enabled" class="button reactivate" @click="activateCommittee(committee.id)">Reactivate</button></td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="column is-one-quarter">
-          <div class="box" id="admin_forms">
-            <h3 class="title is-3">Actions</h3>
-            <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
-          </div>
-        </div>
-      </div>
+    <div class="box" id="admin_forms">
+      <h3 class="title is-3">Actions</h3>
+      <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
+    </div>
 
-
-
+    <div class="box" id="committee_table">
+      <h3 class="title is-3">Manage Committees</h3>
+      <table class="table is-fullwidth is-striped">
+        <thead>
+        <tr>
+          <td>Committee ID</td>
+          <td>Committee Name</td>
+          <td>Actions</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="committee in committees" :key="committee.id">
+          <td>{{ committee.id }}</td>
+          <td>{{ committee.title }}</td>
+          <td class="action-buttons">
+            <button class="button is-primary" @click="openEditCommitteeForm(committee.id)">Edit</button>
+            <button class="button is-primary" @click="openAddMemberToCommitteeForm(committee.id)">Add Member</button>
+            <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button>
+            <button v-if="committee.enabled" class="button is-danger" @click="deactivateCommittee(committee.id)">Deactivate</button>
+            <button v-if="!committee.enabled" class="button reactivate" @click="activateCommittee(committee.id)">Reactivate</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 
       <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
         <div class="modal-background" v-on:click="closeCreateCommittee()"></div>
@@ -589,12 +587,8 @@ export default {
 </script>
 
 <style scoped>
-  .action-buttons button {
-    margin-right: 10px;
-  }
-
-  .columns {
-    margin: 10px;
+  .box {
+    margin: 20px;
   }
 
   table {
