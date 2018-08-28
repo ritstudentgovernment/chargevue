@@ -18,14 +18,14 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div class="taskbar">
-      <span class="icon" v-bind:class="{ active_task:mockTasks[0].active }" @click="setActive(mockTasks[0].status)"><i class="mdi mdi-play-circle-outline"></i> 1 In Progress</span>
-      <span class="icon" v-bind:class="{ active_task:mockTasks[1].active }" @click="setActive(mockTasks[1].status)"><i class="mdi mdi-minus-circle-outline"></i> 1 Stopped</span>
-      <span class="icon" v-bind:class="{ active_task:mockTasks[2].active }" @click="setActive(mockTasks[2].status)"><i class="mdi mdi-checkbox-marked-circle-outline"></i> 1 Completed</span>
-      <span class="icon" v-bind:class="{ active_task:mockTasks[3].active }" @click="setActive(mockTasks[3].status)"><i class="mdi mdi-pause-circle-outline"></i> 1 On Hold</span>
-      <span class="icon" v-bind:class="{ active_task:mockTasks[4].active }" @click="setActive(mockTasks[4].status)"><i class="mdi mdi-information-outline"></i> 1 Indefinite</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 0 }" v-on:click="makeActive(0)"><i class="mdi mdi-play-circle-outline" v-bind:class="{ 'in-progress': active_task === 0 }"></i> {{ tasks.filter(task => task.status == 0).length }} In Progress</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 1 }" v-on:click="makeActive(1)"><i class="mdi mdi-minus-circle-outline" v-bind:class="{ 'stop': active_task === 1 }"></i> {{ tasks.filter(task => task.status == 1).length }} Stopped</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 2 }" v-on:click="makeActive(2)"><i class="mdi mdi-checkbox-marked-circle-outline" v-bind:class="{ 'complete': active_task === 2 }"></i> {{ tasks.filter(task => task.status == 2).length }} Completed</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 3 }" v-on:click="makeActive(3)"><i class="mdi mdi-pause-circle-outline" v-bind:class="{ 'on-hold': active_task === 3 }"></i> {{ tasks.filter(task => task.status == 3).length }} On Hold</span>
+      <span class="icon" v-bind:class="{ 'active_task': active_task === 4 }" v-on:click="makeActive(4)"><i class="mdi mdi-information-outline" v-bind:class="{ 'indefinite': active_task === 4 }"></i> {{ tasks.filter(task => task.status == 4).length }} Indefinite</span>
     </div>
 
-    <Task v-for="task in mockTasks" v-if="task.active" :key="task.status" v-bind:status="task.status" v-bind:title="task.title" v-bind:subtitle="task.subtitle"/>
+    <Task v-for="task in filteredTasks" :key="task.id" v-bind:task="task"/>
 
     <div class="add-task modal" v-bind:class="{ 'is-active': showAddTaskForm }">
       <div class="modal-background" @click="showAddTaskForm = false"></div>
@@ -34,94 +34,76 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="field">
             <label class="label">Task Name</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Task Name">
+              <input class="input" type="text" placeholder="Task Name" v-model="createTaskData.title">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Assignee</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Assignee" v-model="createTaskData.assignee">
             </div>
           </div>
 
           <div class="field">
             <label class="label">Task Description</label>
             <div class="control">
-              <textarea class="textarea" placeholder="Purpose and description of this task..."></textarea>
+              <textarea class="textarea" placeholder="Purpose and description of this task..." v-model="createTaskData.description"></textarea>
             </div>
           </div>
 
-          <button class="button is-primary">Create Task</button>
+          <button class="button is-primary" @click="createTask()">Create Task</button>
         </div>
       </div>
       <button class="modal-close is-large" @click="showAddTaskForm = false"></button>
     </div>
-
-
-
   </div>
 </template>
 
 <script>
   import Task from './Task'
+  import Auth from '../mixins/auth'
 
   export default {
     name: 'tasks',
+    mixins: [Auth],
+    props: ['tasks'],
     components: {
       'Task': Task
     },
     data () {
       return {
         showAddTaskForm: false,
-        mockTasks: [
-          {
-            'title': 'In progress task for a project.',
-            'subtitle': 'In progress since 3/17/2017',
-            'status': 'inProgress',
-            'active': true
-          },
-          {
-            'title': 'Stopped task for a project.',
-            'subtitle': 'Stopped since 3/17/2017',
-            'status': 'stop',
-            'active': false
-          },
-          {
-            'title': 'Completed task for a project.',
-            'subtitle': 'Completed since 3/17/2017',
-            'status': 'complete',
-            'active': false
-          },
-          {
-            'title': 'On hold task for a project.',
-            'subtitle': 'On hold since 3/17/2017',
-            'status': 'onHold',
-            'active': false
-          },
-          {
-            'title': 'Indefinite task for a project.',
-            'subtitle': 'Indefinite since 3/17/2017',
-            'status': 'indefinite',
-            'active': false
-          },
-          {
-            'title': 'In progress task 2',
-            'subtitle': 'In progress since 2/14/2017',
-            'status': 'inProgress',
-            'active': true
-          },
-          {
-            'title': 'On hold task 2',
-            'subtitle': 'On hold since 2/14/2017',
-            'status': 'onHold',
-            'active': true
-          }
-        ]
+        active_task: 0,
+        createTaskData: {
+          title: '',
+          description: '',
+          assignee: ''
+        }
       }
     },
     methods: {
-      setActive: function (status) {
-        for (let k of this.mockTasks) {
-          if (k.status === status) {
-            k.active = true
-          } else {
-            k.active = false
-          }
-        }
+      createTask () {
+        this.$socket.emit('create_action', {
+          token: this.getToken(),
+          charge: this.$router.history.current.params['charge'],
+          assigned_to: this.createTaskData.assignee,
+          title: this.createTaskData.title,
+          description: this.createTaskData.description
+        })
+      },
+      makeActive (status) {
+        this.active_task = status
+      }
+    },
+    sockets: {
+      create_action: function (data) {
+        console.log('CREATED ACTION: ', data)
+      }
+    },
+    computed: {
+      filteredTasks: function () {
+        return this.tasks.filter(task => task.status === this.active_task)
       }
     }
   }
@@ -130,8 +112,33 @@ author: Gabe Landau <gll1872@rit.edu>
 <style scoped>
   @import "../../node_modules/mdi/css/materialdesignicons.css";
 
+  /* Statuses for icons */
+  .in-progress {
+    color: #d6b829;
+  }
+
+  .stop {
+    color: #f00;
+  }
+
+  .complete {
+    color: #088512;
+  }
+
+  .on-hold {
+    color: #ff8720;
+  }
+
+  .indefinite {
+    color: #4f86ff;
+  }
+
   html, body {
     overflow: hidden !important;
+  }
+
+  .add-task {
+    z-index: 1000;
   }
 
   .control {

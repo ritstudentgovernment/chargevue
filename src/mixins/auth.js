@@ -6,6 +6,10 @@ let functions = {
         this.$options.sockets.auth = (data) => {
           if (data.token) {
             localStorage.setItem('token', data.token)
+            if (data.admin) this.$store.commit('admin', { admin: true })
+            this.$store.commit('authenticated', { authenticated: true })
+            this.$store.commit('token', { token: data.token })
+            this.$store.commit('username', { username: data.username })
             resolve()
           } else {
             reject()
@@ -15,12 +19,25 @@ let functions = {
     },
     logout () {
       localStorage.removeItem('token')
+      this.$store.commit('authenticated', { authenticated: false })
+      this.$store.commit('token', { token: '' })
+      this.$store.commit('username', { username: '' })
+      this.$store.commit('admin', { admin: false })
+    },
+    pageReloaded (token, admin, username) {
+      this.$store.commit('authenticated', { authenticated: true })
+      this.$store.commit('token', { token: token })
+      this.$store.commit('username', { username: username })
+      this.$store.commit('admin', { admin: admin })
     },
     getToken () {
-      return localStorage.getItem('token')
+      return this.$store.getters.token
+    },
+    isAdmin () {
+      return this.$store.getters.admin
     },
     isAuthenticated () {
-      return !!localStorage.getItem('token')
+      return this.$store.getters.authenticated
     }
   }
 }

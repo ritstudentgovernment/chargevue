@@ -14,8 +14,9 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <h1 id="dashboard_title">Projects In Progress</h1>
     <h2>Projects that are currently in progress.</h2>
-    <!-- <ProjectThumbnail />
-    <ProjectThumbnail /> -->
+    <div v-for="charge in charges" :key="charge.id">
+      <ProjectThumbnail v-if="charge.status == 0" v-bind:charge="charge" />
+    </div>
   </div>
 </template>
 
@@ -35,8 +36,17 @@ export default {
   },
   data () {
     return {
-      title: 'Charge Tracker'
+      title: 'Charge Tracker',
+      charges: []
     }
+  },
+  sockets: {
+    get_all_charges: function (data) {
+      this.charges = data
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_all_charges', 'technology')
   }
 }
 </script>

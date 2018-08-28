@@ -15,9 +15,10 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="charge_header_text">{{ this.charge.title }}</div>
       <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
     </div>
+    <ChargeAdmin />
     <ChargeStatusBar />
     <Purpose v-bind:chargeDesc="this.charge.description" />
-    <Tasks />
+    <Tasks v-bind:tasks="actions" />
   </div>
 </template>
 
@@ -27,6 +28,8 @@ import CommitteesMenu from '../components/CommitteesMenu'
 import ChargeStatusBar from '../components/ChargeStatusBar'
 import Tasks from '../components/Tasks'
 import Purpose from '../components/Purpose'
+import ChargeAdmin from '../components/ChargeAdmin'
+import moment from 'moment'
 
 export default {
   name: 'dashboard',
@@ -35,7 +38,8 @@ export default {
     'CommitteesMenu': CommitteesMenu,
     'ChargeStatusBar': ChargeStatusBar,
     'Tasks': Tasks,
-    'Purpose': Purpose
+    'Purpose': Purpose,
+    'ChargeAdmin': ChargeAdmin
   },
   data () {
     return {
@@ -43,17 +47,31 @@ export default {
         title: '',
         committee: ''
       },
-      actions: null
+      actions: []
     }
   },
   sockets: {
     get_charge: function (data) {
       this.charge = data
-      console.log(this.charge)
     },
     get_actions: function (data) {
       this.actions = data
-      console.log(this.actions)
+      for (let action of this.actions) {
+        this.$socket.emit('get_notes', action.id)
+      }
+    },
+    get_notes: function (data) {
+      if (data.length > 0) {
+        for (let note of data) {
+          note.created_at = moment(note.created_at).format('L @ h:mma')
+        }
+
+        for (let action of this.actions) {
+          if (action.id === data[0].action) {
+            this.$set(action, 'notes', data)
+          }
+        }
+      }
     }
   },
   beforeMount () {

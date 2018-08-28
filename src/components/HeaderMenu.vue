@@ -12,14 +12,14 @@ author: Gabe Landau <gll1872@rit.edu>
     <header>
       <div class="left">
         <div class="link" id="site">
-          <span>Go to Site</span>
+          <router-link to="/" tag="span">Go to Site</router-link>
         </div>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
       <div class="right">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated">Logout</span>
-        <router-link to="/admin" class="link" v-if="authenticated">Admin</router-link>
+        <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
       </div>
     </header>
 
@@ -61,13 +61,13 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <script>
 import Auth from '../mixins/auth'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'headermenu',
   mixins: [Auth],
   data () {
     return {
-      authenticated: false,
       showLoginForm: false,
       showLoginLoading: false,
       showAuthError: false,
@@ -77,15 +77,12 @@ export default {
   },
   methods: {
     submitLogin () {
-      console.log('submit')
       this.showAuthError = false
       this.showLoginLoading = true
       this.login(this.username, this.password).then(() => {
-        console.log('authenticated')
         this.showAuthError = false
         this.showLoginForm = false
         this.showLoginLoading = false
-        this.authenticated = true
       }).catch(() => {
         this.showLoginLoading = false
         this.showAuthError = true
@@ -93,14 +90,14 @@ export default {
     },
     submitLogout () {
       this.logout()
-      this.authenticated = false
       this.$router.push({ path: '/' })
     }
   },
-  beforeMount () {
-    if (this.isAuthenticated()) {
-      this.authenticated = true
-    }
+  computed: {
+    ...mapGetters({
+      authenticated: 'authenticated',
+      admin: 'admin'
+    })
   }
 }
 </script>

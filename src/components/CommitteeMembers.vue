@@ -6,13 +6,13 @@
 -->
 
 <template>
-  <div class = 'committee_members_list'>
-    <div class = 'committee_members_header'>
-      <h2>Members</h2>
-      <h4>{{ committee.description }}</h4>
-    </div>
-    <div class = 'committee_members_member' v-for='member in members'>
-      <span>{{ member.id }}</span>
+  <div class="committee_members">
+    <div class="title">Committee Members</div>
+    <div class="divider"></div>
+    <div class="content">
+      <div class="member" v-for="member in members" :key="member.id">
+        <span>{{ member.id }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@
     data () {
       return {
         members: null,
-        committee: {'description': 'committee'}
+        committee: { 'description': 'committee' }
       }
     },
     sockets: {
@@ -49,40 +49,42 @@
   }
 </script>
 
-<style scoped lang="sass">
-  @import '../assets/vars.sass'
+<style scoped>
+  .committee_members {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    width: 70%;
+    margin: 25px auto 10px auto;
+  }
 
-  .committee_members_list
-    background-color: #fff
-    width: 70%
-    margin: 15px auto
-    padding: 20px
+  .title {
+    text-align: left;
+    font-size: 18pt;
+    margin: 10px;
+  }
 
-  .committee_members_member
-    color: #fff
-    font-size: 14pt
-    font-weight: 300
-    display: inline-block
-    width: 25%
-    span
-      background-color: $primary
-      padding: 10px
-      margin: 10px
-      display: inline-block
-      width: 80%
-      text-align: center
+  .divider {
+    border-top: 1px solid #000;
+  }
 
-  .committee_members_header
-    width: 100%
-    border-bottom: 1px solid #555
-    color: #555
-    margin-top: 0
-    h4
-      margin-top: 0
-      margin-bottom: 1%
-      font-weight: 300
-    h2
-      margin-bottom: 1%
-      font-weight: 300
-      margin-top: 0
+  .member {
+    color: #fff;
+    font-size: 14pt;
+    font-weight: 300;
+    display: inline-block;
+    width: 25%;
+  }
+
+  .member span {
+    background-color: #f36e21;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+    width: 80%;
+    text-align: center;
+  }
+
+  .content {
+    padding: 10px;
+  }
 </style>

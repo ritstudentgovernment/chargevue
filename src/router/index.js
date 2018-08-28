@@ -5,6 +5,7 @@ import Committee from '@/pages/Committee'
 import Charge from '@/pages/Charge'
 import Admin from '@/pages/Admin'
 import Invitation from '@/pages/Invitation'
+import store from '@/store'
 
 Vue.use(Router)
 
@@ -12,28 +13,30 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: Dashboard,
-      refresh: true
+      component: Dashboard
     },
     {
       path: '/committee/:committee',
-      component: Committee,
-      refresh: true
+      component: Committee
     },
     {
       path: '/charge/:charge',
-      component: Charge,
-      refresh: true
+      component: Charge
     },
     {
       path: '/admin',
       component: Admin,
-      refresh: true
+      beforeEnter: (to, from, next) => {
+        if (store.getters.admin) {
+          next()
+        } else {
+          next(false)
+        }
+      }
     },
     {
       path: '/invitation/:id',
-      component: Invitation,
-      refresh: true
+      component: Invitation
     }
   ]
 })
