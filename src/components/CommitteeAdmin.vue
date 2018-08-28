@@ -40,7 +40,7 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
           </div>
 
-          <label class="label">Priority</label>
+          <!-- <label class="label">Priority</label>
             <div class="field">
               <div class="control">
                 <div class="select">
@@ -51,7 +51,7 @@ author: Gabe Landau <gll1872@rit.edu>
                   </select>
                 </div>
               </div>
-            </div>
+            </div> -->
         </section>
         <footer class="modal-card-foot">
           <button class="button is-primary" @click="createNewCharge()">Create</button>
@@ -75,7 +75,7 @@ author: Gabe Landau <gll1872@rit.edu>
       return {
         showAddNewCharge: false,
         createChargeTitle: null,
-        createChargePriority: null,
+        createChargePriority: 1,
         createChargeDescription: null,
         createChargeResponse: {
           show: false,
@@ -109,6 +109,7 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     sockets: {
       create_charge: function (data) {
+        console.log(data)
         if (data.success) {
           this.createChargeResponse.show = true
           this.createChargeResponse.success = true

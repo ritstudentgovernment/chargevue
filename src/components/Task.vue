@@ -34,6 +34,9 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="modal-background" @click="active = false"></div>
         <div class="modal-content">
           <div class="box">
+            <article class="message" v-if="createNoteResponseStatus" v-bind:class="createNoteResponseStatus === 'success' ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ createNoteResponseMessage }}</div>
+            </article>
             <div class="modal-header">
               <span class="icon"><i class="mdi header-icon" v-bind:class="[style, icon]"></i></span>
               <span class="modal-titles">
@@ -108,15 +111,23 @@ author: Gabe Landau <gll1872@rit.edu>
         icon: '',
         id: null,
         status: -1,
-        createNoteText: ''
+        createNoteText: '',
+        createNoteResponseStatus: '',
+        createNoteResponseMessage: ''
       }
     },
     sockets: {
       create_note: function (data) {
-        console.log('CREATED NOTE: ', data)
+        if (data.error) {
+          this.createNoteResponseStatus = 'error'
+          this.createNoteResponseMessage = data.error
+        }
       },
       edit_action: function (data) {
-        console.log('EDITED ACTION: ', data)
+        if (data.error) {
+          this.createNoteResponseStatus = 'error'
+          this.createNoteResponseMessage = data.error
+        }
       }
     },
     methods: {

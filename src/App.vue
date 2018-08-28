@@ -5,8 +5,23 @@
 </template>
 
 <script>
+import Auth from '@/mixins/auth'
+
 export default {
-  name: 'app'
+  name: 'app',
+  mixins: [Auth],
+  beforeMount () {
+    if (localStorage.getItem('token')) {
+      this.$socket.emit('verify_auth', {
+        token: localStorage.getItem('token')
+      })
+    }
+  },
+  sockets: {
+    verify_auth: function (data) {
+      this.pageReloaded(localStorage.getItem('token'), data.admin, data.username)
+    }
+  }
 }
 </script>
 

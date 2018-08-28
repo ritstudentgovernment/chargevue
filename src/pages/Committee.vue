@@ -16,8 +16,8 @@ author: Gabe Landau <gll1872@rit.edu>
       <h1>{{ committee.description }}</h1>
     </div>
 
-    <CommitteeOverview inProgressCount="1" incompleteCount="3" completedCount="10" indefiniteCount="3" stoppedCount="2" />
-    <CommitteeAdmin v-bind:committee="this.committee"/>
+    <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
+    <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee"/>
     <CommitteeMembers />
 
     <h1>Projects In Progress</h1>
@@ -37,6 +37,7 @@ import ProjectThumbnailSmall from '../components/ProjectThumbnailSmall'
 import LoadingIndicator from '../components/LoadingIndicator'
 import CommitteeMembers from '../components/CommitteeMembers'
 import CommitteeAdmin from '../components/CommitteeAdmin'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'dashboard',
@@ -55,12 +56,13 @@ export default {
       committee: {'description': 'committee'},
       backgroundImage: null,
       showLoadingIndicator: true,
-      charges: null
+      charges: []
     }
   },
   sockets: {
     get_committee: function (data) {
       this.committee = data
+      console.log(this.committee)
 
       let image = data.committee_img
       if (image) {
@@ -85,6 +87,27 @@ export default {
   beforeMount () {
     this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
     this.$socket.emit('get_charges', this.$router.history.current.params['committee'])
+  },
+  computed: {
+    inProgressCount () {
+      return this.charges.filter(x => x.status === 0).length
+    },
+    incompleteCount () {
+      return this.charges.filter(x => x.status === 1).length
+    },
+    completedCount () {
+      return this.charges.filter(x => x.status === 2).length
+    },
+    indefiniteCount () {
+      return this.charges.filter(x => x.status === 3).length
+    },
+    stoppedCount () {
+      return this.charges.filter(x => x.status === 4).length
+    },
+    ...mapGetters({
+      username: 'username',
+      admin: 'admin'
+    })
   },
   /* Since this component is used for each committee page, we have to
     watch for changes in the URL and update the props on the page

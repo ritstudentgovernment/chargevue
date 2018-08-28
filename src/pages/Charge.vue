@@ -57,14 +57,15 @@ export default {
     get_actions: function (data) {
       this.actions = data
       for (let action of this.actions) {
-        console.log(action)
         this.$socket.emit('get_notes', action.id)
       }
     },
     get_notes: function (data) {
-      console.log(moment(data[0].created_at).format('L @ '))
-      console.log(moment().format('L'))
       if (data.length > 0) {
+        for (let note of data) {
+          note.created_at = moment(note.created_at).format('L @ h:mma')
+        }
+
         for (let action of this.actions) {
           if (action.id === data[0].action) {
             this.$set(action, 'notes', data)
