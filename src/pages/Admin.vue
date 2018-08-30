@@ -135,7 +135,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 
       <div class="modal" v-bind:class="{ 'is-active': showEditCommitteeForm }">
-        <div class="modal-background" v-on:click="showEditCommitteeForm = false"></div>
+        <div class="modal-background" v-on:click="closeEditCommitteeForm()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Edit Committee</p>
@@ -498,6 +498,10 @@ export default {
       this.addMemberResponse.success = null
       this.addMemberMember = null
       this.showAddMemberToCommitteeForm = false
+    },
+    closeEditCommitteeForm () {
+      this.showEditCommitteeForm = false
+      this.editCommitteeResponse.show = false
     },
     removeMemberFromCommittee () {
       console.log(this.removeMemberCommittee)
