@@ -8,8 +8,8 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <div>
-    <div class="task" @click="active = true">
+  <div class="task">
+    <div @click="active = true">
       <div><h3 class="title is-3">{{task.title}}</h3></div>
       <div class="taskList">
         <p>{{task.description}}</p>
@@ -121,6 +121,8 @@ author: Gabe Landau <gll1872@rit.edu>
         if (data.error) {
           this.createNoteResponseStatus = 'error'
           this.createNoteResponseMessage = data.error
+        } else {
+          this.createNoteText = ''
         }
       },
       edit_action: function (data) {
@@ -207,9 +209,9 @@ author: Gabe Landau <gll1872@rit.edu>
 
   /* Thumbnail styles */
   .task {
-    border-top: 1px solid #ddd;
     padding: 10px;
     font-size: 14pt;
+    border-bottom: 10px solid #eee;
   }
 
   .thumbnail {

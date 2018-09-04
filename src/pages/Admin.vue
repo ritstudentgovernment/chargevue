@@ -135,7 +135,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 
       <div class="modal" v-bind:class="{ 'is-active': showEditCommitteeForm }">
-        <div class="modal-background" v-on:click="showEditCommitteeForm = false"></div>
+        <div class="modal-background" v-on:click="closeEditCommitteeForm()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Edit Committee</p>
@@ -447,7 +447,7 @@ export default {
       } else {
         this.$socket.emit('edit_committee', {
           token: this.getToken(),
-          id: this.editTitle.toLowerCase(),
+          id: this.editTitle.toLowerCase().replace(/\s/g, ''),
           description: this.editDescription,
           location: this.editLocation,
           meeting_time: time,
@@ -499,6 +499,10 @@ export default {
       this.addMemberMember = null
       this.showAddMemberToCommitteeForm = false
     },
+    closeEditCommitteeForm () {
+      this.showEditCommitteeForm = false
+      this.editCommitteeResponse.show = false
+    },
     removeMemberFromCommittee () {
       console.log(this.removeMemberCommittee)
       console.log(this.removeMemberMember)
@@ -543,6 +547,7 @@ export default {
         this.editCommitteeResponse.success = true
         this.editCommitteeResponse.message = data.success
       } else if (data.error) {
+        console.log(data)
         this.editCommitteeResponse.show = true
         this.editCommitteeResponse.success = false
         this.editCommitteeResponse.message = data.error
