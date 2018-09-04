@@ -207,9 +207,9 @@ author: Gabe Landau <gll1872@rit.edu>
 
   /* Thumbnail styles */
   .task {
-    border-top: 1px solid #ddd;
     padding: 10px;
     font-size: 14pt;
+    border-bottom: 10px solid #eee;
   }
 
   .thumbnail {

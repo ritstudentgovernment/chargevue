@@ -10,7 +10,7 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <div class="project_thumbnail" @click="openCharge()">
 		<div class="project_thumbnail_header">{{charge.title}}</div>
-		<div class="project_thumbnail_subheader">Last updated on: 3/7/2017</div>
+		<div class="project_thumbnail_subheader">Last updated on: 9/1/2018</div>
 		<div class="project_thumbnail_description">{{charge.description}}</div>
 	</div>
 </template>
