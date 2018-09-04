@@ -9,7 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div class="task">
-    <div  @click="active = true">
+    <div @click="active = true">
       <div><h3 class="title is-3">{{task.title}}</h3></div>
       <div class="taskList">
         <p>{{task.description}}</p>
