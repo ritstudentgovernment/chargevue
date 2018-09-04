@@ -83,6 +83,8 @@ export default {
         this.showAuthError = false
         this.showLoginForm = false
         this.showLoginLoading = false
+        this.username = ''
+        this.password = ''
       }).catch(() => {
         this.showLoginLoading = false
         this.showAuthError = true

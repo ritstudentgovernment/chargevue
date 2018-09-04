@@ -447,7 +447,7 @@ export default {
       } else {
         this.$socket.emit('edit_committee', {
           token: this.getToken(),
-          id: this.editTitle.toLowerCase(),
+          id: this.editTitle.toLowerCase().replace(/\s/g, ''),
           description: this.editDescription,
           location: this.editLocation,
           meeting_time: time,
@@ -547,6 +547,7 @@ export default {
         this.editCommitteeResponse.success = true
         this.editCommitteeResponse.message = data.success
       } else if (data.error) {
+        console.log(data)
         this.editCommitteeResponse.show = true
         this.editCommitteeResponse.success = false
         this.editCommitteeResponse.message = data.error
