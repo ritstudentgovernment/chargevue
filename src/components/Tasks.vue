@@ -27,9 +27,12 @@ author: Gabe Landau <gll1872@rit.edu>
     <Task v-for="task in filteredTasks" :key="task.id" v-bind:task="task"/>
 
     <div class="add-task modal" v-bind:class="{ 'is-active': showAddTaskForm }">
-      <div class="modal-background" @click="showAddTaskForm = false"></div>
+      <div class="modal-background" @click="clearTaskModal()"></div>
       <div class="modal-content">
         <div class="box">
+          <article class="message" v-if="addTaskResponse.show" v-bind:class="addTaskResponse.success ? 'is-success' : 'is-danger'">
+            <div class="message-body">{{ addTaskResponse.message }}</div>
+          </article>
           <div class="field">
             <label class="label">Task Name</label>
             <div class="control">
@@ -54,7 +57,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <button class="button is-primary" @click="createTask()">Create Task</button>
         </div>
       </div>
-      <button class="modal-close is-large" @click="showAddTaskForm = false"></button>
+      <button class="modal-close is-large" @click="clearTaskModal"></button>
     </div>
   </div>
 </template>
@@ -77,6 +80,11 @@ author: Gabe Landau <gll1872@rit.edu>
           title: '',
           description: '',
           assignee: ''
+        },
+        addTaskResponse: {
+          show: false,
+          success: null,
+          message: null
         }
       }
     },
@@ -92,10 +100,28 @@ author: Gabe Landau <gll1872@rit.edu>
       },
       makeActive (status) {
         this.active_task = status
+      },
+      clearTaskModal () {
+        this.showAddTaskForm = false
+        this.createTaskData.title = ''
+        this.createTaskData.description = ''
+        this.createTaskData.assignee = ''
+        this.addTaskResponse.show = false
+        this.addTaskResponse.success = null
+        this.addTaskResponse.message = null
       }
     },
     sockets: {
       create_action: function (data) {
+        if (data.success) {
+          this.addTaskResponse.success = true
+          this.addTaskResponse.show = true
+          this.addTaskResponse.message = data.success
+        } else if (data.error) {
+          this.addTaskResponse.success = false
+          this.addTaskResponse.show = true
+          this.addTaskResponse.message = data.error
+        }
         console.log('CREATED ACTION: ', data)
       }
     },
