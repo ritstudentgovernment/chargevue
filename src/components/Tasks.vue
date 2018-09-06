@@ -30,6 +30,9 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="modal-background" @click="showAddTaskForm = false"></div>
       <div class="modal-content">
         <div class="box">
+          <article class="message" v-if="addTaskResponse.show" v-bind:class="addTaskResponse.success ? 'is-success' : 'is-danger'">
+            <div class="message-body">{{ addTaskResponse.message }}</div>
+          </article>
           <div class="field">
             <label class="label">Task Name</label>
             <div class="control">
@@ -77,6 +80,11 @@ author: Gabe Landau <gll1872@rit.edu>
           title: '',
           description: '',
           assignee: ''
+        },
+        addTaskResponse: {
+          show: false,
+          success: null,
+          message: null
         }
       }
     },
@@ -96,6 +104,15 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     sockets: {
       create_action: function (data) {
+        if (data.success) {
+          this.addTaskResponse.success = true
+          this.addTaskResponse.show = true
+          this.addTaskResponse.message = data.success
+        } else if (data.error) {
+          this.addTaskResponse.success = false
+          this.addTaskResponse.show = true
+          this.addTaskResponse.message = data.error
+        }
         console.log('CREATED ACTION: ', data)
       }
     },
