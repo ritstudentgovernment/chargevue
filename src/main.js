@@ -9,7 +9,7 @@ import store from './store'
 import socketio from 'socket.io-client'
 import VueSocketIO from 'vue-socket.io'
 
-Vue.use(VueSocketIO, socketio('localhost:5000'))
+Vue.use(VueSocketIO, socketio('https://tigertrackerstage.rit.edu:5000'))
 
 Vue.config.productionTip = false
 
