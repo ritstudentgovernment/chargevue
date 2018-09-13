@@ -16,7 +16,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
     </div>
     <ChargeAdmin />
-    <ChargeStatusBar />
+    <ChargeStatusBar v-bind:actions="this.actions"/>
     <Purpose v-bind:chargeDesc="this.charge.description" />
     <Tasks v-bind:tasks="actions" />
   </div>
@@ -77,6 +77,7 @@ export default {
   beforeMount () {
     this.$socket.emit('get_charge', this.$router.history.current.params['charge'])
     this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
+    console.log(this.actions)
   }
 }
 </script>
