@@ -62,41 +62,19 @@ author: Gabe Landau <gll1872@rit.edu>
         </footer>
       </div>
     </div>
-
-    <div class="modal" v-bind:class="{ 'is-active': showAddMemberToCommitteeForm}">
-      <div class="modal-background" v-on:click="closeAddMember()"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Add Member to Committee</p>
-        </header>
-        <section class="modal-card-body" @keyup.enter="addMemberToCommittee()">
-          <article class="message" v-if="addMemberResponse.show" v-bind:class="addMemberResponse.success ? 'is-success' : 'is-danger'">
-            <div class="message-body">{{ addMemberResponse.message }}</div>
-          </article>
-
-          <div class="field">
-            <label class="label">Member</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="RIT Username" v-model="addMemberMember">
-            </div>
-          </div>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-primary" v-on:click="addMemberToCommittee()">Add
-            Member</button>
-          <button class="button" v-on:click="closeAddMember()">Cancel</button>
-        </footer>
-      </div>
+    <div v-if="showAddMemberToCommitteeForm">
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id"/>
     </div>
   </div>
 </template>
 
 <script>
   import Auth from '../mixins/auth'
+  import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
 
   export default {
     name: 'committee-admin',
-    components: {},
+    components: {AddCommitteeMemberModal: AddCommitteeMember},
     mixins: [Auth],
     props: ['committee'],
     data () {
@@ -107,18 +85,7 @@ author: Gabe Landau <gll1872@rit.edu>
         createChargeTitle: null,
         createChargePriority: 1,
         createChargeDescription: null,
-        addMemberMember: null,
         createChargeResponse: {
-          show: false,
-          message: null,
-          success: null
-        },
-        addMemberResponse: {
-          show: false,
-          message: null,
-          success: null
-        },
-        removeMemberResponse: {
           show: false,
           message: null,
           success: null
@@ -151,21 +118,7 @@ author: Gabe Landau <gll1872@rit.edu>
         this.showAddMemberToCommitteeForm = true
       },
       closeAddMember () {
-        this.addMemberResponse.show = false
-        this.addMemberResponse.message = null
-        this.addMemberResponse.success = null
-        this.addMemberMember = null
         this.showAddMemberToCommitteeForm = false
-      },
-      addMemberToCommittee () {
-        console.log(this.addMemberCommittee)
-        console.log(this.addMemberMember)
-        this.$socket.emit('add_member_committee', {
-          token: this.getToken(),
-          user_id: this.addMemberMember,
-          committee_id: this.addMemberCommittee
-        })
-        console.log(this.addMemberResponse.show)
       }
     },
     sockets: {
@@ -179,17 +132,6 @@ author: Gabe Landau <gll1872@rit.edu>
           this.createChargeResponse.show = true
           this.createChargeResponse.success = false
           this.createChargeResponse.message = data.error
-        }
-      },
-      add_member_committee: function (data) {
-        if (data.success) {
-          this.addMemberResponse.show = true
-          this.addMemberResponse.success = true
-          this.addMemberResponse.message = data.success
-        } else if (data.error) {
-          this.addMemberResponse.show = true
-          this.addMemberResponse.success = false
-          this.addMemberResponse.message = data.error
         }
       }
     }

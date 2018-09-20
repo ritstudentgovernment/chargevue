@@ -27,9 +27,54 @@
 </template>
 
 <script>
-    export default {
-      name: 'AddCommitteeMemberModal'
+  import Auth from '../mixins/auth'
+
+  export default {
+    name: 'AddCommitteeMemberModal',
+    mixins: [Auth],
+    props: { addMemberCommittee: String },
+    data () {
+      return {
+        showAddMemberToCommitteeForm: true,
+        addMemberMember: null,
+        addMemberResponse: {
+          show: false,
+          message: null,
+          success: null
+        }
+      }
+    },
+    methods: {
+      closeAddMember () {
+        this.addMemberResponse.show = false
+        this.addMemberResponse.message = null
+        this.addMemberResponse.success = null
+        this.addMemberMember = null
+        this.showAddMemberToCommitteeForm = false
+        this.$emit('close-add-member')
+      },
+      addMemberToCommittee () {
+        this.$socket.emit('add_member_committee', {
+          token: this.getToken(),
+          user_id: this.addMemberMember,
+          committee_id: this.addMemberCommittee
+        })
+      }
+    },
+    sockets: {
+      add_member_committee: function (data) {
+        if (data.success) {
+          this.addMemberResponse.show = true
+          this.addMemberResponse.success = true
+          this.addMemberResponse.message = data.success
+        } else if (data.error) {
+          this.addMemberResponse.show = true
+          this.addMemberResponse.success = false
+          this.addMemberResponse.message = data.error
+        }
+      }
     }
+  }
 </script>
 
 <style scoped>
