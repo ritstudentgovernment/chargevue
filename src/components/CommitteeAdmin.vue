@@ -13,7 +13,10 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="committee_admin">
       <div class="title">Committee Controls</div>
       <div class="divider"></div>
-      <div class="content"><button class="button is-primary" @click="openAddNewCharge()">Create Charge</button></div>
+      <div class="content">
+        <button class="button is-primary" @click="openAddNewCharge()">Create Charge</button>
+        <button class="button is-primary" @click="openAddCommitteeMember()">Add Member</button>
+      </div>
     </div>
 
     <div class="modal" v-bind:class="{ 'is-active': showAddNewCharge}">
@@ -59,21 +62,26 @@ author: Gabe Landau <gll1872@rit.edu>
         </footer>
       </div>
     </div>
-
+    <div v-if="showAddMemberToCommitteeForm">
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id"/>
+    </div>
   </div>
 </template>
 
 <script>
   import Auth from '../mixins/auth'
+  import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
 
   export default {
     name: 'committee-admin',
-    components: {},
+    components: {AddCommitteeMemberModal: AddCommitteeMember},
     mixins: [Auth],
     props: ['committee'],
     data () {
       return {
         showAddNewCharge: false,
+        showAddMemberToCommitteeForm: false,
+        showRemoveMemberFromCommitteeForm: false,
         createChargeTitle: null,
         createChargePriority: 1,
         createChargeDescription: null,
@@ -105,6 +113,12 @@ author: Gabe Landau <gll1872@rit.edu>
           priority: parseInt(this.createChargePriority),
           description: this.createChargeDescription
         })
+      },
+      openAddCommitteeMember () {
+        this.showAddMemberToCommitteeForm = true
+      },
+      closeAddMember () {
+        this.showAddMemberToCommitteeForm = false
       }
     },
     sockets: {

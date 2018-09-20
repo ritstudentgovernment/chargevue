@@ -41,7 +41,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </table>
     </div>
 
-      <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
+    <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
         <div class="modal-background" v-on:click="closeCreateCommittee()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
@@ -132,9 +132,7 @@ author: Gabe Landau <gll1872@rit.edu>
         </div>
       </div>
 
-
-
-      <div class="modal" v-bind:class="{ 'is-active': showEditCommitteeForm }">
+    <div class="modal" v-bind:class="{ 'is-active': showEditCommitteeForm }">
         <div class="modal-background" v-on:click="closeEditCommitteeForm()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
@@ -224,37 +222,11 @@ author: Gabe Landau <gll1872@rit.edu>
         </div>
       </div>
 
+    <div v-if="showAddMemberToCommitteeForm">
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.addMemberCommittee"/>
+    </div>
 
-
-      <div class="modal" v-bind:class="{ 'is-active': showAddMemberToCommitteeForm }">
-        <div class="modal-background" v-on:click="closeAddMember()"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Add Member to Committee</p>
-          </header>
-          <section class="modal-card-body" @keyup.enter="addMemberToCommittee()">
-            <article class="message" v-if="addMemberResponse.show" v-bind:class="addMemberResponse.success ? 'is-success' : 'is-danger'">
-              <div class="message-body">{{ addMemberResponse.message }}</div>
-            </article>
-
-            <div class="field">
-              <label class="label">Member</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="RIT Username" v-model="addMemberMember">
-              </div>
-            </div>
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="addMemberToCommittee()">Add
-              Member</button>
-            <button class="button" v-on:click="closeAddMember()">Cancel</button>
-          </footer>
-        </div>
-      </div>
-
-
-
-      <div class="modal" v-bind:class="{ 'is-active': showRemoveMemberFromCommitteeForm }">
+    <div class="modal" v-bind:class="{ 'is-active': showRemoveMemberFromCommitteeForm }">
         <div class="modal-background" v-on:click="showRemoveMemberFromCommitteeForm = false"></div>
         <div class="modal-card">
           <header class="modal-card-head">
@@ -283,14 +255,12 @@ author: Gabe Landau <gll1872@rit.edu>
           </footer>
         </div>
       </div>
-
-
-
-    </div>
+  </div>
 </template>
 
 <script>
 import HeaderMenu from '@/components/HeaderMenu.vue'
+import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
 import Auth from '../mixins/auth'
 import Base64 from '../mixins/base64'
 import Time from '../mixins/time'
@@ -299,12 +269,14 @@ export default {
   name: 'admin',
   mixins: [Auth, Base64, Time],
   components: {
-    HeaderMenu: HeaderMenu
+    HeaderMenu: HeaderMenu,
+    AddCommitteeMemberModal: AddCommitteeMember
   },
   data () {
     return {
       committees: null,
       members: null,
+      addMemberCommittee: null,
       showCreateCommitteeForm: false,
       showEditCommitteeForm: false,
       showAddMemberToCommitteeForm: false,
@@ -312,11 +284,6 @@ export default {
       showRemoveMemberDropdown: false,
       showRemoveMemberDropdownLoading: true,
       createCommitteeResponse: {
-        show: false,
-        message: null,
-        success: null
-      },
-      addMemberResponse: {
         show: false,
         message: null,
         success: null
@@ -353,8 +320,6 @@ export default {
       editCommitteeHead: null,
       editImage: null,
       editImageName: '(no file selected)',
-      addMemberMember: null,
-      addMemberCommittee: null,
       removeMemberCommittee: null,
       removeMemberMember: null,
       minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
@@ -482,23 +447,6 @@ export default {
       this.showRemoveMemberFromCommitteeForm = true
       this.removeMemberCommittee = id
     },
-    addMemberToCommittee () {
-      console.log(this.addMemberCommittee)
-      console.log(this.addMemberMember)
-      this.$socket.emit('add_member_committee', {
-        token: this.getToken(),
-        user_id: this.addMemberMember,
-        committee_id: this.addMemberCommittee
-      })
-      console.log(this.addMemberResponse.show)
-    },
-    closeAddMember () {
-      this.addMemberResponse.show = false
-      this.addMemberResponse.message = null
-      this.addMemberResponse.success = null
-      this.addMemberMember = null
-      this.showAddMemberToCommitteeForm = false
-    },
     closeEditCommitteeForm () {
       this.showEditCommitteeForm = false
       this.editCommitteeResponse.show = false
@@ -511,6 +459,9 @@ export default {
         user_id: this.removeMemberMember,
         committee_id: this.removeMemberCommittee
       })
+    },
+    closeAddMember () {
+      this.showAddMemberToCommitteeForm = false
     }
   },
   sockets: {
@@ -551,17 +502,6 @@ export default {
         this.editCommitteeResponse.show = true
         this.editCommitteeResponse.success = false
         this.editCommitteeResponse.message = data.error
-      }
-    },
-    add_member_committee: function (data) {
-      if (data.success) {
-        this.addMemberResponse.show = true
-        this.addMemberResponse.success = true
-        this.addMemberResponse.message = data.success
-      } else if (data.error) {
-        this.addMemberResponse.show = true
-        this.addMemberResponse.success = false
-        this.addMemberResponse.message = data.error
       }
     },
     remove_member_committee: function (data) {
