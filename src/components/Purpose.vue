@@ -14,7 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="description_title">Purpose</div>
       </div>
       <div class="column">
-        <div class="description_date">9/20/17</div>
+        <div class="description_date">{{ createdAt }}</div>
       </div>
     </div>
     <div class="divider"></div>
@@ -25,7 +25,7 @@ author: Gabe Landau <gll1872@rit.edu>
 <script>
   export default {
     name: 'purpose',
-    props: ['chargeDesc'],
+    props: ['chargeDesc', 'createdAt'],
     components: {},
     data () {
       return {

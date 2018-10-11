@@ -17,7 +17,7 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
     <ChargeAdmin />
     <ChargeStatusBar v-bind:actions="this.actions"/>
-    <Purpose v-bind:chargeDesc="this.charge.description" />
+    <Purpose v-bind:chargeDesc="this.charge.description" v-bind:createdAt="this.charge.created_at" />
     <Tasks v-bind:tasks="actions" />
   </div>
 </template>
@@ -53,6 +53,8 @@ export default {
   sockets: {
     get_charge: function (data) {
       this.charge = data
+      this.charge.created_at = this.charge.created_at.substring(5, 7) + '/' + this.charge.created_at.substring(8, 10) + '/' + this.charge.created_at.substring(0, 4)
+      console.log(this.charge)
     },
     get_actions: function (data) {
       this.actions = data
