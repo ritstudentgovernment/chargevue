@@ -16,6 +16,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="content">
         <button class="button is-primary" @click="openAddNewCharge()">Create Charge</button>
         <button class="button is-primary" @click="openAddCommitteeMember()">Add Member</button>
+        <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm()">Remove Member</button>
       </div>
     </div>
 
@@ -65,21 +66,26 @@ author: Gabe Landau <gll1872@rit.edu>
     <div v-if="showAddMemberToCommitteeForm">
       <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id"/>
     </div>
+    <div v-if="showRemoveMemberFromCommitteeForm">
+      <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee" />
+    </div>
   </div>
 </template>
 
 <script>
   import Auth from '../mixins/auth'
   import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
+  import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
 
   export default {
     name: 'committee-admin',
-    components: {AddCommitteeMemberModal: AddCommitteeMember},
+    components: {AddCommitteeMemberModal: AddCommitteeMember, RemoveCommitteeMemberModal: RemoveCommitteeMember},
     mixins: [Auth],
     props: ['committee'],
     data () {
       return {
         showAddNewCharge: false,
+        members: null,
         showAddMemberToCommitteeForm: false,
         showRemoveMemberFromCommitteeForm: false,
         createChargeTitle: null,
@@ -117,8 +123,16 @@ author: Gabe Landau <gll1872@rit.edu>
       openAddCommitteeMember () {
         this.showAddMemberToCommitteeForm = true
       },
+      openRemoveMemberFromCommitteeForm () {
+        this.$socket.emit('get_members', this.committee.id)
+        this.removeMemberCommittee = this.committee.id
+        this.showRemoveMemberFromCommitteeForm = true
+      },
       closeAddMember () {
         this.showAddMemberToCommitteeForm = false
+      },
+      closeRemoveMember () {
+        this.showRemoveMemberFromCommitteeForm = false
       }
     },
     sockets: {
@@ -133,6 +147,10 @@ author: Gabe Landau <gll1872@rit.edu>
           this.createChargeResponse.success = false
           this.createChargeResponse.message = data.error
         }
+      },
+      get_members: function (data) {
+        this.members = data.members
+        console.log(this.members)
       }
     }
   }
