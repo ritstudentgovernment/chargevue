@@ -11,11 +11,11 @@ export default {
   name: 'app',
   mixins: [Auth],
   beforeMount () {
-    this.$socket.emit('check_logged_in', {})
+    this.$socket.emit('verify_auth', {})
   },
   sockets: {
-    check_logged_in: function (data) {
-      if (data.username) {
+    verify_auth: function (data) {
+      if (!data.error) {
         this.pageReloaded(null, data.admin, data.username)
       } else {
         this.logout()
