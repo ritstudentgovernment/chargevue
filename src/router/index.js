@@ -38,5 +38,6 @@ export default new Router({
       path: '/invitation/:id',
       component: Invitation
     }
-  ]
+  ],
+  mode: 'history'
 })

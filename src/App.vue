@@ -11,15 +11,15 @@ export default {
   name: 'app',
   mixins: [Auth],
   beforeMount () {
-    if (localStorage.getItem('token')) {
-      this.$socket.emit('verify_auth', {
-        token: localStorage.getItem('token')
-      })
-    }
+    this.$socket.emit('check_logged_in', {})
   },
   sockets: {
-    verify_auth: function (data) {
-      this.pageReloaded(localStorage.getItem('token'), data.admin, data.username)
+    check_logged_in: function (data) {
+      if (data.username) {
+        this.pageReloaded(null, data.admin, data.username)
+      } else {
+        this.logout()
+      }
     }
   }
 }

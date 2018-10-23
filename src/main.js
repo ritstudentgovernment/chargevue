@@ -13,6 +13,8 @@ console.log(window.location.hostname)
 
 if (window.location.hostname === 'localhost') {
   Vue.use(VueSocketIO, socketio('localhost:5000'))
+} else if (window.location.hostname.includes('ngrok.io')) {
+  Vue.use(VueSocketIO, socketio(window.location.hostname))
 } else {
   Vue.use(VueSocketIO, socketio('https://tigertrackerstage.rit.edu'))
 }
