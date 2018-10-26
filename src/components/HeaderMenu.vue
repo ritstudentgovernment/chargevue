@@ -17,11 +17,47 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
       <div class="right">
-        <a href="./saml/login" class="link" v-if="!authenticated">Login</a>
-        <a href="./saml/logout" class="link" v-if="authenticated">Logout</a>
+        <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
+        <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
+        <a href="./saml/login" class="link" v-if="!authenticated && !isLdap">Login</a>
+        <a href="./saml/logout" class="link" v-if="authenticated && !isLdap">Logout</a>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
       </div>
     </header>
+
+    <div>
+      <div class="modal" v-bind:class="{ 'is-active': showLoginForm }">
+      <div class="modal-background" @click="showLoginForm = false"></div>
+      <div class="modal-card">
+        <div class="modal-card-head">
+          <p class="modal-card-title">Login</p>
+        </div>
+        <section class="modal-card-body">
+          <article class="message is-danger" v-if="showAuthError">
+            <div class="message-body">Oops! Username or password was incorrect. Please try again.</div>
+          </article>
+
+          <div class="field">
+            <label class="label">Username</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="RIT Username" v-model="username">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+              <input class="input" type="password" placeholder="RIT Password" v-model="password">
+            </div>
+          </div>
+        </section>
+        <div class="modal-card-foot">
+          <button class="button is-primary" @click="submitLogin()" v-bind:class="{ 'is-loading': showLoginLoading }">Login</button>
+          <button class="button" @click="showLoginForm = false">Cancel</button>
+        </div>
+      </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -64,7 +100,8 @@ export default {
   computed: {
     ...mapGetters({
       authenticated: 'authenticated',
-      admin: 'admin'
+      admin: 'admin',
+      isLdap: 'isLdap'
     })
   }
 }

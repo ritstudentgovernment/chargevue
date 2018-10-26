@@ -11,12 +11,13 @@ export default {
   name: 'app',
   mixins: [Auth],
   beforeMount () {
-    this.$socket.emit('verify_auth', {})
+    var token = (process.env.AUTH_METHOD === 'LDAP') ? {token: localStorage.getItem('token')} : {}
+    this.$socket.emit('verify_auth', token)
   },
   sockets: {
     verify_auth: function (data) {
       if (!data.error) {
-        this.pageReloaded(null, data.admin, data.username)
+        this.pageReloaded(localStorage.getItem('token'), data.admin, data.username)
       } else {
         this.logout()
       }
