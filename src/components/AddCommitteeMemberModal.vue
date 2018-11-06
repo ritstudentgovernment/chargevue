@@ -54,6 +54,8 @@
         this.$emit('close-add-member')
       },
       addMemberToCommittee () {
+        console.log(this.addMemberMember)
+        console.log(this.addMemberCommittee)
         this.$socket.emit('add_member_committee', {
           token: this.getToken(),
           user_id: this.addMemberMember,
@@ -63,6 +65,7 @@
     },
     sockets: {
       add_member_committee: function (data) {
+        console.log(data)
         if (data.success) {
           this.addMemberResponse.show = true
           this.addMemberResponse.success = true

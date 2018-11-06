@@ -212,6 +212,7 @@ author: Gabe Landau <gll1872@rit.edu>
     padding: 10px;
     font-size: 14pt;
     border-bottom: 10px solid #eee;
+    cursor: pointer;
   }
 
   .thumbnail {

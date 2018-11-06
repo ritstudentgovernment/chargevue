@@ -42,6 +42,7 @@ export default {
   -moz-animation: pop-in 0.5s
   -ms-animation: pop-in 0.5s
   animation: pop-in 0.5s
+  cursor: pointer
 
 .project_thumbnail_header
   color: $primary

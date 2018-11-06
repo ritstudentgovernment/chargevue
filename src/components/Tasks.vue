@@ -179,6 +179,7 @@ author: Gabe Landau <gll1872@rit.edu>
     color: #555;
     padding: 10px;
     text-decoration: underline;
+    cursor: pointer;
   }
   .columns, .column {
     padding: 0;
@@ -192,6 +193,7 @@ author: Gabe Landau <gll1872@rit.edu>
   .taskbar .icon {
     padding-left: 15px;
     color: #888;
+    cursor: pointer;
   }
   .active_task {
     color: #000 !important;
