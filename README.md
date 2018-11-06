@@ -13,6 +13,7 @@ To build this application for a production environment, follow the above steps t
 
 1. Run `npm run build`
 2. Copy the contents of the `dist` folder to a server capable of serving over http:// (NOTE: This application uses vue-router, and thus, serving over file:// in your browser will not work)
+3. If using [Shibboleth](https://www.shibboleth.net/), copy the contents of the `dist` folder to `chargeflask/app/static` 
 
 ### Running tests
 To run tests for this application, follow the steps above to get it running for development. When that's working as expected, do the following:

@@ -4,6 +4,7 @@ import Dashboard from '@/pages/Dashboard'
 import Committee from '@/pages/Committee'
 import Charge from '@/pages/Charge'
 import Admin from '@/pages/Admin'
+import NotFound from '@/pages/NotFound'
 import Invitation from '@/pages/Invitation'
 import store from '@/store'
 
@@ -30,13 +31,18 @@ export default new Router({
         if (store.getters.admin) {
           next()
         } else {
-          next(false)
+          next({ path: '/' })
         }
       }
     },
     {
       path: '/invitation/:id',
       component: Invitation
+    },
+    {
+      path: '*',
+      component: NotFound
     }
-  ]
+  ],
+  mode: 'history'
 })
