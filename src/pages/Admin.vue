@@ -225,42 +225,16 @@ author: Gabe Landau <gll1872@rit.edu>
     <div v-if="showAddMemberToCommitteeForm">
       <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.addMemberCommittee"/>
     </div>
-
-    <div class="modal" v-bind:class="{ 'is-active': showRemoveMemberFromCommitteeForm }">
-        <div class="modal-background" v-on:click="showRemoveMemberFromCommitteeForm = false"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Remove Member from Committee</p>
-          </header>
-          <section class="modal-card-body" @keyup.enter="removeMemberFromCommittee()">
-            <article class="message" v-if="removeMemberResponse.show" v-bind:class="removeMemberResponse.success ? 'is-success' : 'is-danger'">
-              <div class="message-body">{{ removeMemberResponse.message }}</div>
-            </article>
-
-            <div class="field" v-show="showRemoveMemberDropdown">
-              <label class="label">Member</label>
-              <div class="control">
-                <div class="select" v-bind:class="{ 'is-loading': showRemoveMemberDropdownLoading }">
-                  <select v-model="removeMemberMember">
-                    <option selected disabled></option>
-                    <option v-for="member in members" :key="member.id" v-bind:value="member.id"><span>{{member.id}}</span></option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="removeMemberFromCommittee()">Remove Member</button>
-            <button class="button" v-on:click="showRemoveMemberFromCommitteeForm = false">Cancel</button>
-          </footer>
-        </div>
-      </div>
+    <div v-if="showRemoveMemberFromCommitteeForm">
+      <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee"/>
+    </div>
   </div>
 </template>
 
 <script>
 import HeaderMenu from '@/components/HeaderMenu.vue'
 import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
+import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
 import Auth from '../mixins/auth'
 import Base64 from '../mixins/base64'
 import Time from '../mixins/time'
@@ -270,7 +244,8 @@ export default {
   mixins: [Auth, Base64, Time],
   components: {
     HeaderMenu: HeaderMenu,
-    AddCommitteeMemberModal: AddCommitteeMember
+    AddCommitteeMemberModal: AddCommitteeMember,
+    RemoveCommitteeMemberModal: RemoveCommitteeMember
   },
   data () {
     return {
@@ -281,14 +256,7 @@ export default {
       showEditCommitteeForm: false,
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
-      showRemoveMemberDropdown: false,
-      showRemoveMemberDropdownLoading: true,
       createCommitteeResponse: {
-        show: false,
-        message: null,
-        success: null
-      },
-      removeMemberResponse: {
         show: false,
         message: null,
         success: null
@@ -321,7 +289,6 @@ export default {
       editImage: null,
       editImageName: '(no file selected)',
       removeMemberCommittee: null,
-      removeMemberMember: null,
       minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
     }
   },
@@ -444,24 +411,18 @@ export default {
     },
     openRemoveMemberFromCommitteeForm (id) {
       this.$socket.emit('get_members', id)
-      this.showRemoveMemberFromCommitteeForm = true
       this.removeMemberCommittee = id
+      this.showRemoveMemberFromCommitteeForm = true
     },
     closeEditCommitteeForm () {
       this.showEditCommitteeForm = false
       this.editCommitteeResponse.show = false
     },
-    removeMemberFromCommittee () {
-      console.log(this.removeMemberCommittee)
-      console.log(this.removeMemberMember)
-      this.$socket.emit('remove_member_committee', {
-        token: this.getToken(),
-        user_id: this.removeMemberMember,
-        committee_id: this.removeMemberCommittee
-      })
-    },
     closeAddMember () {
       this.showAddMemberToCommitteeForm = false
+    },
+    closeRemoveMember () {
+      this.showRemoveMemberFromCommitteeForm = false
     }
   },
   sockets: {
@@ -498,28 +459,17 @@ export default {
         this.editCommitteeResponse.success = true
         this.editCommitteeResponse.message = data.success
       } else if (data.error) {
-        console.log(data)
         this.editCommitteeResponse.show = true
         this.editCommitteeResponse.success = false
         this.editCommitteeResponse.message = data.error
       }
     },
-    remove_member_committee: function (data) {
-      console.log(data)
-      if (data.success) {
-        this.removeMemberResponse.show = true
-        this.removeMemberResponse.success = true
-        this.removeMemberResponse.message = data.success
-      } else if (data.error) {
-        this.removeMemberResponse.show = true
-        this.removeMemberResponse.success = false
-        this.removeMemberResponse.message = data.error
-      }
-    },
     get_members: function (data) {
       this.members = data.members
-      this.showRemoveMemberDropdown = true
-      this.showRemoveMemberDropdownLoading = false
+      // this.showRemoveMemberFromCommitteeForm = true
+      // this.showRemoveMemberDropdown = true
+      // this.showRemoveMemberDropdownLoading = false
+      // this.removeMemberCommittee = id
     }
   },
   beforeMount () {

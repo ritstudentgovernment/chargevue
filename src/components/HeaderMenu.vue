@@ -17,8 +17,10 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
       <div class="right">
-        <span class="link" @click="showLoginForm = true" v-if="!authenticated">Login</span>
-        <span class="link" @click="submitLogout()" v-if="authenticated">Logout</span>
+        <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
+        <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
+        <a href="./saml/login" class="link" v-if="!authenticated && !isLdap">Login</a>
+        <a href="./saml/logout" class="link" v-if="authenticated && !isLdap">Logout</a>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
       </div>
     </header>
@@ -98,7 +100,8 @@ export default {
   computed: {
     ...mapGetters({
       authenticated: 'authenticated',
-      admin: 'admin'
+      admin: 'admin',
+      isLdap: 'isLdap'
     })
   }
 }

@@ -28,6 +28,7 @@ export default new Vuex.Store({
     token: state => state.token,
     admin: state => state.admin,
     username: state => state.username,
-    authenticated: state => state.authenticated
+    authenticated: state => state.authenticated,
+    isLdap: state => process.env.AUTH_METHOD === 'LDAP'
   }
 })
