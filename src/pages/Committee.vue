@@ -63,7 +63,9 @@ export default {
     get_committee: function (data) {
       this.committee = data
       console.log(this.committee)
-
+      if (this.committee.enabled === false) {
+        this.$router.push({path: '/'})
+      }
       let image = data.committee_img
       if (image) {
         if (image.charAt(0) === '/') {
