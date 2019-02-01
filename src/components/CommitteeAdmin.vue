@@ -137,7 +137,6 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     sockets: {
       create_charge: function (data) {
-        console.log(data)
         if (data.success) {
           this.createChargeResponse.show = true
           this.createChargeResponse.success = true

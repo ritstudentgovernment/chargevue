@@ -18,7 +18,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <ChargeAdmin v-bind:charge="this.charge"/>
     <ChargeStatusBar v-bind:actions="this.actions"/>
     <Purpose v-bind:chargeDesc="this.charge.description" v-bind:createdAt="this.charge.created_at" />
-    <Tasks v-bind:tasks="actions" />
+    <Tasks v-if="this.charge.committee != ''" v-bind:tasks="actions" v-bind:committee="this.charge.committee" />
   </div>
 </template>
 

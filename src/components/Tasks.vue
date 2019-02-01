@@ -43,7 +43,13 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="field">
             <label class="label">Assignee</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Assignee" v-model="createTaskData.assignee">
+              <vue-simple-suggest
+                v-model="createTaskData.assignee"
+                :list="memberSuggestions"
+                :filter-by-query="true"
+                :max-suggestions="5"
+                :min-length="0">
+              </vue-simple-suggest>
             </div>
           </div>
 
@@ -65,12 +71,15 @@ author: Gabe Landau <gll1872@rit.edu>
 <script>
   import Task from './Task'
   import Auth from '../mixins/auth'
+  import VueSimpleSuggest from 'vue-simple-suggest'
+  import 'vue-simple-suggest/dist/styles.css'
   export default {
     name: 'tasks',
     mixins: [Auth],
-    props: ['tasks'],
+    props: ['tasks', 'committee'],
     components: {
-      'Task': Task
+      'Task': Task,
+      'VueSimpleSuggest': VueSimpleSuggest
     },
     data () {
       return {
@@ -85,11 +94,23 @@ author: Gabe Landau <gll1872@rit.edu>
           show: false,
           success: null,
           message: null
-        }
+        },
+        members: [],
+        memberSuggestions: []
       }
     },
     methods: {
       createTask () {
+        // switch to id if username
+        this.members.forEach((member) => {
+          if (this.createTaskData.assignee === member.name) {
+            this.createTaskData.assignee = member.id
+            return
+          }
+          if (this.createTaskData.assignee === member.id) {
+            return
+          }
+        })
         this.$socket.emit('create_action', {
           token: this.getToken(),
           charge: this.$router.history.current.params['charge'],
@@ -122,8 +143,17 @@ author: Gabe Landau <gll1872@rit.edu>
           this.addTaskResponse.show = true
           this.addTaskResponse.message = data.error
         }
-        console.log('CREATED ACTION: ', data)
+      },
+      get_members: function (data) {
+        this.members = data.members
+        this.members.forEach((member) => {
+          this.memberSuggestions.push(member.id)
+          this.memberSuggestions.push(member.name)
+        })
       }
+    },
+    beforeMount () {
+      this.$socket.emit('get_members', this.committee)
     },
     computed: {
       filteredTasks: function () {
