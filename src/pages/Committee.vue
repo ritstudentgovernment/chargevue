@@ -19,7 +19,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
     <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee"/>
     <CommitteeMembers />
-    <div class="tabs is-boxed">
+    <div class="tabs is-boxed is-centered">
       <ul>
         <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Projects</a></li>
         <li   v-bind:class="{'is-active': !showProjects}" v-on:click="showProjects = false"><a>Meetings</a></li>
@@ -33,7 +33,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div id='minutes' v-if="!showProjects">
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum consequat aliquam. Integer lorem nisl, eleifend sed facilisis at, egestas vitae turpis. Donec mattis enim ut leo facilisis gravida. Vivamus venenatis porttitor eros et sagittis. Vivamus turpis risus, vestibulum eget orci vitae, commodo luctus metus. Aenean erat justo, fermentum sit amet tellus et, gravida facilisis est. Vestibulum neque sem, tempus faucibus purus sit amet, sollicitudin eleifend enim. Fusce sagittis tempus risus id fermentum.</p>
+      <p class='minutesPlaceholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum consequat aliquam. Integer lorem nisl, eleifend sed facilisis at, egestas vitae turpis. Donec mattis enim ut leo facilisis gravida. Vivamus venenatis porttitor eros et sagittis. Vivamus turpis risus, vestibulum eget orci vitae, commodo luctus metus. Aenean erat justo, fermentum sit amet tellus et, gravida facilisis est. Vestibulum neque sem, tempus faucibus purus sit amet, sollicitudin eleifend enim. Fusce sagittis tempus risus id fermentum.</p>
     </div>
   </div>
 </template>
@@ -181,6 +181,15 @@ h1, h2 {
 
 .controlPanelContent {
   padding: 10px;
+}
+
+.minutesPlaceholder {
+  width: 70vw;
+  text-align: center;
+  margin-left: 15vw;
+  margin-right: 15vw;
+  margin-top:5vh;
+  margin-bottom:5vh;
 }
 
 h4 {
