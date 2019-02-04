@@ -44,6 +44,13 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
           </div>
 
+          <div class="field">
+            <label class="label">PawPrints Link</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="PawPrints Petition Link" v-model="createChargePawLink">
+            </div>
+          </div>
+
           <!-- <label class="label">Priority</label>
             <div class="field">
               <div class="control">
@@ -91,6 +98,7 @@ author: Gabe Landau <gll1872@rit.edu>
         createChargeTitle: null,
         createChargePriority: 1,
         createChargeDescription: null,
+        createChargePawLink: null,
         createChargeResponse: {
           show: false,
           message: null,
@@ -117,7 +125,8 @@ author: Gabe Landau <gll1872@rit.edu>
           title: this.createChargeTitle,
           committee: this.committee.id,
           priority: parseInt(this.createChargePriority),
-          description: this.createChargeDescription
+          description: this.createChargeDescription,
+          paw_links: this.createChargePawLink
         })
       },
       openAddCommitteeMember () {
@@ -137,6 +146,7 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     sockets: {
       create_charge: function (data) {
+        console.log(data)
         if (data.success) {
           this.createChargeResponse.show = true
           this.createChargeResponse.success = true
