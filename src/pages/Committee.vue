@@ -19,11 +19,21 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
     <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee"/>
     <CommitteeMembers />
-
-    <h1>Projects In Progress</h1>
-    <h2>Projects that are currently in progress.</h2>
-    <div v-for="charge in charges" :key="charge.id">
-      <ProjectThumbnail v-if="charge.status != 5" v-bind:charge="charge" />
+    <div class="tabs is-boxed">
+      <ul>
+        <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Projects</a></li>
+        <li   v-bind:class="{'is-active': !showProjects}" v-on:click="showProjects = false"><a>Meetings</a></li>
+      </ul>
+    </div>
+    <div id='projects' v-if="showProjects">
+      <h1>Projects In Progress</h1>
+      <h2>Projects that are currently in progress.</h2>
+      <div v-for="charge in charges" :key="charge.id">
+        <ProjectThumbnail v-if="charge.status != 5" v-bind:charge="charge" />
+      </div>
+    </div>
+    <div id='minutes' v-if="!showProjects">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum consequat aliquam. Integer lorem nisl, eleifend sed facilisis at, egestas vitae turpis. Donec mattis enim ut leo facilisis gravida. Vivamus venenatis porttitor eros et sagittis. Vivamus turpis risus, vestibulum eget orci vitae, commodo luctus metus. Aenean erat justo, fermentum sit amet tellus et, gravida facilisis est. Vestibulum neque sem, tempus faucibus purus sit amet, sollicitudin eleifend enim. Fusce sagittis tempus risus id fermentum.</p>
     </div>
   </div>
 </template>
@@ -56,6 +66,7 @@ export default {
       committee: {'description': 'committee'},
       backgroundImage: null,
       showLoadingIndicator: true,
+      showProjects: true,
       charges: []
     }
   },

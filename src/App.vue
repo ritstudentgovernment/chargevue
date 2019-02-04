@@ -39,6 +39,7 @@ export default {
 @import '../node_modules/bulma/sass/elements/button'
 @import '../node_modules/bulma/sass/elements/table'
 @import '../node_modules/bulma/sass/elements/box'
+@import '../node_modules/bulma/sass/components/tabs'
 
 html, body
   padding: 0
