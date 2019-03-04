@@ -16,11 +16,11 @@ author: Gabe Landau <gll1872@rit.edu>
         </div>
       </div>
       <div class="taskbar">
-        <span class="icon" v-bind:class="{ 'active_task': active_task === 0 }" v-on:click="makeActive(0)"><i class="mdi mdi-play-circle-outline" v-bind:class="{ 'in-progress': active_task === 0 }"></i> {{ tasks.filter(task => task.status == 0).length }} In Progress</span>
-        <span class="icon" v-bind:class="{ 'active_task': active_task === 1 }" v-on:click="makeActive(1)"><i class="mdi mdi-minus-circle-outline" v-bind:class="{ 'stop': active_task === 1 }"></i> {{ tasks.filter(task => task.status == 1).length }} Stopped</span>
-        <span class="icon" v-bind:class="{ 'active_task': active_task === 2 }" v-on:click="makeActive(2)"><i class="mdi mdi-checkbox-marked-circle-outline" v-bind:class="{ 'complete': active_task === 2 }"></i> {{ tasks.filter(task => task.status == 2).length }} Completed</span>
-        <span class="icon" v-bind:class="{ 'active_task': active_task === 3 }" v-on:click="makeActive(3)"><i class="mdi mdi-pause-circle-outline" v-bind:class="{ 'on-hold': active_task === 3 }"></i> {{ tasks.filter(task => task.status == 3).length }} On Hold</span>
-        <span class="icon" v-bind:class="{ 'active_task': active_task === 4 }" v-on:click="makeActive(4)"><i class="mdi mdi-information-outline" v-bind:class="{ 'indefinite': active_task === 4 }"></i> {{ tasks.filter(task => task.status == 4).length }} Indefinite</span>
+        <span class="icon" v-bind:class="{ 'active_task': active_task === 0 }" v-on:click="makeActive(0)"><i class="mdi mdi-play-circle-outline"></i> {{ tasks.filter(task => task.status == 0).length }} In Progress</span>
+        <span class="icon" v-bind:class="{ 'active_task': active_task === 1 }" v-on:click="makeActive(1)"><i class="mdi mdi-minus-circle-outline"></i> {{ tasks.filter(task => task.status == 1).length }} Stopped</span>
+        <span class="icon" v-bind:class="{ 'active_task': active_task === 2 }" v-on:click="makeActive(2)"><i class="mdi mdi-checkbox-marked-circle-outline"></i> {{ tasks.filter(task => task.status == 2).length }} Completed</span>
+        <span class="icon" v-bind:class="{ 'active_task': active_task === 3 }" v-on:click="makeActive(3)"><i class="mdi mdi-pause-circle-outline"></i> {{ tasks.filter(task => task.status == 3).length }} On Hold</span>
+        <span class="icon" v-bind:class="{ 'active_task': active_task === 4 }" v-on:click="makeActive(4)"><i class="mdi mdi-information-outline"></i> {{ tasks.filter(task => task.status == 4).length }} Indefinite</span>
       </div>
     </div>
 
@@ -216,17 +216,33 @@ author: Gabe Landau <gll1872@rit.edu>
     margin: 0;
   }
   .taskbar {
+    text-align: center;
     background-color: #eee;
+    display: table;
+    width: 100%;
     border-top: 1px solid #ddd;
-    padding: 10px;
   }
+
+  .taskbar:after {
+    clear: both;
+  }
+
   .taskbar .icon {
+    display: table-cell;
     padding-left: 15px;
     color: #888;
     cursor: pointer;
+    padding: 6px;
+    width: 20%;
   }
+
+  .taskbar .icon:hover:not(.active_task){
+    background-color: #DEDCDC;
+  }
+
   .active_task {
-    color: #000 !important;
+    color: white !important;
+    background-color: #f36e21;
   }
   .modal-content {
     width: 60%;
