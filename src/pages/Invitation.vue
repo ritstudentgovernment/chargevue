@@ -100,7 +100,6 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     methods: {
       submitLogin () {
-        console.log('submitlogin')
         this.showAuthError = false
         this.showLoginLoading = true
         this.login(this.username, this.password).then(() => {
@@ -115,11 +114,9 @@ author: Gabe Landau <gll1872@rit.edu>
         })
       },
       sendHome () {
-        console.log('sendhome')
         this.$router.push({path: '/'})
       },
       acceptInvite () {
-        console.log('acceptInvite')
         this.$socket.emit('set_invitation', {
           token: this.getToken(),
           invitation_id: this.$router.history.current.params['id'],
@@ -128,10 +125,7 @@ author: Gabe Landau <gll1872@rit.edu>
       }
     },
     beforeMount () {
-      console.log('getInvite')
       let token = localStorage.getItem('token')
-      console.log(token)
-      console.log(this.$router.history.current.params['id'])
       this.$socket.emit('get_invitation', {
         invitation_id: this.$router.history.current.params['id'],
         token: token
@@ -139,18 +133,15 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     sockets: {
       get_invitation: function (data) {
-        console.log('get_invitation', data)
         if (data.error) {
           this.noinvite = true
         } else {
-          console.log(data)
           this.committee = data.committee_title
           this.inviter = data.committee_head
           this.invitee = data.invite_user
         }
       },
       set_invitation: function (data) {
-        console.log('set_invitation', data)
         if (data.error) {
         } else {
           this.$router.push({path: '/committee/' + this.committee})

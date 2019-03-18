@@ -35,8 +35,8 @@
       }
     },
     beforeMount () {
-      this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
       this.$socket.emit('get_members', this.$router.history.current.params['committee'])
+      this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
     },
     /* Since this component is used for each committee page, we have to
     watch for changes in the URL and update the props on the page

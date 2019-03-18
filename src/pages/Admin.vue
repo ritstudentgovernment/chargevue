@@ -20,9 +20,9 @@ author: Gabe Landau <gll1872@rit.edu>
       <table class="table is-fullwidth is-striped">
         <thead>
         <tr>
-          <td>Committee ID</td>
-          <td>Committee Name</td>
-          <td>Actions</td>
+          <th>Committee ID</th>
+          <th>Committee Name</th>
+          <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -513,5 +513,9 @@ export default {
 
   .is-one-quarter {
     width: 20%;
+  }
+
+  .action-buttons {
+    width: 32vw;
   }
 </style>

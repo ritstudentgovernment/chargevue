@@ -7,6 +7,7 @@ import Admin from '@/pages/Admin'
 import NotFound from '@/pages/NotFound'
 import Invitation from '@/pages/Invitation'
 import store from '@/store'
+import Minutes from '@/pages/Minutes'
 
 Vue.use(Router)
 
@@ -38,6 +39,10 @@ export default new Router({
     {
       path: '/invitation/:id',
       component: Invitation
+    },
+    {
+      path: '/minutes/:committee',
+      component: Minutes
     },
     {
       path: '*',

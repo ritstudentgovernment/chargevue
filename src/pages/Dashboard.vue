@@ -43,7 +43,6 @@ export default {
   sockets: {
     get_all_charges: function (data) {
       this.charges = data
-      console.log(this.charges)
     }
   },
   beforeMount () {

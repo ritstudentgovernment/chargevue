@@ -40,6 +40,7 @@ export default {
 @import '../node_modules/bulma/sass/elements/table'
 @import '../node_modules/bulma/sass/elements/box'
 @import '../node_modules/bulma/sass/components/tabs'
+@import '../node_modules/bulma/sass/components/navbar'
 
 html, body
   padding: 0

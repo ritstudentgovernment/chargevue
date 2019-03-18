@@ -17,6 +17,7 @@ author: Gabe Landau <gll1872@rit.edu>
         <button class="button is-primary" @click="openAddNewCharge()">Create Charge</button>
         <button class="button is-primary" @click="openAddCommitteeMember()">Add Member</button>
         <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm()">Remove Member</button>
+        <button class="button is-primary" @click="showAddMeetingMinutes()">New Minutes</button>
       </div>
     </div>
 
@@ -71,7 +72,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div v-if="showAddMemberToCommitteeForm">
-      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id"/>
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id" v-bind:memberSuggestions="this.allMembersAndName" v-bind:allMembers="this.allMembers"/>
     </div>
     <div v-if="showRemoveMemberFromCommitteeForm">
       <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee" />
@@ -103,7 +104,10 @@ author: Gabe Landau <gll1872@rit.edu>
           show: false,
           message: null,
           success: null
-        }
+        },
+        allMembers: null,
+        allMembersAndName: [],
+        showMeetingMinutes: false
       }
     },
     methods: {
@@ -130,6 +134,7 @@ author: Gabe Landau <gll1872@rit.edu>
         })
       },
       openAddCommitteeMember () {
+        this.$socket.emit('get_all_users')
         this.showAddMemberToCommitteeForm = true
       },
       openRemoveMemberFromCommitteeForm () {
@@ -142,11 +147,13 @@ author: Gabe Landau <gll1872@rit.edu>
       },
       closeRemoveMember () {
         this.showRemoveMemberFromCommitteeForm = false
+      },
+      showAddMeetingMinutes () {
+        this.showMeetingMinutes = true
       }
     },
     sockets: {
       create_charge: function (data) {
-        console.log(data)
         if (data.success) {
           this.createChargeResponse.show = true
           this.createChargeResponse.success = true
@@ -159,7 +166,13 @@ author: Gabe Landau <gll1872@rit.edu>
       },
       get_members: function (data) {
         this.members = data.members
-        console.log(this.members)
+      },
+      get_all_users: function (data) {
+        this.allMembers = data
+        this.allMembers.forEach(member => {
+          this.allMembersAndName.push(member.username)
+          this.allMembersAndName.push(member.name)
+        })
       }
     }
   }

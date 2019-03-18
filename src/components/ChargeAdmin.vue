@@ -55,7 +55,6 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     methods: {
       closeCharge () {
-        console.log(this.charge)
         this.$socket.emit('edit_charge', {
           token: this.getToken(),
           charge: this.charge.id,
@@ -74,7 +73,6 @@ author: Gabe Landau <gll1872@rit.edu>
     },
     sockets: {
       edit_charge: function (data) {
-        console.log('/committee/' + this.charge.committee)
         if (data.success) {
           this.editChargeResponse.show = true
           this.editChargeResponse.success = true

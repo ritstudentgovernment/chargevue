@@ -30,9 +30,11 @@ import Tasks from '../components/Tasks'
 import Purpose from '../components/Purpose'
 import ChargeAdmin from '../components/ChargeAdmin'
 import moment from 'moment'
+import Auth from '../mixins/auth'
 
 export default {
   name: 'dashboard',
+  mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
@@ -54,7 +56,6 @@ export default {
     get_charge: function (data) {
       this.charge = data
       this.charge.created_at = this.charge.created_at.substring(5, 7) + '/' + this.charge.created_at.substring(8, 10) + '/' + this.charge.created_at.substring(0, 4)
-      console.log(this.charge)
     },
     get_actions: function (data) {
       this.actions = data
@@ -77,9 +78,11 @@ export default {
     }
   },
   beforeMount () {
-    this.$socket.emit('get_charge', this.$router.history.current.params['charge'])
+    this.$socket.emit('get_charge', {
+      token: this.getToken(),
+      charge: this.$router.history.current.params['charge']
+    })
     this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
-    console.log(this.actions)
   }
 }
 </script>

@@ -33,7 +33,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div id='minutes' v-if="!showProjects">
-      <p class='minutesPlaceholder'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus condimentum consequat aliquam. Integer lorem nisl, eleifend sed facilisis at, egestas vitae turpis. Donec mattis enim ut leo facilisis gravida. Vivamus venenatis porttitor eros et sagittis. Vivamus turpis risus, vestibulum eget orci vitae, commodo luctus metus. Aenean erat justo, fermentum sit amet tellus et, gravida facilisis est. Vestibulum neque sem, tempus faucibus purus sit amet, sollicitudin eleifend enim. Fusce sagittis tempus risus id fermentum.</p>
+      <MinutesThumbnail v-bind:committee="this.committee"></MinutesThumbnail>
     </div>
   </div>
 </template>
@@ -47,10 +47,13 @@ import ProjectThumbnailSmall from '../components/ProjectThumbnailSmall'
 import LoadingIndicator from '../components/LoadingIndicator'
 import CommitteeMembers from '../components/CommitteeMembers'
 import CommitteeAdmin from '../components/CommitteeAdmin'
+import MinutesThumbnail from '../components/MinutesThumbnail'
 import { mapGetters } from 'vuex'
+import Auth from '../mixins/auth'
 
 export default {
   name: 'dashboard',
+  mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
@@ -59,7 +62,8 @@ export default {
     'ProjectThumbnailSmall': ProjectThumbnailSmall,
     'LoadingIndicator': LoadingIndicator,
     'CommitteeMembers': CommitteeMembers,
-    'CommitteeAdmin': CommitteeAdmin
+    'CommitteeAdmin': CommitteeAdmin,
+    'MinutesThumbnail': MinutesThumbnail
   },
   data () {
     return {
@@ -73,7 +77,6 @@ export default {
   sockets: {
     get_committee: function (data) {
       this.committee = data
-      console.log(this.committee)
       if (this.committee.enabled === false) {
         this.$router.push({path: '/'})
       }
@@ -99,7 +102,10 @@ export default {
   },
   beforeMount () {
     this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
-    this.$socket.emit('get_charges', this.$router.history.current.params['committee'])
+    this.$socket.emit('get_charges', {
+      token: this.getToken(),
+      committee_id: this.$router.history.current.params['committee']
+    })
   },
   computed: {
     inProgressCount () {

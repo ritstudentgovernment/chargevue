@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" v-bind:class="{ 'is-active': showAddMemberToCommitteeForm }">
+  <div class="modal is-clipped" v-bind:class="{ 'is-active': showAddMemberToCommitteeForm }">
     <div class="modal-background" v-on:click="closeAddMember()"></div>
     <div class="modal-card">
       <header class="modal-card-head">
@@ -13,7 +13,13 @@
         <div class="field">
           <label class="label">Member</label>
           <div class="control">
-            <input class="input" type="text" placeholder="RIT Username" v-model="addMemberMember">
+            <vue-simple-suggest
+                v-model="addMemberMember"
+                :list="memberSuggestions"
+                :filter-by-query="true"
+                :max-suggestions="3"
+                :min-length="0">
+              </vue-simple-suggest>
           </div>
         </div>
       </section>
@@ -28,11 +34,16 @@
 
 <script>
   import Auth from '../mixins/auth'
+  import VueSimpleSuggest from 'vue-simple-suggest'
+  import 'vue-simple-suggest/dist/styles.css'
 
   export default {
     name: 'AddCommitteeMemberModal',
     mixins: [Auth],
-    props: { addMemberCommittee: String },
+    props: { addMemberCommittee: String, memberSuggestions: Array, allMembers: Array },
+    components: {
+      'VueSimpleSuggest': VueSimpleSuggest
+    },
     data () {
       return {
         showAddMemberToCommitteeForm: true,
@@ -54,8 +65,16 @@
         this.$emit('close-add-member')
       },
       addMemberToCommittee () {
-        console.log(this.addMemberMember)
-        console.log(this.addMemberCommittee)
+        // switch to id if username
+        this.allMembers.forEach((member) => {
+          if (this.addMemberMember === member.name) {
+            this.addMemberMember = member.username
+            return
+          }
+          if (this.addMemberMember === member.username) {
+            return
+          }
+        })
         this.$socket.emit('add_member_committee', {
           token: this.getToken(),
           user_id: this.addMemberMember,
@@ -65,7 +84,6 @@
     },
     sockets: {
       add_member_committee: function (data) {
-        console.log(data)
         if (data.success) {
           this.addMemberResponse.show = true
           this.addMemberResponse.success = true
@@ -81,5 +99,7 @@
 </script>
 
 <style scoped>
-
+.modal-card-body{
+  padding-bottom: 13vh;
+}
 </style>
