@@ -15,10 +15,9 @@
           <div class="control">
             <vue-simple-suggest
                 v-model="addMemberMember"
-                :list="memberSuggestions"
+                :list="this.memberSuggestions()"
                 :filter-by-query="true"
-                :max-suggestions="3"
-                :min-length="0">
+                :min-length="1">
               </vue-simple-suggest>
           </div>
         </div>
@@ -40,11 +39,12 @@
   export default {
     name: 'AddCommitteeMemberModal',
     mixins: [Auth],
-    props: { addMemberCommittee: String, memberSuggestions: Array, allMembers: Array },
+    props: { addMemberCommittee: String, allMembers: Array },
     components: {
       'VueSimpleSuggest': VueSimpleSuggest
     },
     data () {
+      document.documentElement.style.overflow = 'hidden'
       return {
         showAddMemberToCommitteeForm: true,
         addMemberMember: null,
@@ -62,22 +62,21 @@
         this.addMemberResponse.success = null
         this.addMemberMember = null
         this.showAddMemberToCommitteeForm = false
+        document.documentElement.style.overflow = 'visible'
         this.$emit('close-add-member')
+      },
+      memberSuggestions () {
+        var members = []
+        this.$props.allMembers.forEach((member) => {
+          members.push(`${member.name} (${member.username})`)
+        })
+        return members
       },
       addMemberToCommittee () {
         // switch to id if username
-        this.allMembers.forEach((member) => {
-          if (this.addMemberMember === member.name) {
-            this.addMemberMember = member.username
-            return
-          }
-          if (this.addMemberMember === member.username) {
-            return
-          }
-        })
         this.$socket.emit('add_member_committee', {
           token: this.getToken(),
-          user_id: this.addMemberMember,
+          user_id: this.addMemberMember.match(/\(([^)]+)\)/)[1],
           committee_id: this.addMemberCommittee
         })
       }
@@ -98,8 +97,20 @@
   }
 </script>
 
-<style scoped>
+<style>
+.modal-card{
+  overflow: visible;
+}
 .modal-card-body{
-  padding-bottom: 13vh;
+  overflow: visible;
+}
+.vue-simple-suggest.designed .input-wrapper input{
+  font-display: 'Montserrat', Helvetica, Arial, sans-serif !important;
+  font-size: 1rem !important;
+}
+
+.vue-simple-suggest.designed .suggestions{
+  max-height: 200px;
+  overflow-y: auto;
 }
 </style>
