@@ -72,7 +72,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div v-if="showAddMemberToCommitteeForm">
-      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id" v-bind:memberSuggestions="this.allMembersAndName" v-bind:allMembers="this.allMembers"/>
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id" v-bind:allMembers="this.allMembers"/>
     </div>
     <div v-if="showRemoveMemberFromCommitteeForm">
       <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee" />
@@ -106,7 +106,6 @@ author: Gabe Landau <gll1872@rit.edu>
           success: null
         },
         allMembers: null,
-        allMembersAndName: [],
         showMeetingMinutes: false
       }
     },
@@ -135,7 +134,6 @@ author: Gabe Landau <gll1872@rit.edu>
       },
       openAddCommitteeMember () {
         this.$socket.emit('get_all_users')
-        this.showAddMemberToCommitteeForm = true
       },
       openRemoveMemberFromCommitteeForm () {
         this.$socket.emit('get_members', this.committee.id)
@@ -169,10 +167,7 @@ author: Gabe Landau <gll1872@rit.edu>
       },
       get_all_users: function (data) {
         this.allMembers = data
-        this.allMembers.forEach(member => {
-          this.allMembersAndName.push(member.username)
-          this.allMembersAndName.push(member.name)
-        })
+        this.showAddMemberToCommitteeForm = true
       }
     }
   }

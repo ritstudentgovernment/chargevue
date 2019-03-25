@@ -223,7 +223,7 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
 
     <div v-if="showAddMemberToCommitteeForm">
-      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.addMemberCommittee"/>
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.addMemberCommittee" v-bind:allMembers="this.allMembers"/>
     </div>
     <div v-if="showRemoveMemberFromCommitteeForm">
       <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee"/>
@@ -251,6 +251,7 @@ export default {
     return {
       committees: null,
       members: null,
+      allMembers: null,
       addMemberCommittee: null,
       showCreateCommitteeForm: false,
       showEditCommitteeForm: false,
@@ -406,8 +407,8 @@ export default {
       this.$socket.emit('get_committee', id)
     },
     openAddMemberToCommitteeForm (id) {
-      this.showAddMemberToCommitteeForm = true
       this.addMemberCommittee = id
+      this.$socket.emit('get_all_users')
     },
     openRemoveMemberFromCommitteeForm (id) {
       this.$socket.emit('get_members', id)
@@ -470,6 +471,10 @@ export default {
       // this.showRemoveMemberDropdown = true
       // this.showRemoveMemberDropdownLoading = false
       // this.removeMemberCommittee = id
+    },
+    get_all_users: function (data) {
+      this.allMembers = data
+      this.showAddMemberToCommitteeForm = true
     }
   },
   beforeMount () {
