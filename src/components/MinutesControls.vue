@@ -30,6 +30,9 @@
               <p class='modal-card-title'>Add Charge</p>
             </header>
             <section class='modal-card-body'>
+                <article class="message" v-if="addChargeResponse.show" v-bind:class="addChargeResponse.success ? 'is-success' : 'is-danger'">
+                <div class="message-body">{{ addChargeResponse.message }}</div>
+              </article>
               <div class='field'>
                 <label class='label'>Charge</label>
                 <input class='input' type='text' placeholder='Charge' v-model='newCharge'>
@@ -51,7 +54,12 @@ export default {
     return {
       charges: [],
       showAddChargeModal: false,
-      newCharge: ''
+      newCharge: '',
+      addChargeResponse: {
+          show: false,
+          message: null,
+          success: null
+        }
     }
   },
   methods: {
