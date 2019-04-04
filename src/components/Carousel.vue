@@ -41,30 +41,30 @@ export default {
 </script>
 
 <style scoped>
-#carousel {
-	text-align: center;
-	color: white;
-	height: 400px;
-  background: no-repeat fixed;
-  -webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
-}
+	#carousel {
+		text-align: center;
+		color: white;
+		height: 400px;
+		background: no-repeat fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+	}
 
-#carousel h1 {
-	cursor: default;
-	padding: 0;
-	margin: 0;
-	text-transform: uppercase;
-}
+	#carousel h1 {
+		cursor: default;
+		padding: 0;
+		margin: 0;
+		text-transform: uppercase;
+	}
 
-.slogan {
-	display: inline-block;
-	width: 100%;
-	max-width: 400px;
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
-}
+	.slogan {
+		display: inline-block;
+		width: 100%;
+		max-width: 400px;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+	}
 </style>

@@ -98,19 +98,19 @@
 </script>
 
 <style>
-.modal-card{
-  overflow: visible;
-}
-.modal-card-body{
-  overflow: visible;
-}
-.vue-simple-suggest.designed .input-wrapper input{
-  font-display: 'Montserrat', Helvetica, Arial, sans-serif !important;
-  font-size: 1rem !important;
-}
+  .modal-card{
+    overflow: visible;
+  }
+  .modal-card-body{
+    overflow: visible;
+  }
+  .vue-simple-suggest.designed .input-wrapper input{
+    font-display: 'Montserrat', Helvetica, Arial, sans-serif !important;
+    font-size: 1rem !important;
+  }
 
-.vue-simple-suggest.designed .suggestions{
-  max-height: 200px;
-  overflow-y: auto;
-}
+  .vue-simple-suggest.designed .suggestions{
+    max-height: 200px;
+    overflow-y: auto;
+  }
 </style>

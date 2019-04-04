@@ -141,89 +141,89 @@ export default {
 </script>
 
 <style scoped>
-h1, h2 {
-  font-weight: 300;
-  text-align: center;
-}
+  h1, h2 {
+    font-weight: 300;
+    text-align: center;
+  }
 
-.columns {
-  width: 70%;
-  margin: 0 auto;
-}
+  .columns {
+    width: 70%;
+    margin: 0 auto;
+  }
 
-.pagename {
-  background: #000;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
+  .pagename {
+    background: #000;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 
-.pagename h1 {
-  margin: 0;
-  text-align: center;
-  text-transform: uppercase;
-  padding: 75px 0;
-  color: #fff;
-  animation: fadein 0.5s;
-  -webkit-animation: fadein 0.5s;
-  -moz-animation: fadein 0.5s;
-  -ms-animation: fadein 0.5s;
-}
+  .pagename h1 {
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 75px 0;
+    color: #fff;
+    animation: fadein 0.5s;
+    -webkit-animation: fadein 0.5s;
+    -moz-animation: fadein 0.5s;
+    -ms-animation: fadein 0.5s;
+  }
 
-.controlPanel {
-  background-color: #fff;
-  width: 70%;
-  margin: 15px auto;
-  padding: 20px;
-}
+  .controlPanel {
+    background-color: #fff;
+    width: 70%;
+    margin: 15px auto;
+    padding: 20px;
+  }
 
-.controlPanelHeader {
-  width: 100%;
-  border-bottom: 1px solid #555;
-  color: #555;
-  margin-top: 0;
-}
+  .controlPanelHeader {
+    width: 100%;
+    border-bottom: 1px solid #555;
+    color: #555;
+    margin-top: 0;
+  }
 
-.controlPanelContent {
-  padding: 10px;
-}
+  .controlPanelContent {
+    padding: 10px;
+  }
 
-.minutesPlaceholder {
-  width: 70vw;
-  text-align: center;
-  margin-left: 15vw;
-  margin-right: 15vw;
-  margin-top:5vh;
-  margin-bottom:5vh;
-}
+  .minutesPlaceholder {
+    width: 70vw;
+    text-align: center;
+    margin-left: 15vw;
+    margin-right: 15vw;
+    margin-top:5vh;
+    margin-bottom:5vh;
+  }
 
-h4 {
-  margin-top: 0;
-  margin-bottom: 1%;
-  font-weight: 300;
-}
+  h4 {
+    margin-top: 0;
+    margin-bottom: 1%;
+    font-weight: 300;
+  }
 
-@keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 
-/* Firefox < 16 */
-@-moz-keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  /* Firefox < 16 */
+  @-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  /* Safari, Chrome and Opera > 12.1 */
+  @-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 
-/* Internet Explorer */
-@-ms-keyframes fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  /* Internet Explorer */
+  @-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 </style>

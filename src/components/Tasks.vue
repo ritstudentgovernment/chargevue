@@ -69,98 +69,98 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  import Task from './Task'
-  import Auth from '../mixins/auth'
-  import VueSimpleSuggest from 'vue-simple-suggest'
-  import 'vue-simple-suggest/dist/styles.css'
-  export default {
-    name: 'tasks',
-    mixins: [Auth],
-    props: ['tasks', 'committee'],
-    components: {
-      'Task': Task,
-      'VueSimpleSuggest': VueSimpleSuggest
-    },
-    data () {
-      return {
-        showAddTaskForm: false,
-        active_task: 0,
-        createTaskData: {
-          title: '',
-          description: '',
-          assignee: ''
-        },
-        addTaskResponse: {
-          show: false,
-          success: null,
-          message: null
-        },
-        members: [],
-        memberSuggestions: []
-      }
-    },
-    methods: {
-      createTask () {
-        // switch to id if username
-        this.members.forEach((member) => {
-          if (this.createTaskData.assignee === member.name) {
-            this.createTaskData.assignee = member.id
-            return
-          }
-          if (this.createTaskData.assignee === member.id) {
-            return
-          }
-        })
-        this.$socket.emit('create_action', {
-          token: this.getToken(),
-          charge: this.$router.history.current.params['charge'],
-          assigned_to: this.createTaskData.assignee,
-          title: this.createTaskData.title,
-          description: this.createTaskData.description
-        })
+import Task from './Task'
+import Auth from '../mixins/auth'
+import VueSimpleSuggest from 'vue-simple-suggest'
+import 'vue-simple-suggest/dist/styles.css'
+export default {
+  name: 'tasks',
+  mixins: [Auth],
+  props: ['tasks', 'committee'],
+  components: {
+    'Task': Task,
+    'VueSimpleSuggest': VueSimpleSuggest
+  },
+  data () {
+    return {
+      showAddTaskForm: false,
+      active_task: 0,
+      createTaskData: {
+        title: '',
+        description: '',
+        assignee: ''
       },
-      makeActive (status) {
-        this.active_task = status
+      addTaskResponse: {
+        show: false,
+        success: null,
+        message: null
       },
-      clearTaskModal () {
-        this.showAddTaskForm = false
-        this.createTaskData.title = ''
-        this.createTaskData.description = ''
-        this.createTaskData.assignee = ''
-        this.addTaskResponse.show = false
-        this.addTaskResponse.success = null
-        this.addTaskResponse.message = null
-      }
-    },
-    sockets: {
-      create_action: function (data) {
-        if (data.success) {
-          this.addTaskResponse.success = true
-          this.addTaskResponse.show = true
-          this.addTaskResponse.message = data.success
-        } else if (data.error) {
-          this.addTaskResponse.success = false
-          this.addTaskResponse.show = true
-          this.addTaskResponse.message = data.error
+      members: [],
+      memberSuggestions: []
+    }
+  },
+  methods: {
+    createTask () {
+      // switch to id if username
+      this.members.forEach((member) => {
+        if (this.createTaskData.assignee === member.name) {
+          this.createTaskData.assignee = member.id
+          return
         }
-      },
-      get_members: function (data) {
-        this.members = data.members
-        this.members.forEach((member) => {
-          this.memberSuggestions.push(member.id)
-          this.memberSuggestions.push(member.name)
-        })
+        if (this.createTaskData.assignee === member.id) {
+          return
+        }
+      })
+      this.$socket.emit('create_action', {
+        token: this.getToken(),
+        charge: this.$router.history.current.params['charge'],
+        assigned_to: this.createTaskData.assignee,
+        title: this.createTaskData.title,
+        description: this.createTaskData.description
+      })
+    },
+    makeActive (status) {
+      this.active_task = status
+    },
+    clearTaskModal () {
+      this.showAddTaskForm = false
+      this.createTaskData.title = ''
+      this.createTaskData.description = ''
+      this.createTaskData.assignee = ''
+      this.addTaskResponse.show = false
+      this.addTaskResponse.success = null
+      this.addTaskResponse.message = null
+    }
+  },
+  sockets: {
+    create_action: function (data) {
+      if (data.success) {
+        this.addTaskResponse.success = true
+        this.addTaskResponse.show = true
+        this.addTaskResponse.message = data.success
+      } else if (data.error) {
+        this.addTaskResponse.success = false
+        this.addTaskResponse.show = true
+        this.addTaskResponse.message = data.error
       }
     },
-    beforeMount () {
-      this.$socket.emit('get_members', this.committee)
-    },
-    computed: {
-      filteredTasks: function () {
-        return this.tasks.filter(task => task.status === this.active_task)
-      }
+    get_members: function (data) {
+      this.members = data.members
+      this.members.forEach((member) => {
+        this.memberSuggestions.push(member.id)
+        this.memberSuggestions.push(member.name)
+      })
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_members', this.committee)
+  },
+  computed: {
+    filteredTasks: function () {
+      return this.tasks.filter(task => task.status === this.active_task)
     }
   }
+}
 </script>
 
 <style scoped>

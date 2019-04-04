@@ -76,43 +76,43 @@ export default {
 </script>
 
 <style scoped>
-a {
-  text-decoration: none;
-  color: inherit;
-}
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 
-#committee_bar {
-	background-color: #ccc;
-	color: #333;
-	font-weight: 300;
-	text-transform: uppercase;
-	padding: 5px 0;
-}
+  #committee_bar {
+    background-color: #ccc;
+    color: #333;
+    font-weight: 300;
+    text-transform: uppercase;
+    padding: 5px 0;
+  }
 
-#committee_bar ul {
-	list-style: none;
-	text-align: center;
-	padding: 0;
-}
+  #committee_bar ul {
+    list-style: none;
+    text-align: center;
+    padding: 0;
+  }
 
-#committee_bar ul li {
-	padding: 0 15px;
-	display: inline;
-}
-.navbar {
-  background-color: #ccc;
-}
+  #committee_bar ul li {
+    padding: 0 15px;
+    display: inline;
+  }
+  .navbar {
+    background-color: #ccc;
+  }
 
-.navbar-item{
-  text-align: center;
-}
+  .navbar-item{
+    text-align: center;
+  }
 
-/* .navbar-menu {
-  margin-left: 28vw;
-  margin-right: 28vw; 
-} */
+  /* .navbar-menu {
+    margin-left: 28vw;
+    margin-right: 28vw; 
+  } */
 
-.navbar-item:hover {
-  background-color: #ccc;
-}
+  .navbar-item:hover {
+    background-color: #ccc;
+  }
 </style>

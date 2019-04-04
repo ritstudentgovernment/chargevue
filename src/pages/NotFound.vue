@@ -20,14 +20,14 @@ export default {
 }
 </script>
 <style scoped>
-h2{
-	text-align: center;
-}
-.not_found{
-	text-align: center;
-	display: block;
-	width: 500px;
-	height: 300px;
-	margin: 0 auto;
-}
+  h2{
+    text-align: center;
+  }
+  .not_found{
+    text-align: center;
+    display: block;
+    width: 500px;
+    height: 300px;
+    margin: 0 auto;
+  }
 </style>

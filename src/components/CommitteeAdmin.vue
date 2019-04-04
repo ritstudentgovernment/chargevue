@@ -81,96 +81,96 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  import Auth from '../mixins/auth'
-  import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
-  import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
+import Auth from '../mixins/auth'
+import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
+import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
 
-  export default {
-    name: 'committee-admin',
-    components: {AddCommitteeMemberModal: AddCommitteeMember, RemoveCommitteeMemberModal: RemoveCommitteeMember},
-    mixins: [Auth],
-    props: ['committee'],
-    data () {
-      return {
-        showAddNewCharge: false,
-        members: null,
-        showAddMemberToCommitteeForm: false,
-        showRemoveMemberFromCommitteeForm: false,
-        createChargeTitle: null,
-        createChargePriority: 1,
-        createChargeDescription: null,
-        createChargePawLink: null,
-        createChargeResponse: {
-          show: false,
-          message: null,
-          success: null
-        },
-        allMembers: null,
-        showMeetingMinutes: false
+export default {
+  name: 'committee-admin',
+  components: {AddCommitteeMemberModal: AddCommitteeMember, RemoveCommitteeMemberModal: RemoveCommitteeMember},
+  mixins: [Auth],
+  props: ['committee'],
+  data () {
+    return {
+      showAddNewCharge: false,
+      members: null,
+      showAddMemberToCommitteeForm: false,
+      showRemoveMemberFromCommitteeForm: false,
+      createChargeTitle: null,
+      createChargePriority: 1,
+      createChargeDescription: null,
+      createChargePawLink: null,
+      createChargeResponse: {
+        show: false,
+        message: null,
+        success: null
+      },
+      allMembers: null,
+      showMeetingMinutes: false
+    }
+  },
+  methods: {
+    openAddNewCharge () {
+      this.showAddNewCharge = true
+    },
+    closeAddNewCharge () {
+      this.createChargeTitle = null
+      this.createChargeDescription = null
+      this.createChargePriority = null
+      this.showAddNewCharge = false
+      this.createChargeResponse.show = false
+      this.createChargeResponse.message = null
+      this.createChargeResponse.success = null
+    },
+    createNewCharge () {
+      this.$socket.emit('create_charge', {
+        token: this.getToken(),
+        title: this.createChargeTitle,
+        committee: this.committee.id,
+        priority: parseInt(this.createChargePriority),
+        description: this.createChargeDescription,
+        paw_links: this.createChargePawLink
+      })
+    },
+    openAddCommitteeMember () {
+      this.$socket.emit('get_all_users')
+    },
+    openRemoveMemberFromCommitteeForm () {
+      this.$socket.emit('get_members', this.committee.id)
+      this.removeMemberCommittee = this.committee.id
+      this.showRemoveMemberFromCommitteeForm = true
+    },
+    closeAddMember () {
+      this.showAddMemberToCommitteeForm = false
+    },
+    closeRemoveMember () {
+      this.showRemoveMemberFromCommitteeForm = false
+    },
+    showAddMeetingMinutes () {
+      this.showMeetingMinutes = true
+    }
+  },
+  sockets: {
+    create_charge: function (data) {
+      if (data.success) {
+        this.createChargeResponse.show = true
+        this.createChargeResponse.success = true
+        this.createChargeResponse.message = data.success
+      } else if (data.error) {
+        this.createChargeResponse.show = true
+        this.createChargeResponse.success = false
+        this.createChargeResponse.message = data.error
       }
     },
-    methods: {
-      openAddNewCharge () {
-        this.showAddNewCharge = true
-      },
-      closeAddNewCharge () {
-        this.createChargeTitle = null
-        this.createChargeDescription = null
-        this.createChargePriority = null
-        this.showAddNewCharge = false
-        this.createChargeResponse.show = false
-        this.createChargeResponse.message = null
-        this.createChargeResponse.success = null
-      },
-      createNewCharge () {
-        this.$socket.emit('create_charge', {
-          token: this.getToken(),
-          title: this.createChargeTitle,
-          committee: this.committee.id,
-          priority: parseInt(this.createChargePriority),
-          description: this.createChargeDescription,
-          paw_links: this.createChargePawLink
-        })
-      },
-      openAddCommitteeMember () {
-        this.$socket.emit('get_all_users')
-      },
-      openRemoveMemberFromCommitteeForm () {
-        this.$socket.emit('get_members', this.committee.id)
-        this.removeMemberCommittee = this.committee.id
-        this.showRemoveMemberFromCommitteeForm = true
-      },
-      closeAddMember () {
-        this.showAddMemberToCommitteeForm = false
-      },
-      closeRemoveMember () {
-        this.showRemoveMemberFromCommitteeForm = false
-      },
-      showAddMeetingMinutes () {
-        this.showMeetingMinutes = true
-      }
+    get_members: function (data) {
+      this.members = data.members
     },
-    sockets: {
-      create_charge: function (data) {
-        if (data.success) {
-          this.createChargeResponse.show = true
-          this.createChargeResponse.success = true
-          this.createChargeResponse.message = data.success
-        } else if (data.error) {
-          this.createChargeResponse.show = true
-          this.createChargeResponse.success = false
-          this.createChargeResponse.message = data.error
-        }
-      },
-      get_members: function (data) {
-        this.members = data.members
-      },
-      get_all_users: function (data) {
-        this.allMembers = data
-        this.showAddMemberToCommitteeForm = true
-      }
+    get_all_users: function (data) {
+      this.allMembers = data
+      this.showAddMemberToCommitteeForm = true
     }
   }
+}
 </script>
 
 <style scoped>

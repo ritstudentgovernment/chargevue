@@ -23,15 +23,15 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  export default {
-    name: 'purpose',
-    props: ['chargeDesc', 'createdAt'],
-    components: {},
-    data () {
-      return {
-      }
+export default {
+  name: 'purpose',
+  props: ['chargeDesc', 'createdAt'],
+  components: {},
+  data () {
+    return {
     }
   }
+}
 </script>
 
 <style scoped>
