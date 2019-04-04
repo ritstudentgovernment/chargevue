@@ -56,10 +56,10 @@ export default {
       showAddChargeModal: false,
       newCharge: '',
       addChargeResponse: {
-          show: false,
-          message: null,
-          success: null
-        }
+        show: false,
+        message: null,
+        success: null
+      }
     }
   },
   methods: {
