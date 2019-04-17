@@ -37,59 +37,57 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  import Auth from '../mixins/auth'
-
-  export default {
-    name: 'charge-admin',
-    mixins: [Auth],
-    props: ['charge'],
-    data () {
-      return {
-        showConfirmModal: false,
-        editChargeResponse: {
-          show: false,
-          message: null,
-          success: null
-        }
+import Auth from '../mixins/auth'
+export default {
+  name: 'charge-admin',
+  mixins: [Auth],
+  props: ['charge'],
+  data () {
+    return {
+      showConfirmModal: false,
+      editChargeResponse: {
+        show: false,
+        message: null,
+        success: null
       }
+    }
+  },
+  methods: {
+    closeCharge () {
+      this.$socket.emit('edit_charge', {
+        token: this.getToken(),
+        charge: this.charge.id,
+        status: 5
+      })
     },
-    methods: {
-      closeCharge () {
-        this.$socket.emit('edit_charge', {
-          token: this.getToken(),
-          charge: this.charge.id,
-          status: 5
-        })
-      },
-      closeConfirmModal () {
-        this.showConfirmModal = false
-        this.editChargeResponse.show = false
-        this.editChargeResponse.message = null
-        this.editChargeResponse.success = null
-      },
-      openConfirmModal () {
-        this.showConfirmModal = true
-      }
+    closeConfirmModal () {
+      this.showConfirmModal = false
+      this.editChargeResponse.show = false
+      this.editChargeResponse.message = null
+      this.editChargeResponse.success = null
     },
-    sockets: {
-      edit_charge: function (data) {
-        if (data.success) {
-          this.editChargeResponse.show = true
-          this.editChargeResponse.success = true
-          this.editChargeResponse.message = data.success
-          var that = this
-          setTimeout(function () {
-            that.$router.push({path: '/committee/' + that.charge.committee})
-          }, 2000)
-        } else if (data.error) {
-          this.editChargeResponse.show = true
-          this.editChargeResponse.success = false
-          this.editChargeResponse.message = data.error
-        }
+    openConfirmModal () {
+      this.showConfirmModal = true
+    }
+  },
+  sockets: {
+    edit_charge: function (data) {
+      if (data.success) {
+        this.editChargeResponse.show = true
+        this.editChargeResponse.success = true
+        this.editChargeResponse.message = data.success
+        var that = this
+        setTimeout(function () {
+          that.$router.push({path: '/committee/' + that.charge.committee})
+        }, 2000)
+      } else if (data.error) {
+        this.editChargeResponse.show = true
+        this.editChargeResponse.success = false
+        this.editChargeResponse.message = data.error
       }
     }
   }
-  
+}
 </script>
 
 <style scoped>

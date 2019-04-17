@@ -16,13 +16,13 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  export default {
-    name: 'loading-indicator',
-    data () {
-      return {
-      }
+export default {
+  name: 'loading-indicator',
+  data () {
+    return {
     }
   }
+}
 </script>
 
 <style scoped>

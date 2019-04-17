@@ -27,31 +27,31 @@ export default {
 </script>
 
 <style lang="sass">
-@import 'assets/vars.sass'
+  @import 'assets/vars.sass'
 
-@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400')
-@import '../node_modules/bulma/sass/utilities/_all'
-@import '../node_modules/bulma/sass/grid/columns'
-@import '../node_modules/bulma/sass/components/modal'
-@import '../node_modules/bulma/sass/components/message'
-@import '../node_modules/bulma/sass/components/menu'
-@import '../node_modules/bulma/sass/elements/form'
-@import '../node_modules/bulma/sass/elements/button'
-@import '../node_modules/bulma/sass/elements/table'
-@import '../node_modules/bulma/sass/elements/box'
-@import '../node_modules/bulma/sass/components/tabs'
-@import '../node_modules/bulma/sass/components/navbar'
+  @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400')
+  @import '../node_modules/bulma/sass/utilities/_all'
+  @import '../node_modules/bulma/sass/grid/columns'
+  @import '../node_modules/bulma/sass/components/modal'
+  @import '../node_modules/bulma/sass/components/message'
+  @import '../node_modules/bulma/sass/components/menu'
+  @import '../node_modules/bulma/sass/elements/form'
+  @import '../node_modules/bulma/sass/elements/button'
+  @import '../node_modules/bulma/sass/elements/table'
+  @import '../node_modules/bulma/sass/elements/box'
+  @import '../node_modules/bulma/sass/components/tabs'
+  @import '../node_modules/bulma/sass/components/navbar'
 
-html, body
-  padding: 0
-  margin: 0
-  background-color: #eee
+  html, body
+    padding: 0
+    margin: 0
+    background-color: #eee
 
-#app
-  font-family: 'Montserrat', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing: antialiased
-  -moz-osx-font-smoothing: grayscale
+  #app
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
 
-.modal
-  z-index: 1000
+  .modal
+    z-index: 1000
 </style>

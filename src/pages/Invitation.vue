@@ -76,79 +76,79 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  import HeaderMenu from '../components/HeaderMenu'
-  import Auth from '../mixins/auth'
+import HeaderMenu from '../components/HeaderMenu'
+import Auth from '../mixins/auth'
 
-  export default {
-    name: 'invitations',
-    mixins: [Auth],
-    components: {
-      'HeaderMenu': HeaderMenu
-    },
-    data () {
-      return {
-        committee: null,
-        inviter: null,
-        invitee: null,
-        noinvite: false,
-        showLoginForm: false,
-        showLoginLoading: false,
-        showAuthError: false,
-        username: '',
-        password: ''
-      }
-    },
-    methods: {
-      submitLogin () {
+export default {
+  name: 'invitations',
+  mixins: [Auth],
+  components: {
+    'HeaderMenu': HeaderMenu
+  },
+  data () {
+    return {
+      committee: null,
+      inviter: null,
+      invitee: null,
+      noinvite: false,
+      showLoginForm: false,
+      showLoginLoading: false,
+      showAuthError: false,
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    submitLogin () {
+      this.showAuthError = false
+      this.showLoginLoading = true
+      this.login(this.username, this.password).then(() => {
         this.showAuthError = false
-        this.showLoginLoading = true
-        this.login(this.username, this.password).then(() => {
-          this.showAuthError = false
-          this.showLoginForm = false
-          this.showLoginLoading = false
-          this.authenticated = true
-          this.acceptInvite()
-        }).catch(() => {
-          this.showLoginLoading = false
-          this.showAuthError = true
-        })
-      },
-      sendHome () {
-        this.$router.push({path: '/'})
-      },
-      acceptInvite () {
-        this.$socket.emit('set_invitation', {
-          token: this.getToken(),
-          invitation_id: this.$router.history.current.params['id'],
-          status: true
-        })
-      }
-    },
-    beforeMount () {
-      let token = localStorage.getItem('token')
-      this.$socket.emit('get_invitation', {
-        invitation_id: this.$router.history.current.params['id'],
-        token: token
+        this.showLoginForm = false
+        this.showLoginLoading = false
+        this.authenticated = true
+        this.acceptInvite()
+      }).catch(() => {
+        this.showLoginLoading = false
+        this.showAuthError = true
       })
     },
-    sockets: {
-      get_invitation: function (data) {
-        if (data.error) {
-          this.noinvite = true
-        } else {
-          this.committee = data.committee_title
-          this.inviter = data.committee_head
-          this.invitee = data.invite_user
-        }
-      },
-      set_invitation: function (data) {
-        if (data.error) {
-        } else {
-          this.$router.push({path: '/committee/' + this.committee})
-        }
+    sendHome () {
+      this.$router.push({path: '/'})
+    },
+    acceptInvite () {
+      this.$socket.emit('set_invitation', {
+        token: this.getToken(),
+        invitation_id: this.$router.history.current.params['id'],
+        status: true
+      })
+    }
+  },
+  beforeMount () {
+    let token = localStorage.getItem('token')
+    this.$socket.emit('get_invitation', {
+      invitation_id: this.$router.history.current.params['id'],
+      token: token
+    })
+  },
+  sockets: {
+    get_invitation: function (data) {
+      if (data.error) {
+        this.noinvite = true
+      } else {
+        this.committee = data.committee_title
+        this.inviter = data.committee_head
+        this.invitee = data.invite_user
+      }
+    },
+    set_invitation: function (data) {
+      if (data.error) {
+      } else {
+        this.$router.push({path: '/committee/' + this.committee})
       }
     }
   }
+}
 </script>
 
 <style scoped>

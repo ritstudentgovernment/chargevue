@@ -18,35 +18,35 @@
 </template>
 
 <script>
-  export default {
-    name: 'committee-members',
-    data () {
-      return {
-        members: null,
-        committee: { 'description': 'committee' }
-      }
+export default {
+  name: 'committee-members',
+  data () {
+    return {
+      members: null,
+      committee: { 'description': 'committee' }
+    }
+  },
+  sockets: {
+    get_committee: function (data) {
+      this.committee = data
     },
-    sockets: {
-      get_committee: function (data) {
-        this.committee = data
-      },
-      get_members: function (data) {
-        this.members = data.members
-      }
-    },
-    beforeMount () {
-      this.$socket.emit('get_members', this.$router.history.current.params['committee'])
-      this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
-    },
-    /* Since this component is used for each committee page, we have to
-    watch for changes in the URL and update the props on the page
-    when the route changes */
-    watch: {
-      '$route.params.committee': function (committee) {
-        this.$socket.emit('get_committee', committee)
-      }
+    get_members: function (data) {
+      this.members = data.members
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_members', this.$router.history.current.params['committee'])
+    this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+  },
+  /* Since this component is used for each committee page, we have to
+  watch for changes in the URL and update the props on the page
+  when the route changes */
+  watch: {
+    '$route.params.committee': function (committee) {
+      this.$socket.emit('get_committee', committee)
     }
   }
+}
 </script>
 
 <style scoped>

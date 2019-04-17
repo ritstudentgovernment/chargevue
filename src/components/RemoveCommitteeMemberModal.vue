@@ -31,53 +31,53 @@
 </template>
 
 <script>
-  import Auth from '../mixins/auth'
+import Auth from '../mixins/auth'
 
-  export default {
-    name: 'RemoveCommitteeMemberModal',
-    mixins: [Auth],
-    props: {removeMemberCommittee: String, members: Array},
-    data () {
-      return {
-        removeMemberMember: null,
-        showRemoveMemberDropdown: true,
-        showRemoveMemberDropdownLoading: false,
-        removeMemberResponse: {
-          show: false,
-          message: null,
-          success: null
-        }
+export default {
+  name: 'RemoveCommitteeMemberModal',
+  mixins: [Auth],
+  props: {removeMemberCommittee: String, members: Array},
+  data () {
+    return {
+      removeMemberMember: null,
+      showRemoveMemberDropdown: true,
+      showRemoveMemberDropdownLoading: false,
+      removeMemberResponse: {
+        show: false,
+        message: null,
+        success: null
       }
+    }
+  },
+  methods: {
+    closeRemoveMember () {
+      this.removeMemberResponse.show = false
+      this.removeMemberResponse.message = null
+      this.removeMemberResponse.success = null
+      this.removeMemberMember = null
+      this.showRemoveMemberFromCommitteeForm = false
+      this.$emit('close-remove-member')
     },
-    methods: {
-      closeRemoveMember () {
-        this.removeMemberResponse.show = false
-        this.removeMemberResponse.message = null
-        this.removeMemberResponse.success = null
-        this.removeMemberMember = null
-        this.showRemoveMemberFromCommitteeForm = false
-        this.$emit('close-remove-member')
-      },
-      removeMemberFromCommittee () {
-        this.$socket.emit('remove_member_committee', {
-          token: this.getToken(),
-          user_id: this.removeMemberMember,
-          committee_id: this.removeMemberCommittee
-        })
-      }
-    },
-    sockets: {
-      remove_member_committee: function (data) {
-        if (data.success) {
-          this.removeMemberResponse.show = true
-          this.removeMemberResponse.success = true
-          this.removeMemberResponse.message = data.success
-        } else if (data.error) {
-          this.removeMemberResponse.show = true
-          this.removeMemberResponse.success = false
-          this.removeMemberResponse.message = data.error
-        }
+    removeMemberFromCommittee () {
+      this.$socket.emit('remove_member_committee', {
+        token: this.getToken(),
+        user_id: this.removeMemberMember,
+        committee_id: this.removeMemberCommittee
+      })
+    }
+  },
+  sockets: {
+    remove_member_committee: function (data) {
+      if (data.success) {
+        this.removeMemberResponse.show = true
+        this.removeMemberResponse.success = true
+        this.removeMemberResponse.message = data.success
+      } else if (data.error) {
+        this.removeMemberResponse.show = true
+        this.removeMemberResponse.success = false
+        this.removeMemberResponse.message = data.error
       }
     }
   }
+}
 </script>

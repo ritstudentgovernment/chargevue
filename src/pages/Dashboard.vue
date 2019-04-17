@@ -52,8 +52,8 @@ export default {
 </script>
 
 <style scoped>
-h1, h2 {
-  font-weight: 300;
-  text-align: center;
-}
+  h1, h2 {
+    font-weight: 300;
+    text-align: center;
+  }
 </style>

@@ -97,92 +97,92 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-  import Auth from '../mixins/auth'
+import Auth from '../mixins/auth'
 
-  export default {
-    name: 'tasks',
-    components: {},
-    props: ['task'],
-    mixins: [Auth],
-    data () {
-      return {
-        active: false,
-        style: '',
-        icon: '',
-        id: null,
-        status: -1,
-        createNoteText: '',
-        createNoteResponseStatus: '',
-        createNoteResponseMessage: ''
+export default {
+  name: 'tasks',
+  components: {},
+  props: ['task'],
+  mixins: [Auth],
+  data () {
+    return {
+      active: false,
+      style: '',
+      icon: '',
+      id: null,
+      status: -1,
+      createNoteText: '',
+      createNoteResponseStatus: '',
+      createNoteResponseMessage: ''
+    }
+  },
+  sockets: {
+    create_note: function (data) {
+      if (data.error) {
+        this.createNoteResponseStatus = 'error'
+        this.createNoteResponseMessage = data.error
+      } else {
+        this.createNoteText = ''
       }
     },
-    sockets: {
-      create_note: function (data) {
-        if (data.error) {
-          this.createNoteResponseStatus = 'error'
-          this.createNoteResponseMessage = data.error
-        } else {
-          this.createNoteText = ''
-        }
-      },
-      edit_action: function (data) {
-        if (data.error) {
-          this.createNoteResponseStatus = 'error'
-          this.createNoteResponseMessage = data.error
-        }
-      }
-    },
-    methods: {
-      createNote () {
-        this.$socket.emit('create_note', {
-          token: this.getToken(),
-          action: this.task.id,
-          description: this.createNoteText
-        })
-      },
-      changeStatus () {
-        this.$socket.emit('edit_action', {
-          token: this.getToken(),
-          id: this.task.id,
-          status: this.status
-        })
-      }
-    },
-    computed: {
-      recentNotes: function () {
-        if (this.task.notes) {
-          return this.task.notes.slice(this.task.notes.length - 2, this.task.notes.length)
-        } else {
-          return []
-        }
-      }
-    },
-    beforeMount () {
-      this.status = this.task.status
-      switch (this.task.status) {
-        case 0:
-          this.style = 'in-progress'
-          this.icon = 'mdi-play-circle-outline'
-          break
-        case 1:
-          this.style = 'stop'
-          this.icon = 'mdi-minus-circle-outline'
-          break
-        case 2:
-          this.style = 'complete'
-          this.icon = 'mdi-checkbox-marked-circle-outline'
-          break
-        case 3:
-          this.style = 'on-hold'
-          this.icon = 'mdi-pause-circle-outline'
-          break
-        case 4:
-          this.style = 'indefinite'
-          this.icon = 'mdi-information-outline'
-          break
+    edit_action: function (data) {
+      if (data.error) {
+        this.createNoteResponseStatus = 'error'
+        this.createNoteResponseMessage = data.error
       }
     }
+  },
+  methods: {
+    createNote () {
+      this.$socket.emit('create_note', {
+        token: this.getToken(),
+        action: this.task.id,
+        description: this.createNoteText
+      })
+    },
+    changeStatus () {
+      this.$socket.emit('edit_action', {
+        token: this.getToken(),
+        id: this.task.id,
+        status: this.status
+      })
+    }
+  },
+  computed: {
+    recentNotes: function () {
+      if (this.task.notes) {
+        return this.task.notes.slice(this.task.notes.length - 2, this.task.notes.length)
+      } else {
+        return []
+      }
+    }
+  },
+  beforeMount () {
+    this.status = this.task.status
+    switch (this.task.status) {
+      case 0:
+        this.style = 'in-progress'
+        this.icon = 'mdi-play-circle-outline'
+        break
+      case 1:
+        this.style = 'stop'
+        this.icon = 'mdi-minus-circle-outline'
+        break
+      case 2:
+        this.style = 'complete'
+        this.icon = 'mdi-checkbox-marked-circle-outline'
+        break
+      case 3:
+        this.style = 'on-hold'
+        this.icon = 'mdi-pause-circle-outline'
+        break
+      case 4:
+        this.style = 'indefinite'
+        this.icon = 'mdi-information-outline'
+        break
+    }
   }
+}
 </script>
 
 <style scoped>

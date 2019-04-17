@@ -50,23 +50,23 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.columns
-  text-align: center
-  width: 800px
-  margin: 20px auto 0 auto
-  color: #555
+  .columns
+    text-align: center
+    width: 800px
+    margin: 20px auto 0 auto
+    color: #555
 
-.column
-  border-right: 1px solid #555
+  .column
+    border-right: 1px solid #555
 
-.last
-  border-right: none !important
+  .last
+    border-right: none !important
 
-.overview_count
-  font-weight: 200
-  font-size: 26pt
+  .overview_count
+    font-weight: 200
+    font-size: 26pt
 
-.overview_description
-  margin: 10px 0 0 0
-  font-weight: 300
+  .overview_description
+    margin: 10px 0 0 0
+    font-weight: 300
 </style>
