@@ -41,6 +41,15 @@ author: Gabe Landau <gll1872@rit.edu>
       </table>
     </div>
 
+    <div class="modal" v-bind:class="{ 'is-active': editCommitteeResponse.show }">
+      <div class="modal-background" v-on:click="closeEditResponse()"></div>
+      <div class="modal-card">
+      <article class="message" v-if="editCommitteeResponse.show" v-bind:class="editCommitteeResponse.success ? 'is-success' : 'is-danger'">
+        <div class="message-body">{{ editCommitteeResponse.message }}</div>
+      </article>
+      </div>
+    </div>
+
     <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
         <div class="modal-background" v-on:click="closeCreateCommittee()"></div>
         <div class="modal-card">
@@ -139,10 +148,6 @@ author: Gabe Landau <gll1872@rit.edu>
             <p class="modal-card-title">Edit Committee</p>
           </header>
           <section class="modal-card-body" @keyup.enter="editCommittee()">
-            <article class="message" v-if="editCommitteeResponse.show" v-bind:class="editCommitteeResponse.success ? 'is-success' : 'is-danger'">
-              <div class="message-body">{{ editCommitteeResponse.message }}</div>
-            </article>
-
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
@@ -388,6 +393,8 @@ export default {
           head: this.editCommitteeHead
         })
       }
+
+      this.showEditCommitteeForm = false
     },
     deactivateCommittee (id) {
       this.$socket.emit('edit_committee', {
@@ -405,6 +412,7 @@ export default {
     },
     openEditCommitteeForm (id) {
       this.$socket.emit('get_committee', id)
+      this.showEditCommitteeForm = true
     },
     openAddMemberToCommitteeForm (id) {
       this.addMemberCommittee = id
@@ -417,6 +425,9 @@ export default {
     },
     closeEditCommitteeForm () {
       this.showEditCommitteeForm = false
+      this.editCommitteeResponse.show = false
+    },
+    closeEditResponse () {
       this.editCommitteeResponse.show = false
     },
     closeAddMember () {
@@ -441,7 +452,6 @@ export default {
       this.editDescription = data.description
       this.editLocation = data.location
       this.editCommitteeHead = data.head
-      this.showEditCommitteeForm = true
     },
     create_committee: function (data) {
       if (data.success) {
