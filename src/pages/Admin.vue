@@ -3,7 +3,7 @@
 filename: Admin.vue
 description: Admin page
 
-author: Gabe Landau <gll1872@rit.edu>
+author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
 
 -->
 
@@ -72,6 +72,19 @@ author: Gabe Landau <gll1872@rit.edu>
               <label class="label">Description</label>
               <div class="control">
                 <input class="input" type="text" placeholder="Description" v-model="createDescription">
+              </div>
+            </div>
+
+            <label class="label">Meeting Committee</label>
+            <div class="field is-grouped">
+              <div class="control">
+                <div class="select">
+                  <select v-model="createMeetingDay">
+                    <option>Student Government</option>
+                    <option>Academic Senate</option>
+                    <option>Staff Council</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -159,6 +172,19 @@ author: Gabe Landau <gll1872@rit.edu>
               <label class="label">Description</label>
               <div class="control">
                 <input class="input" type="text" placeholder="Description" v-model="editDescription">
+              </div>
+            </div>
+
+            <label class="label">Meeting Committee</label>
+            <div class="field is-grouped">
+              <div class="control">
+                <div class="select">
+                  <select v-model="createMeetingDay">
+                    <option>Student Government</option>
+                    <option>Academic Senate</option>
+                    <option>Staff Council</option>
+                  </select>
+                </div>
               </div>
             </div>
 
