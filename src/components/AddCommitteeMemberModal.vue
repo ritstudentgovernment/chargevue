@@ -33,7 +33,7 @@
 
 <script>
   import Auth from '../mixins/auth'
-  import VueSimpleSuggest from 'vue-simple-suggest'
+  import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs'
   import 'vue-simple-suggest/dist/styles.css'
 
   export default {
