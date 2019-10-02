@@ -13,7 +13,7 @@ author: Gabe Landau <gll1872@rit.edu>
 				<div class="slogan">
 					<h1>We've got your back</h1>
 					<div>
-						<p>Visualize and track the projects that we're working on to improve your path through RIT.</p>
+						<p>Visualize and track the charges that we're working on to improve your path through RIT.</p>
 					</div>
 				</div>
 			</div>
