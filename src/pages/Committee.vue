@@ -21,13 +21,13 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteeMembers />
     <div class="tabs is-boxed is-centered">
       <ul>
-        <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Projects</a></li>
+        <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Charges</a></li>
         <li   v-bind:class="{'is-active': !showProjects}" v-on:click="showProjects = false"><a>Meetings</a></li>
       </ul>
     </div>
     <div id='projects' v-if="showProjects">
-      <h1>Projects In Progress</h1>
-      <h2>Projects that are currently in progress.</h2>
+      <h1>Charges In Progress</h1>
+      <h2>Charges that are currently in progress.</h2>
       <div v-for="charge in charges" :key="charge.id">
         <ProjectThumbnail v-if="charge.status != 5" v-bind:charge="charge" />
       </div>

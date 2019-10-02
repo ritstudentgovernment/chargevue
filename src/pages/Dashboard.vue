@@ -12,8 +12,8 @@ author: Gabe Landau <gll1872@rit.edu>
     <HeaderMenu />
     <Carousel />
     <CommitteesMenu />
-    <h1 id="dashboard_title">Projects In Progress</h1>
-    <h2>Projects that are currently in progress.</h2>
+    <h1 id="dashboard_title">Charges In Progress</h1>
+    <h2>Charges that are currently in progress.</h2>
     <div v-for="charge in charges" :key="charge.id">
       <ProjectThumbnail v-if="charge.status == 0" v-bind:charge="charge" />
     </div>
