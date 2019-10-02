@@ -6,7 +6,7 @@
         <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.description }}</h1>
     </div>
-    <MinutesControls></MinutesControls>
+    <MinutesControls />
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
