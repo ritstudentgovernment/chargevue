@@ -10,7 +10,7 @@ import Auth from '@/mixins/auth'
 export default {
   name: 'app',
   mixins: [Auth],
-  beforeMount () {
+  beforeCreate () {
     var token = (process.env.AUTH_METHOD === 'LDAP') ? {token: localStorage.getItem('token')} : {}
     this.$socket.emit('verify_auth', token)
   },
