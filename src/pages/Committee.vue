@@ -21,8 +21,8 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteeMembers />
     <div class="tabs is-boxed is-centered">
       <ul>
-        <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Charges</a></li>
-        <li   v-bind:class="{'is-active': !showProjects}" v-on:click="showProjects = false"><a>Meetings</a></li>
+        <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a style="cursor: pointer;">Charges</a></li>
+        <li   v-bind:class="{'is-active': !showProjects}" v-on:click="showProjects = false"><a style="cursor: pointer;">Meetings</a></li>
       </ul>
     </div>
     <div id='projects' v-if="showProjects">
