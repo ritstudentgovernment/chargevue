@@ -3,10 +3,22 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <HeaderMenu />
     <CommitteesMenu />
-        <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
+    <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.description }}</h1>
     </div>
     <MinutesControls></MinutesControls>
+
+   
+    <div class="charge_header">
+      <div class="charge_header_text">{{ this.charge.title }}</div>
+      <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
+    </div>
+    <ChargeAdmin v-bind:charge="this.charge"/>
+    <ChargeStatusBar v-bind:actions="this.actions"/>
+    <Purpose v-bind:chargeDesc="this.charge.description" v-bind:createdAt="this.charge.created_at" />
+    <Tasks v-if="this.charge.committee != ''" v-bind:tasks="actions" v-bind:committee="this.charge.committee" />
+   
+
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
@@ -16,23 +28,37 @@
 </template>
 
 <script>
+import Tasks from '../components/Tasks'
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
+import ChargeAdmin from '../components/ChargeAdmin'
+import ChargeStatusBar from '../components/ChargeStatusBar'
+import Purpose from '../components/Purpose'
+import moment from 'moment'
 
 export default {
   name: 'minutes',
   components: {
+    'ChargeAdmin': ChargeAdmin,
+    'Purpose': Purpose,
+    'ChargeStatusBar': ChargeStatusBar,
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
-    'MinutesControls': MinutesControls
+    'MinutesControls': MinutesControls,
+    'Tasks': Tasks
   },
   data () {
     return {
+      charge: {
+        title: '',
+        committee: ''
+      },
       committee: {'description': 'committee'},
       backgroundImage: null,
       showLoadingIndicator: true,
-      quill: null
+      quill: null,
+      actions: []
     }
   },
   methods: {
@@ -47,6 +73,31 @@ export default {
     }
   },
   sockets: {
+    // From charge.vue
+    get_charge: function (data) {
+      this.charge = data
+      this.charge.created_at = this.charge.created_at.substring(5, 7) + '/' + this.charge.created_at.substring(8, 10) + '/' + this.charge.created_at.substring(0, 4)
+    },
+    get_actions: function (data) {
+      this.actions = data
+      for (let action of this.actions) {
+        this.$socket.emit('get_notes', action.id)
+      }
+    },
+    get_notes: function (data) {
+      if (data.length > 0) {
+        for (let note of data) {
+          note.created_at = moment(note.created_at).format('L @ h:mma')
+        }
+
+        for (let action of this.actions) {
+          if (action.id === data[0].action) {
+            this.$set(action, 'notes', data)
+          }
+        }
+      }
+    },
+    // end
     get_committee: function (data) {
       this.committee = data
       if (this.committee.enabled === false) {
@@ -69,6 +120,13 @@ export default {
     }
   },
   beforeMount () {
+    // From Charge.vue
+    this.$socket.emit('get_charge', {
+      token: this.getToken(),
+      charge: this.$router.history.current.params['charge']
+    })
+    this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
+    // end
     this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
   },
   mounted () {
