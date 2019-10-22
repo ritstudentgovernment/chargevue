@@ -1,27 +1,23 @@
 <template>
   <div class="minutes_thumbnail" @click="openMinutes()">
-      <div class="minutes_thumbnail_header">{{minutes.date}}</div>
-      <div>
-        <div class="minutes_tag" v-for="tag in minutes.tags" :key='tag'><span>{{tag}}</span></div>
-      </div>
+      <div class="minutes_thumbnail_header">Minutes from {{minute.date | epochToDate }}</div>
+      <div class="minutes_tag" v-for="charge in minute.charges" :key='charge.id'><span>{{charge.title}}</span></div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'minutes-thumbnail',
-  data () {
-    return {
-      minutes: {
-        date: '2/18/2018',
-        tags: ['Test', 'Urgent', 'Fake']
-      }
-    }
-  },
-  props: ['committee'],
+  props: ['minute'],
   methods: {
     openMinutes () {
-      this.$router.push({ path: '/minutes/' + this.committee.id })
+      this.$router.push({ path: '/minute/' + this.minute.id })
+    }
+  },
+  filters: {
+    epochToDate: function (v) {
+      var date = new Date(v)
+      return date.toLocaleDateString()
     }
   }
 }
@@ -57,7 +53,7 @@ export default {
 
   .minutes_thumbnail_header
     font-size: 16pt
-    font-weight: 300
+    font-weight: 600
 
   .minutes_thumbnail_subheader
     color: #333

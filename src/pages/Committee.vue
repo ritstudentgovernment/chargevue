@@ -33,7 +33,9 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div id='minutes' v-if="!showProjects">
-      <MinutesThumbnail v-bind:committee="this.committee"></MinutesThumbnail>
+      <div v-for="minute in minutes" :key="minute.id">
+        <MinutesThumbnail v-bind:minute="minute"></MinutesThumbnail>
+      </div>
     </div>
   </div>
 </template>
@@ -71,7 +73,8 @@ export default {
       backgroundImage: null,
       showLoadingIndicator: true,
       showProjects: true,
-      charges: []
+      charges: [],
+      minutes: []
     }
   },
   sockets: {
@@ -98,11 +101,18 @@ export default {
     },
     get_charges: function (data) {
       this.charges = data
+    },
+    get_minutes: function (data) {
+      this.minutes = data
     }
   },
   beforeMount () {
     this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
     this.$socket.emit('get_charges', {
+      token: this.getToken(),
+      committee_id: this.$router.history.current.params['committee']
+    })
+    this.$socket.emit('get_minutes', {
       token: this.getToken(),
       committee_id: this.$router.history.current.params['committee']
     })
