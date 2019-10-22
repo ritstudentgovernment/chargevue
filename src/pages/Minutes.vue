@@ -69,7 +69,7 @@ export default {
     }
   },
   beforeMount () {
-    this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+    this.$socket.emit('get_minute', this.$router.history.current.params['minute'])
   },
   mounted () {
     let quillEle = document.createElement('script')
