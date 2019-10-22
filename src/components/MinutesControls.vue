@@ -1,16 +1,5 @@
 <template>
   <div>
-    <div class="minutes_controls">
-      <div class="title">Committee Controls</div>
-      <div class='divider'></div>
-      <div class='content'>
-        <span><button class='button is-primary'>Delete Minutes</button></span>
-        <span><button class='button is-primary'>Add Summary</button></span>
-        <span><button class='button is-primary'>Add Minute Taker</button></span>
-        <span><button class='button is-primary'>Publish Meeting</button></span>
-      </div>
-    </div>
-
     <div class="meeting_charges">
       <div class="title">Relevant Charges</div>
       <div class='divider'></div>

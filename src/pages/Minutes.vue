@@ -3,8 +3,8 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <HeaderMenu />
     <CommitteesMenu />
-        <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
-      <h1>{{ committee.description }}</h1>
+    <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
+    <h1>{{ minute.title }}</h1>
     </div>
     <MinutesControls />
     <div id='quillcontainer'>
@@ -19,9 +19,11 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
+import Auth from '../mixins/auth'
 
 export default {
   name: 'minutes',
+  mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
@@ -29,7 +31,7 @@ export default {
   },
   data () {
     return {
-      committee: {'description': 'committee'},
+      minute: Object,
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null
@@ -47,29 +49,15 @@ export default {
     }
   },
   sockets: {
-    get_committee: function (data) {
-      this.committee = data
-      if (this.committee.enabled === false) {
-        this.$router.push({path: '/'})
-      }
-      let image = data.committee_img
-      if (image) {
-        if (image.charAt(0) === '/') {
-          image = 'data:image/jpeg;base64,' + image
-        } else if (image.charAt(0) === 'R') {
-          image = 'data:image/gif;base64,' + image
-        } else if (image.charAt(0) === 'i') {
-          image = 'data:image/png;base64,' + image
-        }
-        this.backgroundImage = image
-      } else {
-        this.backgroundImage = null
-      }
-      this.showLoadingIndicator = false
+    get_minute: function (data) {
+      this.minute = data
     }
   },
   beforeMount () {
-    this.$socket.emit('get_minute', this.$router.history.current.params['minute'])
+    this.$socket.emit('get_minute', {
+      token: this.getToken(),
+      minute_id: this.$router.history.current.params['minute']
+    })
   },
   mounted () {
     let quillEle = document.createElement('script')
