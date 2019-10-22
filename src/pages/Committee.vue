@@ -104,7 +104,6 @@ export default {
     },
     get_minutes: function (data) {
       this.minutes = data
-      console.log(this.minutes)
     }
   },
   beforeMount () {
