@@ -8,17 +8,13 @@
     </div>
     <MinutesControls></MinutesControls>
 
-   
     <div class="charge_header">
       <div class="charge_header_text">{{ this.charge.title }}</div>
       <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
     </div>
-    <ChargeAdmin v-bind:charge="this.charge"/>
-    <ChargeStatusBar v-bind:actions="this.actions"/>
-    <Purpose v-bind:chargeDesc="this.charge.description" v-bind:createdAt="this.charge.created_at" />
+
     <Tasks v-if="this.charge.committee != ''" v-bind:tasks="actions" v-bind:committee="this.charge.committee" />
    
-
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
@@ -32,17 +28,13 @@ import Tasks from '../components/Tasks'
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
-import ChargeAdmin from '../components/ChargeAdmin'
-import ChargeStatusBar from '../components/ChargeStatusBar'
-import Purpose from '../components/Purpose'
 import moment from 'moment'
+import Auth from '../mixins/auth'
 
 export default {
   name: 'minutes',
+  mixins: [Auth],
   components: {
-    'ChargeAdmin': ChargeAdmin,
-    'Purpose': Purpose,
-    'ChargeStatusBar': ChargeStatusBar,
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
     'MinutesControls': MinutesControls,
@@ -54,7 +46,7 @@ export default {
         title: '',
         committee: ''
       },
-      committee: {'description': 'committee'},
+      committee_id: '',
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null,
@@ -76,6 +68,7 @@ export default {
     // From charge.vue
     get_charge: function (data) {
       this.charge = data
+      console.log(this.charge + 'testing in get_charge')
       this.charge.created_at = this.charge.created_at.substring(5, 7) + '/' + this.charge.created_at.substring(8, 10) + '/' + this.charge.created_at.substring(0, 4)
     },
     get_actions: function (data) {
@@ -120,11 +113,14 @@ export default {
     }
   },
   beforeMount () {
+    console.log('entered beforemount')
     // From Charge.vue
     this.$socket.emit('get_charge', {
       token: this.getToken(),
       charge: this.$router.history.current.params['charge']
     })
+    console.log(this.charge) // emit('get_charge' ...) not working
+
     this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
     // end
     this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
