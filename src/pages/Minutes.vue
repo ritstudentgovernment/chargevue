@@ -89,8 +89,8 @@ export default {
 
   #quillcontainer {
     height: 50vh;
-    width: 95vw;
-    margin: 5vh;
+    margin: 15px auto;
+    padding: 20px;
     background-color: #fff;
   }
   #editor {
