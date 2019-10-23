@@ -13,23 +13,8 @@ author: Gabe Landau <gll1872@rit.edu>
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
           <div class="navbar-start"></div>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">Student Government</a>
-            <div class="navbar-dropdown">
-              <a class='navbar-item' v-for="(item, index) in sgCommittees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
-            </div>
-          </div>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">Staff Council</a>
-            <div class="navbar-dropdown">
-              <a class='navbar-item' v-for="(item, index) in scCommittees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
-            </div>
-          </div>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-item">Academic Senate</a>
-            <div class="navbar-dropdown">
-              <a class='navbar-item' v-for="(item, index) in asCommittees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
-            </div>
+          <div class="navbar-item is-hoverable">
+              <a class='navbar-item' v-for="(item, index) in committees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
           </div>
           <div class="navbar-end"></div>
         </div>
@@ -54,17 +39,7 @@ export default {
     get_committees: function (data) {
       this.committees = data
       for (let i = 0; i < this.committees.length; i++) {
-        if (i % 3 === 0) {
-          this.sgCommittees.push(this.committees[i])
-        }
-
-        if (i % 3 === 1) {
-          this.asCommittees.push(this.committees[i])
-        }
-
-        if (i % 3 === 2) {
-          this.scCommittees.push(this.committees[i])
-        }
+        this.committees[i].push
       }
       this.loading = false
     }
