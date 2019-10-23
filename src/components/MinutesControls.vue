@@ -7,13 +7,16 @@
         <div class="control">
           <div class="select">
             <select v-model="selected_charge">
-              <option v-for="x in charges" :key="x">{{x.title}}</option>
+              <option v-for="x in charges" :key="x.id" v-bind:value="x">{{x.title}}</option>
             </select>
           </div>
-          <button class='button is-primary'>Add Charge</button>
+          <button class='button is-primary' v-on:click="addCharge()">Add Charge</button>
         </div>
-        <div class='charge' v-for="charge in minute_charges" :key="charge">
-          <span>{{charge}}</span>
+        <div class="charges">
+          <div class='charge' v-for="charge in minute_charges" :key="charge.id">
+            <span v-on:click="openCharge(charge.id)">{{charge.title}}</span>
+            <i v-on:click="removeCharge(charge)" class="mdi mdi-close"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -29,10 +32,11 @@ export default {
   data () {
     return {
       charges: [],
-      selected_charge: {},
+      selected_charge: null,
       minute_charges: []
     }
   },
+  props: ['committee_id', 'token'],
   sockets: {
     get_charges: function (data) {
       this.charges = data
@@ -41,20 +45,34 @@ export default {
   beforeMount () {
     this.$socket.emit('get_charges', {
       token: this.getToken(),
-      committee_id: this.$router.history.current.params['committee']
+      committee_id: this.$props.committee_id
     })
   },
   methods: {
+    openCharge (chargeId) {
+      this.$router.push({ path: '/charge/' + chargeId })
+    },
+    addCharge: function () {
+      if (this.selected_charge && this.minute_charges.indexOf(this.selected_charge) === -1) {
+        this.minute_charges.push(this.selected_charge)
+      }
+    },
+    removeCharge: function (charge) {
+      this.minute_charges = this.minute_charges.filter(e => e !== charge)
+    }
   }
 }
 </script>
 <style scoped>
+  @import "../../node_modules/mdi/css/materialdesignicons.css";
+
   .minutes_controls, .meeting_charges {
     background-color: #fff;
     border: 1px solid #ddd;
     width: 70%;
     margin: 25px auto 10px auto;
   }
+
   .title {
     text-align: left;
     font-size: 18pt;
@@ -69,21 +87,54 @@ export default {
     padding: 10px;
   }
 
+  .control{
+    margin: 10px 0 10px 0;
+  }
+
+  .select{
+    width: 90%;
+  }
+
+  select{
+    width: 100%;
+  }
+  
+  .charges div:nth-child(odd){
+    background-color: #ededed;
+  }
+
   .charge {
-    color: #fff;
     font-size: 14pt;
     font-weight: 300;
     display: inline-block;
-    width: 25%;
+    width: 100%;
+  }
+
+  div.charge:hover{
+    color: white;
+    background-color: #f36e21;
   }
 
   .charge span {
-    background-color: #f36e21;
     padding: 10px;
     margin: 10px;
     display: inline-block;
-    width: 80%;
-    text-align: center;
+    text-align: left;
+    font-weight: 700;
+    width: 93%;
+    cursor: pointer;
+  }
+
+  .mdi-close{
+    font-size: 30px;
+    vertical-align: middle;
+    width: 7%;
+    color: red;
+    cursor: pointer;
+  }
+
+  .mdi-close:hover{
+    color: white;
   }
 </style>
 
