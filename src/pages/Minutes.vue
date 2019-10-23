@@ -3,18 +3,10 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <HeaderMenu />
     <CommitteesMenu />
-    <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
+        <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.description }}</h1>
     </div>
     <MinutesControls></MinutesControls>
-
-    <div class="charge_header">
-      <div class="charge_header_text">{{ this.charge.title }}</div>
-      <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
-    </div>
-
-    <Tasks v-if="this.charge.committee != ''" v-bind:tasks="actions" v-bind:committee="this.charge.committee" />
-   
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
@@ -24,33 +16,22 @@
 </template>
 
 <script>
-import Tasks from '../components/Tasks'
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
-import moment from 'moment'
-import Auth from '../mixins/auth'
-
 export default {
   name: 'minutes',
-  mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
-    'MinutesControls': MinutesControls,
-    'Tasks': Tasks
+    'MinutesControls': MinutesControls
   },
   data () {
     return {
-      charge: {
-        title: '',
-        committee: ''
-      },
-      committee_id: '',
+      committee: {'description': 'committee'},
       backgroundImage: null,
       showLoadingIndicator: true,
-      quill: null,
-      actions: []
+      quill: null
     }
   },
   methods: {
@@ -65,32 +46,6 @@ export default {
     }
   },
   sockets: {
-    // From charge.vue
-    get_charge: function (data) {
-      this.charge = data
-      console.log(this.charge + 'testing in get_charge')
-      this.charge.created_at = this.charge.created_at.substring(5, 7) + '/' + this.charge.created_at.substring(8, 10) + '/' + this.charge.created_at.substring(0, 4)
-    },
-    get_actions: function (data) {
-      this.actions = data
-      for (let action of this.actions) {
-        this.$socket.emit('get_notes', action.id)
-      }
-    },
-    get_notes: function (data) {
-      if (data.length > 0) {
-        for (let note of data) {
-          note.created_at = moment(note.created_at).format('L @ h:mma')
-        }
-
-        for (let action of this.actions) {
-          if (action.id === data[0].action) {
-            this.$set(action, 'notes', data)
-          }
-        }
-      }
-    },
-    // end
     get_committee: function (data) {
       this.committee = data
       if (this.committee.enabled === false) {
@@ -113,17 +68,7 @@ export default {
     }
   },
   beforeMount () {
-    console.log('entered beforemount')
-    // From Charge.vue
-    this.$socket.emit('get_charge', {
-      token: this.getToken(),
-      charge: this.$router.history.current.params['charge']
-    })
-    console.log(this.charge) // emit('get_charge' ...) not working
-
-    this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
-    // end
-    this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+    this.$socket.emit('get_minute', this.$router.history.current.params['minute'])
   },
   mounted () {
     let quillEle = document.createElement('script')
@@ -152,7 +97,6 @@ export default {
     font-weight: 300;
     text-align: center;
   }
-
   #quillcontainer {
     height: 50vh;
     width: 95vw;
@@ -162,17 +106,14 @@ export default {
   #editor {
     background-color: #fff;
   }
-
   #saveMinutes {
     margin: 1vh;
     float: right;
   }
-
   .columns {
     width: 70%;
     margin: 0 auto;
   }
-
   .pagename {
     background: #000;
     background-attachment: fixed;
@@ -180,7 +121,6 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
   }
-
   .pagename h1 {
     margin: 0;
     text-align: center;
@@ -192,25 +132,21 @@ export default {
     -moz-animation: fadein 0.5s;
     -ms-animation: fadein 0.5s;
   }
-
   .controlPanel {
     background-color: #fff;
     width: 70%;
     margin: 15px auto;
     padding: 20px;
   }
-
   .controlPanelHeader {
     width: 100%;
     border-bottom: 1px solid #555;
     color: #555;
     margin-top: 0;
   }
-
   .controlPanelContent {
     padding: 10px;
   }
-
   .minutesPlaceholder {
     width: 70vw;
     text-align: center;
@@ -219,30 +155,25 @@ export default {
     margin-top:5vh;
     margin-bottom:5vh;
   }
-
   h4 {
     margin-top: 0;
     margin-bottom: 1%;
     font-weight: 300;
   }
-
   @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
-
   /* Firefox < 16 */
   @-moz-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
-
   /* Safari, Chrome and Opera > 12.1 */
   @-webkit-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
-
   /* Internet Explorer */
   @-ms-keyframes fadein {
     from { opacity: 0; }
