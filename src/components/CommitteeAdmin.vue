@@ -64,6 +64,12 @@ author: Gabe Landau <gll1872@rit.edu>
                 </div>
               </div>
             </div> -->
+
+          <label class="container label"> Make this charge public?  
+            <input type="checkbox" class="is-primary" autocomplete="off" v-model="privateOrPublic">
+            <span class="checkmark is-primary"></span>
+          </label>
+
         </section>
         <footer class="modal-card-foot">
           <button class="button is-primary" @click="createNewCharge()">Create</button>
@@ -100,6 +106,7 @@ export default {
       createChargePriority: 1,
       createChargeDescription: null,
       createChargePawLink: null,
+      privateOrPublic: null,
       createChargeResponse: {
         show: false,
         message: null,
@@ -121,6 +128,7 @@ export default {
       this.createChargeResponse.show = false
       this.createChargeResponse.message = null
       this.createChargeResponse.success = null
+      this.privateOrPublic = null
     },
     createNewCharge () {
       this.$socket.emit('create_charge', {
@@ -129,7 +137,8 @@ export default {
         committee: this.committee.id,
         priority: parseInt(this.createChargePriority),
         description: this.createChargeDescription,
-        paw_links: this.createChargePawLink
+        paw_links: this.createChargePawLink,
+        private: !(this.privateOrPublic) // The logic of the checkbox is backwards intentionally
       })
     },
     openAddCommitteeMember () {
@@ -199,4 +208,69 @@ export default {
   .field {
     padding-right: 20px;
   }
+
+  /* Customize the label (the container) */
+  .container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 1px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+/* Hide the browser's default checkbox */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+/* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+
+/* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+
+/* When the checkbox is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: #f36e21;
+  }
+
+/* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+/* Show the checkmark when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+/* Style the checkmark/indicator */
+  .container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
 </style>
