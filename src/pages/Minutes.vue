@@ -97,23 +97,28 @@ export default {
     font-weight: 300;
     text-align: center;
   }
+
   #quillcontainer {
     height: 50vh;
     width: 95vw;
     margin: 5vh;
     background-color: #fff;
   }
+
   #editor {
     background-color: #fff;
   }
+
   #saveMinutes {
     margin: 1vh;
     float: right;
   }
+
   .columns {
     width: 70%;
     margin: 0 auto;
   }
+
   .pagename {
     background: #000;
     background-attachment: fixed;
@@ -121,6 +126,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
   }
+
   .pagename h1 {
     margin: 0;
     text-align: center;
@@ -132,21 +138,25 @@ export default {
     -moz-animation: fadein 0.5s;
     -ms-animation: fadein 0.5s;
   }
+
   .controlPanel {
     background-color: #fff;
     width: 70%;
     margin: 15px auto;
     padding: 20px;
   }
+
   .controlPanelHeader {
     width: 100%;
     border-bottom: 1px solid #555;
     color: #555;
     margin-top: 0;
   }
+
   .controlPanelContent {
     padding: 10px;
   }
+
   .minutesPlaceholder {
     width: 70vw;
     text-align: center;
@@ -155,25 +165,30 @@ export default {
     margin-top:5vh;
     margin-bottom:5vh;
   }
+
   h4 {
     margin-top: 0;
     margin-bottom: 1%;
     font-weight: 300;
   }
+
   @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+
   /* Firefox < 16 */
   @-moz-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+
   /* Safari, Chrome and Opera > 12.1 */
   @-webkit-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+
   /* Internet Explorer */
   @-ms-keyframes fadein {
     from { opacity: 0; }
