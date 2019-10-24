@@ -90,7 +90,7 @@ export default {
   #quillcontainer {
     height: 50vh;
     margin: 15px auto;
-    padding: 20px;
+    width: 70%;
     background-color: #fff;
   }
   #editor {
@@ -98,7 +98,7 @@ export default {
   }
 
   #saveMinutes {
-    margin: 1vh;
+    margin: 1vh 0 1vh 0;
     float: right;
   }
 
