@@ -13,8 +13,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
           <div class="navbar-start"></div>
-          <div class="navbar-item is-hoverable">
-              <a class='navbar-item' v-for="(item, index) in committees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
+              <a class='navbar-item' is-hoverable v-for="(item, index) in committees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
           </div>
           <div class="navbar-end"></div>
         </div>
@@ -38,9 +37,6 @@ export default {
   sockets: {
     get_committees: function (data) {
       this.committees = data
-      for (let i = 0; i < this.committees.length; i++) {
-        this.committees[i].push
-      }
       this.loading = false
     }
   },
