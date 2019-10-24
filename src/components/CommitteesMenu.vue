@@ -28,9 +28,6 @@ export default {
     return {
       committees: null,
       loading: true,
-      sgCommittees: [],
-      scCommittees: [],
-      asCommittees: []
     }
   },
   sockets: {
