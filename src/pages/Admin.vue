@@ -75,6 +75,19 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
               </div>
             </div>
 
+            <label class="label">Meeting Committee</label>
+            <div class="field is-grouped">
+              <div class="control">
+                <div class="select">
+                  <select v-model="createMeetingDay">
+                    <option>Student Government</option>
+                    <option>Academic Senate</option>
+                    <option>Staff Council</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <div class="field">
               <label class="label">Meeting Location</label>
               <div class="control">
@@ -166,7 +179,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <div class="field is-grouped">
               <div class="control">
                 <div class="select">
-                  <select v-model="editMeetingCommittee">
+                  <select v-model="createMeetingDay">
                     <option>Student Government</option>
                     <option>Academic Senate</option>
                     <option>Staff Council</option>
@@ -289,7 +302,6 @@ export default {
       createDescription: null,
       createLocation: null,
       createCommitteeHead: null,
-      createMeetingCommittee: null,
       createMeetingDay: null,
       createMeetingAmPm: null,
       createMeetingHour: null,
@@ -301,7 +313,6 @@ export default {
       editTitle: null,
       editDescription: null,
       editLocation: null,
-      editMeetingCommittee: null,
       editMeetingDay: null,
       editMeetingHour: null,
       editMeetingMinute: null,
@@ -348,7 +359,6 @@ export default {
           token: this.getToken(),
           title: this.createTitle,
           description: this.createDescription,
-          committee: this.createMeetingCommittee,
           location: this.createLocation,
           meeting_time: time,
           meeting_day: day,
@@ -372,7 +382,6 @@ export default {
       this.createDescription = null
       this.createLocation = null
       this.createCommitteeHead = null
-      this.createMeetingCommittee = null
       this.createMeetingDay = null
       this.createMeetingAmPm = null
       this.createMeetingHour = null
@@ -393,7 +402,6 @@ export default {
           token: this.getToken(),
           id: this.editTitle.toLowerCase(),
           description: this.editDescription,
-          meeting_committee: this.editMeetingCommittee,
           location: this.editLocation,
           meeting_time: time,
           meeting_day: day,
@@ -405,7 +413,6 @@ export default {
           token: this.getToken(),
           id: this.editTitle.toLowerCase().replace(/\s/g, ''),
           description: this.editDescription,
-          meeting_committee: this.editMeetingCommittee,
           location: this.editLocation,
           meeting_time: time,
           meeting_day: day,
@@ -469,7 +476,6 @@ export default {
       this.editMeetingAmPm = dateTimeObj.ampm
       this.editTitle = data.title
       this.editDescription = data.description
-      this.editMeetingCommittee = data.meetingCommittee
       this.editLocation = data.location
       this.editCommitteeHead = data.head
     },
