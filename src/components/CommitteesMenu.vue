@@ -27,7 +27,7 @@ export default {
   data () {
     return {
       committees: null,
-      loading: true,
+      loading: true
     }
   },
   sockets: {
