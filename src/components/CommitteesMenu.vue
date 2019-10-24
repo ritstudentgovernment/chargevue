@@ -14,7 +14,6 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="navbar-menu is-active">
           <div class="navbar-start"></div>
               <a class='navbar-item' is-hoverable v-for="(item, index) in committees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
-          </div>
           <div class="navbar-end"></div>
         </div>
       </nav>
