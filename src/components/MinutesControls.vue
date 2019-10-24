@@ -36,7 +36,7 @@ export default {
       minute_charges: []
     }
   },
-  props: ['committee_id'],
+  props: ['committee_id', 'existing_charges'],
   sockets: {
     get_charges: function (data) {
       this.charges = data
@@ -49,13 +49,14 @@ export default {
         committee_id: this.$props.committee_id
       })
     })
+    this.minute_charges = this.$props.existing_charges
   },
   methods: {
     openCharge (chargeId) {
       this.$router.push({ path: '/charge/' + chargeId })
     },
     addCharge: function () {
-      if (this.selected_charge && this.minute_charges.indexOf(this.selected_charge) === -1) {
+      if (this.selected_charge && this.minute_charges.filter(c => c.id === this.selected_charge.id).length === 0) {
         this.minute_charges.push(this.selected_charge)
       }
     },
@@ -91,10 +92,13 @@ export default {
 
   .control{
     margin: 10px 0 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .select{
-    width: 90%;
+    width: 100%;
   }
 
   select{
@@ -106,10 +110,12 @@ export default {
   }
 
   .charge {
-    font-size: 14pt;
+    font-size: 12pt;
     font-weight: 300;
-    display: inline-block;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   div.charge:hover{
@@ -118,19 +124,19 @@ export default {
   }
 
   .charge span {
-    padding: 10px;
-    margin: 10px;
+    padding: 5px;
+    margin: 5px;
     display: inline-block;
     text-align: left;
     font-weight: 700;
-    width: 93%;
     cursor: pointer;
   }
 
   .mdi-close{
+    padding: 5px;
+    margin: 5px;
     font-size: 30px;
     vertical-align: middle;
-    width: 7%;
     color: red;
     cursor: pointer;
   }

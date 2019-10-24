@@ -6,7 +6,7 @@
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
     <h1>{{ minute.title }}</h1>
     </div>
-    <MinutesControls v-if="minute.committee_id" v-bind:committee_id="minute.committee_id"/>
+    <MinutesControls v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
