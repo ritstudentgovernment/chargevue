@@ -1,10 +1,7 @@
 <!--
-
 filename: CommitteesMenu.vue
 description: Component showing the menu of committees with links to the Committee.vue page
-
 author: Gabe Landau <gll1872@rit.edu>
-
 -->
 
 <template>
@@ -47,7 +44,6 @@ export default {
     text-decoration: none;
     color: inherit;
   }
-
   #committee_bar {
     background-color: #ccc;
     color: #333;
@@ -55,13 +51,11 @@ export default {
     text-transform: uppercase;
     padding: 5px 0;
   }
-
   #committee_bar ul {
     list-style: none;
     text-align: center;
     padding: 0;
   }
-
   #committee_bar ul li {
     padding: 0 15px;
     display: inline;
@@ -69,16 +63,13 @@ export default {
   .navbar {
     background-color: #ccc;
   }
-
   .navbar-item{
     text-align: center;
   }
-
   /* .navbar-menu {
     margin-left: 28vw;
     margin-right: 28vw; 
   } */
-
   .navbar-item:hover {
     background-color: #ccc;
   }
