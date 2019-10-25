@@ -6,7 +6,7 @@
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
     <h1>{{ minute.title }}</h1>
     </div>
-    <MinutesControls />
+    <MinutesControls v-if="minute.committee_id" v-bind:committee_id="minute.committee_id"/>
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
@@ -54,9 +54,11 @@ export default {
     }
   },
   beforeMount () {
-    this.$socket.emit('get_minute', {
-      token: this.getToken(),
-      minute_id: this.$router.history.current.params['minute']
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_minute', {
+        token: token,
+        minute_id: this.$router.history.current.params['minute']
+      })
     })
   },
   mounted () {

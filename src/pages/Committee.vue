@@ -108,13 +108,15 @@ export default {
   },
   beforeMount () {
     this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
-    this.$socket.emit('get_charges', {
-      token: this.getToken(),
-      committee_id: this.$router.history.current.params['committee']
-    })
-    this.$socket.emit('get_minutes', {
-      token: this.getToken(),
-      committee_id: this.$router.history.current.params['committee']
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_charges', {
+        token: token,
+        committee_id: this.$router.history.current.params['committee']
+      })
+      this.$socket.emit('get_minutes', {
+        token: token,
+        committee_id: this.$router.history.current.params['committee']
+      })
     })
   },
   computed: {

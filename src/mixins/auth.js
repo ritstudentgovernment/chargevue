@@ -38,6 +38,24 @@ let functions = {
     },
     isAuthenticated () {
       return this.$store.getters.authenticated
+    },
+    checkAuth () {
+      return new Promise((resolve, reject) => {
+        if (localStorage.getItem('token')) {
+          resolve(localStorage.getItem('token'))
+        }
+        var token = (process.env.AUTH_METHOD === 'LDAP') ? {token: localStorage.getItem('token')} : {}
+        this.$options.sockets.verify_auth = (data) => {
+          if (!data.error) {
+            this.pageReloaded(localStorage.getItem('token'), data.admin, data.username)
+            resolve(localStorage.getItem('token'))
+          } else {
+            reject()
+            this.logout()
+          }
+        }
+        this.$socket.emit('verify_auth', token)
+      })
     }
   }
 }
