@@ -36,16 +36,18 @@ export default {
       minute_charges: []
     }
   },
-  props: ['committee_id', 'token'],
+  props: ['committee_id'],
   sockets: {
     get_charges: function (data) {
       this.charges = data
     }
   },
   beforeMount () {
-    this.$socket.emit('get_charges', {
-      token: this.getToken(),
-      committee_id: this.$props.committee_id
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_charges', {
+        token: token,
+        committee_id: this.$props.committee_id
+      })
     })
   },
   methods: {
