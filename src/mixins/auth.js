@@ -44,7 +44,6 @@ let functions = {
         if (localStorage.getItem('token')) {
           resolve(localStorage.getItem('token'))
         }
-        var token = (process.env.AUTH_METHOD === 'LDAP') ? {token: localStorage.getItem('token')} : {}
         this.$options.sockets.verify_auth = (data) => {
           if (!data.error) {
             this.pageReloaded(localStorage.getItem('token'), data.admin, data.username)
@@ -54,6 +53,7 @@ let functions = {
             this.logout()
           }
         }
+        var token = (process.env.AUTH_METHOD === 'LDAP') ? {token: localStorage.getItem('token')} : {}
         this.$socket.emit('verify_auth', token)
       })
     }

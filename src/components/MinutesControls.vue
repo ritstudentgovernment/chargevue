@@ -39,14 +39,11 @@ export default {
   props: ['committee_id'],
   sockets: {
     get_charges: function (data) {
-      console.log(data)
       this.charges = data
     }
   },
   beforeMount () {
     this.checkAuth().then((token) => {
-      console.log(token)
-      console.log(this.$props.committee_id)
       this.$socket.emit('get_charges', {
         token: token,
         committee_id: this.$props.committee_id
