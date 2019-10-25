@@ -13,7 +13,11 @@ author: Gabe Landau <gll1872@rit.edu>
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
           <div class="navbar-start"></div>
+<<<<<<< HEAD
           <a class='navbar-item' is-hoverable v-for="(item, index) in committees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
+=======
+          <a class='navbar-item' v-for="(item, index) in asCommittees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
+>>>>>>> Redid changes from previous merge
           <div class="navbar-end"></div>
         </div>
       </nav>
