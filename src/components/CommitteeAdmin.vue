@@ -165,6 +165,12 @@ export default {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = true
         this.createChargeResponse.message = data.success
+        setTimeout(function () {
+          this.createChargeTitle = null
+          this.createChargeDescription = null
+          this.createChargePriority = null
+          this.showAddNewCharge = false
+        }, 2000)
       } else if (data.error) {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = false
