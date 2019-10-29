@@ -1,87 +1,80 @@
 <template>
   <div>
-      <div class="minutes_controls">
-          <div class="title">Committee Controls</div>
-          <div class='divider'></div>
-          <div class='content'>
-              <span><button class='button is-primary'>Delete Minutes</button></span>
-              <span><button class='button is-primary'>Add Summary</button></span>
-              <span><button class='button is-primary'>Add Minute Taker</button></span>
-              <span><button class='button is-primary'>Publish Meeting</button></span>
+    <div class="meeting_charges">
+      <div class="title">Relevant Charges</div>
+      <div class='divider'></div>
+      <div class='content'>
+        <div class="control">
+          <div class="select">
+            <select v-model="selected_charge">
+              <option v-for="x in charges" :key="x.id" v-bind:value="x">{{x.title}}</option>
+            </select>
           </div>
-      </div>
-
-      <div class="meeting_charges">
-          <div class="title">Meeting Charges</div>
-          <div class ='buttons'>
-            <button class='button is-primary' v-on:click='showAddCharge()'>Add Charge</button>
-            <button class='button'>Remove Charge</button>
+          <button class='button is-primary' v-on:click="addCharge()">Add Charge</button>
+        </div>
+        <div class="charges">
+          <div class='charge' v-for="charge in minute_charges" :key="charge.id">
+            <span v-on:click="openCharge(charge.id)">{{charge.title}}</span>
+            <i v-on:click="removeCharge(charge)" class="mdi mdi-close"></i>
           </div>
-          <div class='divider'></div>
-          <div class='charge' v-for="charge in charges" :key="charge">
-            <span>{{charge}}</span>
-          </div>
-      </div>
-
-      <div class='modal' v-bind:class="{ 'is-active': showAddChargeModal }">
-        <div class="modal-background" v-on:click="closeAddCharge()"></div>
-        <div class='modal-card'>
-          <header class='modal-card-head'>
-            <p class='modal-card-title'>Add Charge</p>
-          </header>
-          <section class='modal-card-body'>
-              <article class="message" v-if="addChargeResponse.show" v-bind:class="addChargeResponse.success ? 'is-success' : 'is-danger'">
-              <div class="message-body">{{ addChargeResponse.message }}</div>
-            </article>
-            <div class='field'>
-              <label class='label'>Charge</label>
-              <input class='input' type='text' placeholder='Charge' v-model='newCharge'>
-            </div>
-          </section>
-          <footer class='modal-card-foot'>
-            <button class='button is-primary' v-on:click='addCharge()'>Add Charge</button>
-            <button class='button' v-on:click='closeAddCharge()'>Cancel</button>
-          </footer>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script>
+import Auth from '../mixins/auth'
+
 export default {
   name: 'minutesControls',
+  mixins: [Auth],
   data () {
     return {
       charges: [],
-      showAddChargeModal: false,
-      newCharge: '',
-      addChargeResponse: {
-        show: false,
-        message: null,
-        success: null
-      }
+      selected_charge: null,
+      minute_charges: []
     }
   },
+  props: ['committee_id'],
+  sockets: {
+    get_charges: function (data) {
+      this.charges = data
+    }
+  },
+  beforeMount () {
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_charges', {
+        token: token,
+        committee_id: this.$props.committee_id
+      })
+    })
+  },
   methods: {
-    addCharge () {
-      this.charges.push(this.newCharge)
+    openCharge (chargeId) {
+      this.$router.push({ path: '/charge/' + chargeId })
     },
-    showAddCharge () {
-      this.showAddChargeModal = true
+    addCharge: function () {
+      if (this.selected_charge && this.minute_charges.indexOf(this.selected_charge) === -1) {
+        this.minute_charges.push(this.selected_charge)
+      }
     },
-    closeAddCharge () {
-      this.showAddChargeModal = false
+    removeCharge: function (charge) {
+      this.minute_charges = this.minute_charges.filter(e => e !== charge)
     }
   }
 }
 </script>
 <style scoped>
+  @import "../../node_modules/mdi/css/materialdesignicons.css";
+
   .minutes_controls, .meeting_charges {
     background-color: #fff;
     border: 1px solid #ddd;
     width: 70%;
     margin: 25px auto 10px auto;
   }
+
   .title {
     text-align: left;
     font-size: 18pt;
@@ -96,21 +89,54 @@ export default {
     padding: 10px;
   }
 
+  .control{
+    margin: 10px 0 10px 0;
+  }
+
+  .select{
+    width: 90%;
+  }
+
+  select{
+    width: 100%;
+  }
+  
+  .charges div:nth-child(odd){
+    background-color: #ededed;
+  }
+
   .charge {
-    color: #fff;
     font-size: 14pt;
     font-weight: 300;
     display: inline-block;
-    width: 25%;
+    width: 100%;
+  }
+
+  div.charge:hover{
+    color: white;
+    background-color: #f36e21;
   }
 
   .charge span {
-    background-color: #f36e21;
     padding: 10px;
     margin: 10px;
     display: inline-block;
-    width: 80%;
-    text-align: center;
+    text-align: left;
+    font-weight: 700;
+    width: 93%;
+    cursor: pointer;
+  }
+
+  .mdi-close{
+    font-size: 30px;
+    vertical-align: middle;
+    width: 7%;
+    color: red;
+    cursor: pointer;
+  }
+
+  .mdi-close:hover{
+    color: white;
   }
 </style>
 

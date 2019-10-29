@@ -41,7 +41,7 @@ export default new Router({
       component: Invitation
     },
     {
-      path: '/minutes/:committee',
+      path: '/minute/:minute',
       component: Minutes
     },
     {

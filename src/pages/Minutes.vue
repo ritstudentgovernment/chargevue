@@ -19,8 +19,10 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
+
 export default {
   name: 'minutes',
+  mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
@@ -28,7 +30,7 @@ export default {
   },
   data () {
     return {
-      committee: {'description': 'committee'},
+      minute: Object,
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null
@@ -46,29 +48,17 @@ export default {
     }
   },
   sockets: {
-    get_committee: function (data) {
-      this.committee = data
-      if (this.committee.enabled === false) {
-        this.$router.push({path: '/'})
-      }
-      let image = data.committee_img
-      if (image) {
-        if (image.charAt(0) === '/') {
-          image = 'data:image/jpeg;base64,' + image
-        } else if (image.charAt(0) === 'R') {
-          image = 'data:image/gif;base64,' + image
-        } else if (image.charAt(0) === 'i') {
-          image = 'data:image/png;base64,' + image
-        }
-        this.backgroundImage = image
-      } else {
-        this.backgroundImage = null
-      }
-      this.showLoadingIndicator = false
+    get_minute: function (data) {
+      this.minute = data
     }
   },
   beforeMount () {
-    this.$socket.emit('get_minute', this.$router.history.current.params['minute'])
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_minute', {
+        token: token,
+        minute_id: this.$router.history.current.params['minute']
+      })
+    })
   },
   mounted () {
     let quillEle = document.createElement('script')
@@ -100,8 +90,8 @@ export default {
 
   #quillcontainer {
     height: 50vh;
-    width: 95vw;
-    margin: 5vh;
+    margin: 15px auto;
+    width: 70%;
     background-color: #fff;
   }
 
@@ -110,7 +100,7 @@ export default {
   }
 
   #saveMinutes {
-    margin: 1vh;
+    margin: 1vh 0 1vh 0;
     float: right;
   }
 

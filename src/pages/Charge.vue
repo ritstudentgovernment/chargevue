@@ -78,11 +78,13 @@ export default {
     }
   },
   beforeMount () {
-    this.$socket.emit('get_charge', {
-      token: this.getToken(),
-      charge: this.$router.history.current.params['charge']
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_charge', {
+        token: token,
+        charge: this.$router.history.current.params['charge']
+      })
+      this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
     })
-    this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
   }
 }
 </script>

@@ -13,7 +13,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
-      <h1>{{ committee.description }}</h1>
+      <h1>{{ committee.title }}</h1>
     </div>
 
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
@@ -22,7 +22,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="tabs is-boxed is-centered">
       <ul>
         <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Charges</a></li>
-        <li v-bind:class="{'is-active': !showProjects}" v-on:click="showProjects = false"><a>Meetings</a></li>
+        <li   v-bind:class="{'is-active': !showProjects}" v-on:click="showProjects = false"><a>Minutes</a></li>
       </ul>
     </div>
     <div id='projects' v-if="showProjects">
@@ -33,7 +33,9 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div id='minutes' v-if="!showProjects">
-      <MinutesThumbnail v-bind:committee="this.committee"></MinutesThumbnail>
+      <div v-for="minute in minutes" :key="minute.id">
+        <MinutesThumbnail v-bind:minute="minute"></MinutesThumbnail>
+      </div>
     </div>
   </div>
 </template>
@@ -71,7 +73,8 @@ export default {
       backgroundImage: null,
       showLoadingIndicator: true,
       showProjects: true,
-      charges: []
+      charges: [],
+      minutes: []
     }
   },
   sockets: {
@@ -98,13 +101,22 @@ export default {
     },
     get_charges: function (data) {
       this.charges = data
+    },
+    get_minutes: function (data) {
+      this.minutes = data
     }
   },
   beforeMount () {
     this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
-    this.$socket.emit('get_charges', {
-      token: this.getToken(),
-      committee_id: this.$router.history.current.params['committee']
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_charges', {
+        token: token,
+        committee_id: this.$router.history.current.params['committee']
+      })
+      this.$socket.emit('get_minutes', {
+        token: token,
+        committee_id: this.$router.history.current.params['committee']
+      })
     })
   },
   computed: {
