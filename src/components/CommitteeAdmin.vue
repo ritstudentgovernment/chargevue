@@ -66,7 +66,7 @@ author: Gabe Landau <gll1872@rit.edu>
             </div> -->
 
           <label class="container label"> Make this charge public?  
-            <input type="checkbox" class="is-primary" autocomplete="off" v-model="privateOrPublic">
+            <input type="checkbox" class="is-primary" autocomplete="off" v-model="isPrivate">
             <span class="checkmark is-primary"></span>
           </label>
 
@@ -106,7 +106,7 @@ export default {
       createChargePriority: 1,
       createChargeDescription: null,
       createChargePawLink: null,
-      privateOrPublic: null,
+      isPrivate: null,
       createChargeResponse: {
         show: false,
         message: null,
@@ -128,7 +128,7 @@ export default {
       this.createChargeResponse.show = false
       this.createChargeResponse.message = null
       this.createChargeResponse.success = null
-      this.privateOrPublic = null
+      this.isPrivate = null
     },
     createNewCharge () {
       this.$socket.emit('create_charge', {
