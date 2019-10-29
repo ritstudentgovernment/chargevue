@@ -3,10 +3,10 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <HeaderMenu />
     <CommitteesMenu />
-        <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
-      <h1>{{ committee.description }}</h1>
+    <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
+    <h1>{{ minute.title }}</h1>
     </div>
-    <MinutesControls></MinutesControls>
+    <MinutesControls v-if="minute.committee_id" v-bind:committee_id="minute.committee_id"/>
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
