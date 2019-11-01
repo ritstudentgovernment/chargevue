@@ -64,6 +64,12 @@ author: Gabe Landau <gll1872@rit.edu>
                 </div>
               </div>
             </div> -->
+
+          <label class="container label"> Make this charge public?  
+            <input type="checkbox" class="is-primary" autocomplete="off" v-model="isPrivate">
+            <span class="checkmark is-primary"></span>
+          </label>
+
         </section>
         <footer class="modal-card-foot">
           <button class="button is-primary" @click="createNewCharge()">Create</button>
@@ -100,6 +106,7 @@ export default {
       createChargePriority: 1,
       createChargeDescription: null,
       createChargePawLink: null,
+      isPrivate: null,
       createChargeResponse: {
         show: false,
         message: null,
@@ -121,6 +128,7 @@ export default {
       this.createChargeResponse.show = false
       this.createChargeResponse.message = null
       this.createChargeResponse.success = null
+      this.isPrivate = null
     },
     createNewCharge () {
       this.$socket.emit('create_charge', {
@@ -129,7 +137,8 @@ export default {
         committee: this.committee.id,
         priority: parseInt(this.createChargePriority),
         description: this.createChargeDescription,
-        paw_links: this.createChargePawLink
+        paw_links: this.createChargePawLink,
+        private: !(this.isPrivate) // The logic of the checkbox is backwards intentionally
       })
     },
     openAddCommitteeMember () {
@@ -199,4 +208,5 @@ export default {
   .field {
     padding-right: 20px;
   }
+  
 </style>
