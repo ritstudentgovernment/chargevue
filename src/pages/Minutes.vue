@@ -95,6 +95,7 @@ export default {
     width: 70%;
     background-color: #fff;
   }
+
   #editor {
     background-color: #fff;
   }

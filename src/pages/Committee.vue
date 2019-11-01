@@ -210,6 +210,10 @@ export default {
     margin-bottom:5vh;
   }
 
+  li {
+    cursor: pointer;
+  }
+
   h4 {
     margin-top: 0;
     margin-bottom: 1%;
