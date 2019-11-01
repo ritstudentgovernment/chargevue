@@ -19,6 +19,7 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
+import Auth from '../mixins/auth'
 
 export default {
   name: 'minutes',
