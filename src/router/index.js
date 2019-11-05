@@ -44,10 +44,11 @@ export default new Router({
       path: '/minute/:minute',
       component: Minutes,
       beforeEnter: (to, from, next) => {
-        if (to.query['committee_id']) {
-          next()
-        } else {
+        console.log(to)
+        if (to.params['minute'] === 'new' && !to.query['committee_id']) {
           next({ path: '/' })
+        } else {
+          next()
         }
       }
     },
