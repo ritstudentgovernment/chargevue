@@ -36,8 +36,16 @@ export default {
   },
   data () {
     return {
+<<<<<<< HEAD
       minute: Object,
       isNew: false,
+=======
+      minute: {
+        committee_id: 'test',
+        title: 'temporary title',
+        charge_ids: []
+      },
+>>>>>>> Finished saving the minutes to the backend
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null
@@ -48,15 +56,35 @@ export default {
       let delta = this.quill.getContents()
       console.log(delta)
       this.getDeltaHTML(delta)
+      console.log(this)
+      this.checkAuth().then((token) => {
+        this.$socket.emit('create_minute', {
+          token: token,
+          committee_id: this.minute.committee_id,
+          title: this.minute.title,
+          date: Date.now(),
+          private: true, // This will be set with a checkbox
+          body: this.getDeltaHTML(),
+          charge_ids: []
+        })
+      })
     },
     getDeltaHTML (delta) {
       let commentHTML = document.querySelector('.ql-editor').innerHTML
-      console.log(commentHTML)
+      return commentHTML
     }
   },
   sockets: {
+    create_minute: function (data) {
+      if (data.error) {
+        console.log('this is the error')
+        console.log(data.error)
+      } else {
+        console.log('Success!')
+      }
+    },
     get_minute: function (data) {
-      this.minute = data
+      // this.minute = data TODO this is overriding data
     }
   },
   beforeMount () {
