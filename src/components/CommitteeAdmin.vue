@@ -131,11 +131,6 @@ export default {
         description: this.createChargeDescription,
         paw_links: this.createChargePawLink
       })
-      if (this.createChargeResponse.success) {
-        setTimeout(function () {
-          this.closeAddNewCharge()
-        }, 2000)
-      }
     },
     openAddCommitteeMember () {
       this.$socket.emit('get_all_users')
@@ -161,6 +156,7 @@ export default {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = true
         this.createChargeResponse.message = data.success
+        setTimeout(() => { this.closeAddNewCharge() }, 2000)
       } else if (data.error) {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = false
