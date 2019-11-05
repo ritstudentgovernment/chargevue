@@ -62,6 +62,8 @@ export default {
   },
   beforeMount () {
     if (this.$router.history.current.params['minute'] === 'new') {
+      this.minute.committee_id = this.$router.history.current.query['committee_id']
+      this.minute.charges = []
       this.isNew = true
       return
     }

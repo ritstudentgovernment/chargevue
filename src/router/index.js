@@ -42,7 +42,14 @@ export default new Router({
     },
     {
       path: '/minute/:minute',
-      component: Minutes
+      component: Minutes,
+      beforeEnter: (to, from, next) => {
+        if (to.query['committee_id']) {
+          next()
+        } else {
+          next({ path: '/' })
+        }
+      }
     },
     {
       path: '*',
