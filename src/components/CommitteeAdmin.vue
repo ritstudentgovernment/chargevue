@@ -140,11 +140,6 @@ export default {
         paw_links: this.createChargePawLink,
         private: !(this.isPrivate) // The logic of the checkbox is backwards intentionally
       })
-      if (this.createChargeResponse.success) {
-        setTimeout(function () {
-          this.closeAddNewCharge()
-        }, 2000)
-      }
     },
     openAddCommitteeMember () {
       this.$socket.emit('get_all_users')
@@ -170,6 +165,7 @@ export default {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = true
         this.createChargeResponse.message = data.success
+        setTimeout(() => { this.closeAddNewCharge() }, 2000)
       } else if (data.error) {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = false
