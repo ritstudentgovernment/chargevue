@@ -18,7 +18,14 @@
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
-      <button class="button is-primary" id='saveMinutes' v-on:click="saveMinutes()">Save Minutes</button>
+
+      <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+          <div><label class="container label"> Make this minute private?  
+                <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
+                <span class="checkmark is-primary"></span>
+          </label></div>
+          <div><button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button></div>
+      </div>
     </div>
   </div>
 </template>
@@ -143,8 +150,7 @@ export default {
   }
 
   #saveMinutes {
-    margin: 1vh 0 1vh 0;
-    float: right;
+    margin: 1vh 0 1vh 1vh;
   }
 
   .columns {
@@ -228,6 +234,10 @@ export default {
     width: 70%;
     margin-left: 15vw;
     margin-right: 15vw;
+  }
+  
+  .container {
+    padding-top: 15px;
   }
 
   @keyframes fadein {
