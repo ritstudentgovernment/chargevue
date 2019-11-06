@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     saveMinutes () {
-      console.log(this.minute)
       let delta = this.quill.getContents()
       console.log(delta)
       this.getDeltaHTML(delta)
