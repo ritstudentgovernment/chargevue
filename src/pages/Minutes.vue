@@ -4,13 +4,18 @@
     <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
-    <h1>{{ minute.title }}</h1>
+      <div v-if="isNew">
+        <input v-model="minute.title" type="text" placeholder="Insert Minute Title"/>
+      </div>
+      <div v-else>
+        <h1>{{ minute.title }}</h1>
+      </div>
     </div>
-    <MinutesControls v-if="minute.committee_id" v-bind:committee_id="minute.committee_id"/>
+    <MinutesControls v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
-      <button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button>
+      <button class="button is-primary" id='saveMinutes' v-on:click="saveMinutes()">Save Minutes</button>
     </div>
   </div>
 </template>
@@ -32,6 +37,7 @@ export default {
   data () {
     return {
       minute: Object,
+      isNew: false,
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null
@@ -54,6 +60,12 @@ export default {
     }
   },
   beforeMount () {
+    if (this.$router.history.current.params['minute'] === 'new') {
+      this.minute.committee_id = this.$router.history.current.query['committee_id']
+      this.minute.charges = []
+      this.isNew = true
+      return
+    }
     this.checkAuth().then((token) => {
       this.$socket.emit('get_minute', {
         token: token,
@@ -116,6 +128,23 @@ export default {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    text-align: center;
+  }
+
+  .pagename input{
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-size: 40px;
+    margin: 60px 0;
+    width: 50%;
+    background-color: transparent;
+    border-radius: 0;
+    border-width: 0 0 2px;
+    border-color: white;
+    color: white;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
   }
 
   .pagename h1 {

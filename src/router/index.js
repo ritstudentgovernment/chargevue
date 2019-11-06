@@ -42,7 +42,15 @@ export default new Router({
     },
     {
       path: '/minute/:minute',
-      component: Minutes
+      component: Minutes,
+      beforeEnter: (to, from, next) => {
+        // If new minute, must specify which committee.
+        if (to.params['minute'] === 'new' && !to.query['committee_id']) {
+          next({ path: '/' })
+        } else {
+          next()
+        }
+      }
     },
     {
       path: '*',

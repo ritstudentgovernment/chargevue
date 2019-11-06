@@ -156,7 +156,10 @@ export default {
       this.showRemoveMemberFromCommitteeForm = false
     },
     showAddMeetingMinutes () {
-      this.showMeetingMinutes = true
+      this.$router.push({
+        path: '/minute/new',
+        query: { committee_id: this.committee.id }
+      })
     }
   },
   sockets: {
