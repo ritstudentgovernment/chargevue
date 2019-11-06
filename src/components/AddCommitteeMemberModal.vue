@@ -87,6 +87,7 @@
           this.addMemberResponse.show = true
           this.addMemberResponse.success = true
           this.addMemberResponse.message = data.success
+          setTimeout(() => { this.closeAddMember() }, 2000)
         } else if (data.error) {
           this.addMemberResponse.show = true
           this.addMemberResponse.success = false

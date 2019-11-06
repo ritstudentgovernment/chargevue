@@ -91,7 +91,7 @@ author: Gabe Landau <gll1872@rit.edu>
           </div>
         </div>
       </div>
-      <button class="modal-close is-large" @click="active = false"></button>
+      <button class="modal-close is-large" @click="clearTaskModal"></button>
     </div>
   </div>
 </template>
@@ -118,6 +118,12 @@ export default {
   },
   sockets: {
     create_note: function (data) {
+      if(data.success) {
+        this.active = true
+        this.createNoteResponseStatus = 'success'
+        this.createNoteResponseMessage = data.success
+
+      }
       if (data.error) {
         this.createNoteResponseStatus = 'error'
         this.createNoteResponseMessage = data.error
@@ -146,6 +152,16 @@ export default {
         id: this.task.id,
         status: this.status
       })
+    },
+    clearTaskModal () {
+      this.active = false
+      this.style = ''
+      this.icon = ''
+      this.id = null
+      this.status = -1,
+      this.createNoteText = '',
+      this.createNoteResponseStatus = '',
+      this.createNoteResponseMessage = ''
     }
   },
   computed: {
