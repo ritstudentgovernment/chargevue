@@ -10,7 +10,14 @@
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
-      <button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button>
+
+      <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+          <div><label class="container label"> Make this minute private?  
+                <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
+                <span class="checkmark is-primary"></span>
+          </label></div>
+          <div><button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button></div>
+      </div>
     </div>
   </div>
 </template>
@@ -31,7 +38,11 @@ export default {
   },
   data () {
     return {
-      minute: Object,
+      minute: {
+        committee_id: 'test',
+        title: 'temporary_title',
+        private: false
+      },
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null
@@ -42,6 +53,7 @@ export default {
       let delta = this.quill.getContents()
       console.log(delta)
       this.getDeltaHTML(delta)
+      console.log(this.minute.private)
     },
     getDeltaHTML (delta) {
       let commentHTML = document.querySelector('.ql-editor').innerHTML
@@ -101,8 +113,7 @@ export default {
   }
 
   #saveMinutes {
-    margin: 1vh 0 1vh 0;
-    float: right;
+    margin: 1vh 0 1vh 1vh;
   }
 
   .columns {
@@ -161,6 +172,10 @@ export default {
     margin-top: 0;
     margin-bottom: 1%;
     font-weight: 300;
+  }
+
+  .container {
+    padding-top: 15px;
   }
 
   @keyframes fadein {
