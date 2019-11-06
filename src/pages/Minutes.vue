@@ -36,16 +36,8 @@ export default {
   },
   data () {
     return {
-<<<<<<< HEAD
       minute: Object,
       isNew: false,
-=======
-      minute: {
-        committee_id: 'test',
-        title: 'temporary title',
-        charge_ids: []
-      },
->>>>>>> Finished saving the minutes to the backend
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null
@@ -53,10 +45,6 @@ export default {
   },
   methods: {
     saveMinutes () {
-      let delta = this.quill.getContents()
-      console.log(delta)
-      this.getDeltaHTML(delta)
-      console.log(this)
       this.checkAuth().then((token) => {
         this.$socket.emit('create_minute', {
           token: token,
@@ -64,14 +52,10 @@ export default {
           title: this.minute.title,
           date: Date.now(),
           private: true, // This will be set with a checkbox
-          body: this.getDeltaHTML(),
-          charge_ids: []
+          body: document.querySelector('.ql-editor').innerHTML,
+          charges: []
         })
       })
-    },
-    getDeltaHTML (delta) {
-      let commentHTML = document.querySelector('.ql-editor').innerHTML
-      return commentHTML
     }
   },
   sockets: {
