@@ -18,7 +18,6 @@
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
-
       <div style="display: flex; flex-direction: row; justify-content: flex-end;">
           <div><label class="container label"> Make this minute private?  
                 <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
@@ -234,6 +233,10 @@ export default {
     width: 70%;
     margin-left: 15vw;
     margin-right: 15vw;
+  }
+
+  .container {
+    padding-top: 15px;
   }
   
   .container {
