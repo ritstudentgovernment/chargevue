@@ -44,7 +44,6 @@ export default new Router({
       path: '/minute/:minute',
       component: Minutes,
       beforeEnter: (to, from, next) => {
-        console.log(to)
         // If new minute, must specify which committee.
         if (to.params['minute'] === 'new' && !to.query['committee_id']) {
           next({ path: '/' })

@@ -151,6 +151,7 @@ export default {
     margin: 0;
     text-align: center;
     text-transform: uppercase;
+    padding: 75px 0;
     color: #fff;
     animation: fadein 0.5s;
     -webkit-animation: fadein 0.5s;
