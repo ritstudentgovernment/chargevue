@@ -11,7 +11,7 @@
         <h1>{{ minute.title }}</h1>
       </div>
     </div>
-    <MinutesControls @addedCharge ="getNewCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
+    <MinutesControls @updateCharges ="updateCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
     <article class="message" v-if="saveMinuteResponse.show" v-bind:class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
     <div class="message-body">{{ saveMinuteResponse.message }}</div>
     </article>
@@ -52,9 +52,8 @@ export default {
     }
   },
   methods: {
-    getNewCharges (newCharges) {
-      console.log(newCharges)
-      this.minute.charges = newCharges
+    updateCharges (charges) {
+      this.minute.charges = charges
     },
     saveMinutes () {
       this.checkAuth().then((token) => {
@@ -63,11 +62,14 @@ export default {
           committee_id: this.minute.committee_id,
           title: this.minute.title,
           date: Date.now(),
-          private: true, // This will be set with a checkbox
+          private: true,
           body: document.querySelector('.ql-editor').innerHTML,
-          charges: []
+          charges: this.minute.charges
         })
       })
+    },
+    removeSaveMinuteResponse () {
+      this.saveMinuteResponse.show = false
     }
   },
   sockets: {
