@@ -13,7 +13,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
-      <h1>{{ committee.description }}</h1>
+      <h1>{{ committee.title }}</h1>
     </div>
 
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
