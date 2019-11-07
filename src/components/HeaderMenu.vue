@@ -19,10 +19,8 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="right">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
-        <!-- <button @click="redirectLogin()" v-if="!authenticated && !isLdap">Login</button>
-        <button @click="redirectLogout()" v-if="authenticated && !isLdap">Logout</button> -->
-        <a href="./saml/login" class="link" v-if="!authenticated && !isLdap">Login</a>
-        <a href="./saml/logout" class="link" v-if="authenticated && !isLdap">Logout</a>
+        <button class = "customButton" @click="redirectLogin()" v-if="!authenticated && !isLdap">Login</button>
+        <button class = "customButton" @click="redirectLogout()" v-if="authenticated && !isLdap">Logout</button>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
       </div>
     </header>
@@ -111,7 +109,7 @@ export default {
     ...mapGetters({
       authenticated: 'authenticated',
       admin: 'admin',
-      isLdap: 'isLdap' // TODO reset to 'isLdap' when done testing
+      isLdap: false
     })
   }
 }
@@ -150,6 +148,26 @@ export default {
   }
 
   header .link {
+    cursor: pointer;
+    font-weight: 300;
+    color: grey;
+    text-align: right;
+    display: inline-block;
+    padding-left: 20px;
+  }
+
+  /* A button made to look like a link */
+  button {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: inline-block;
+    padding-left: 20px;
+    font-size: 18px;
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    z-index: 2;
     cursor: pointer;
     font-weight: 300;
     color: grey;
