@@ -13,7 +13,7 @@
     </div>
     <MinutesControls @updateCharges ="updateCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
     <article class="message" v-if="saveMinuteResponse.show" v-bind:class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
-    <div class="message-body">{{ saveMinuteResponse.message }}</div>
+      <div class="message-body">{{ saveMinuteResponse.message }}</div>
     </article>
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
