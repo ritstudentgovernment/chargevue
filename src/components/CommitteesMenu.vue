@@ -27,8 +27,7 @@ export default {
   data () {
     return {
       committees: null,
-      loading: true,
-      url: ''
+      loading: true
     }
   },
   sockets: {
@@ -83,17 +82,17 @@ export default {
   }
 
   button {
-  background: none!important;
-  border: none;
-  padding: 0!important;
-  text-transform: uppercase;
-  font-size: 1.5em;
-  /*optional*/
-  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-  /*input has OS specific font-family*/
-  color: rgb(0,0,0);
-  cursor: pointer;
-}
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    text-transform: uppercase;
+    font-size: 1.5em;
+    /*optional*/
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: rgb(0,0,0);
+    cursor: pointer;
+  }
 
   /* .navbar-menu {
     margin-left: 28vw;
