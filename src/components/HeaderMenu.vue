@@ -19,6 +19,8 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="right">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
+        <!-- <button @click="redirectLogin()" v-if="!authenticated && !isLdap">Login</button>
+        <button @click="redirectLogout()" v-if="authenticated && !isLdap">Logout</button> -->
         <a href="./saml/login" class="link" v-if="!authenticated && !isLdap">Login</a>
         <a href="./saml/logout" class="link" v-if="authenticated && !isLdap">Logout</a>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
@@ -78,6 +80,14 @@ export default {
     }
   },
   methods: {
+    redirectLogin () {
+      this.$router.push('/saml/login')
+      this.$router.go()
+    },
+    redirectLogout () {
+      this.$router.push('/saml/logout')
+      this.$router.go()
+    },
     submitLogin () {
       this.showAuthError = false
       this.showLoginLoading = true
@@ -101,7 +111,7 @@ export default {
     ...mapGetters({
       authenticated: 'authenticated',
       admin: 'admin',
-      isLdap: 'isLdap'
+      isLdap: 'isLdap' // TODO reset to 'isLdap' when done testing
     })
   }
 }
@@ -119,7 +129,7 @@ export default {
     color: inherit;
   }
 
-  header {
+  header { 
     padding-top: 15px;
     padding-bottom: 15px;
     display: inline-block;
