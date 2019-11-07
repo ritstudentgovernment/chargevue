@@ -59,6 +59,7 @@ export default {
       if (this.selected_charge && this.minute_charges.filter(c => c.id === this.selected_charge.id).length === 0) {
         this.minute_charges.push(this.selected_charge)
       }
+      this.$emit('addedCharge', this.minute_charges) // sends the list of charges to Minutes.vue
     },
     removeCharge: function (charge) {
       this.minute_charges = this.minute_charges.filter(e => e !== charge)

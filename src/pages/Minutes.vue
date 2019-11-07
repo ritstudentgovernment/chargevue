@@ -11,7 +11,10 @@
         <h1>{{ minute.title }}</h1>
       </div>
     </div>
-    <MinutesControls v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
+    <MinutesControls @addedCharge ="getNewCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
+    <article class="message" v-if="saveMinuteResponse.show" v-bind:class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
+    <div class="message-body">{{ saveMinuteResponse.message }}</div>
+    </article>
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
@@ -40,10 +43,19 @@ export default {
       isNew: false,
       backgroundImage: null,
       showLoadingIndicator: true,
-      quill: null
+      quill: null,
+      saveMinuteResponse: {
+        show: false,
+        message: null,
+        success: null
+      }
     }
   },
   methods: {
+    getNewCharges (newCharges) {
+      console.log(newCharges)
+      this.minute.charges = newCharges
+    },
     saveMinutes () {
       this.checkAuth().then((token) => {
         this.$socket.emit('create_minute', {
@@ -61,14 +73,18 @@ export default {
   sockets: {
     create_minute: function (data) {
       if (data.error) {
-        console.log('this is the error')
-        console.log(data.error)
-      } else {
-        console.log('Success!')
+        this.saveMinuteResponse.show = true
+        this.saveMinuteResponse.success = false
+        this.saveMinuteResponse.message = data.error
+      } else if (data.success) {
+        this.saveMinuteResponse.show = true
+        this.saveMinuteResponse.success = true
+        this.saveMinuteResponse.message = data.success
       }
+      setTimeout(this.removeSaveMinuteResponse, 3000)
     },
     get_minute: function (data) {
-      // this.minute = data TODO this is overriding data
+      this.minute = data
     }
   },
   beforeMount () {
@@ -202,6 +218,14 @@ export default {
     margin-top: 0;
     margin-bottom: 1%;
     font-weight: 300;
+  }
+
+  .message {
+    position: fixed;
+    top: 0;
+    width: 70%;
+    margin-left: 15vw;
+    margin-right: 15vw;
   }
 
   @keyframes fadein {
