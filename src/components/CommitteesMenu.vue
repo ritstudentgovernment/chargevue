@@ -13,10 +13,10 @@ author: Gabe Landau <gll1872@rit.edu>
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
           <div class="navbar-start"></div>
-          <a class='navbar-item' is-hoverable v-for="(item, index) in committees"><router-link v-if="item.enabled == true" :to="{ path: '/committee/' + item.id }">{{item.title}}</router-link></a>
+          <a class='navbar-item' v-if="item.enabled" is-hoverable v-for="(item, index) in committees"><button @click="redirect(item.id)">{{item.title}}</button></a>
           <div class="navbar-end"></div>
         </div>
-      </nav>
+      </nav> 
     </ul>
   </div>
 </template>
@@ -38,8 +38,15 @@ export default {
   },
   beforeMount () {
     this.$socket.emit('get_committees')
+  },
+  methods: {
+    redirect (itemId) {
+      this.$router.push('/committee/' + itemId)
+      this.$router.go()
+    }
   }
 }
+
 </script>
 
 <style scoped>
@@ -72,6 +79,19 @@ export default {
 
   .navbar-item{
     text-align: center;
+  }
+
+  button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    text-transform: uppercase;
+    font-size: 1.5em;
+    /*optional*/
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: rgb(0,0,0);
+    cursor: pointer;
   }
 
   /* .navbar-menu {
