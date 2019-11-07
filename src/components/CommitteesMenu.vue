@@ -13,7 +13,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
           <div class="navbar-start"></div>
-          <a class='navbar-item' is-hoverable v-for="(item, index) in committees"><button @click="redirect(item.id)">{{item.title}}</button></a>
+          <a class='navbar-item' v-if="item.enabled" is-hoverable v-for="(item, index) in committees"><button @click="redirect(item.id)">{{item.title}}</button></a>
           <div class="navbar-end"></div>
         </div>
       </nav> 
