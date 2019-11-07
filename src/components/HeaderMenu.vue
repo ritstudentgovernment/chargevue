@@ -158,22 +158,17 @@ export default {
 
   /* A button made to look like a link */
   button {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    display: inline-block;
-    padding-left: 20px;
-    font-size: 18px;
-    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-    background: none!important;
-    border: none;
     padding: 0!important;
+    font-size: 18px;
+    font-weight: 300;
+    background: none!important;
+    display: inline-block;
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    border: none;
     z-index: 2;
     cursor: pointer;
-    font-weight: 300;
     color: grey;
     text-align: right;
-    display: inline-block;
-    padding-left: 20px;
   }
 
   header .left {
