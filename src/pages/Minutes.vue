@@ -11,7 +11,10 @@
         <h1>{{ minute.title }}</h1>
       </div>
     </div>
-    <MinutesControls v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
+    <MinutesControls @updateCharges ="updateCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
+    <article class="message" v-if="saveMinuteResponse.show" v-bind:class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
+      <div class="message-body">{{ saveMinuteResponse.message }}</div>
+    </article>
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
@@ -40,21 +43,48 @@ export default {
       isNew: false,
       backgroundImage: null,
       showLoadingIndicator: true,
-      quill: null
+      quill: null,
+      saveMinuteResponse: {
+        show: false,
+        message: null,
+        success: null
+      }
     }
   },
   methods: {
-    saveMinutes () {
-      let delta = this.quill.getContents()
-      console.log(delta)
-      this.getDeltaHTML(delta)
+    updateCharges (charges) {
+      this.minute.charges = charges
     },
-    getDeltaHTML (delta) {
-      let commentHTML = document.querySelector('.ql-editor').innerHTML
-      console.log(commentHTML)
+    saveMinutes () {
+      this.checkAuth().then((token) => {
+        this.$socket.emit('create_minute', {
+          token: token,
+          committee_id: this.minute.committee_id,
+          title: this.minute.title,
+          date: Date.now(),
+          private: true,
+          body: document.querySelector('.ql-editor').innerHTML,
+          charges: this.minute.charges
+        })
+      })
+    },
+    removeSaveMinuteResponse () {
+      this.saveMinuteResponse.show = false
     }
   },
   sockets: {
+    create_minute: function (data) {
+      if (data.error) {
+        this.saveMinuteResponse.show = true
+        this.saveMinuteResponse.success = false
+        this.saveMinuteResponse.message = data.error
+      } else if (data.success) {
+        this.saveMinuteResponse.show = true
+        this.saveMinuteResponse.success = true
+        this.saveMinuteResponse.message = data.success
+      }
+      setTimeout(this.removeSaveMinuteResponse, 3000)
+    },
     get_minute: function (data) {
       this.minute = data
     }
@@ -190,6 +220,14 @@ export default {
     margin-top: 0;
     margin-bottom: 1%;
     font-weight: 300;
+  }
+
+  .message {
+    position: fixed;
+    top: 0;
+    width: 70%;
+    margin-left: 15vw;
+    margin-right: 15vw;
   }
 
   @keyframes fadein {
