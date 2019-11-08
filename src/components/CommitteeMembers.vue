@@ -11,7 +11,7 @@
     <div class="divider"></div>
     <div class="content">
       <div class="head" :key="committee.head">
-        <span class="head-label">HEAD</span>
+          <span class="head-label">HEAD</span>
           <span class="head-container">{{ committee.head }}</span>
       </div>
       <div class="member" v-for="member in members" :key="member.id">
@@ -98,11 +98,12 @@ export default {
     font-size: 14pt;
     font-weight: 300;
     display: inline-block;
+    width: 24%;
   }
   .head-container {
     background-color: #f36e21;
     display: inline-block;
-    padding: 10px 50px 10px 50px;
+    padding: 10px 45px 10px 45px;
     margin: 10px 0 10px 0;
     text-align: center;
   }
@@ -121,8 +122,7 @@ export default {
   }
 
   .head-content {
-    padding: 10px;
-    vertical-align: middle;
+    width: 100%;
   }
 
   .content {
