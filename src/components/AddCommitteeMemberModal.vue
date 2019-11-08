@@ -21,6 +21,16 @@
               </vue-simple-suggest>
           </div>
         </div>
+
+        <div class="select">
+          <label class="label">Role</label>
+          <select v-model="addMemberRole">
+            <option selected disabled>Select an Option</option>
+            <option value="NormalMember">Normal Member</option>
+            <option value="ActiveMember">Active Member</option>
+            <option value="MinuteTaker">Minute Taker</option>
+          </select>
+        </div>
       </section>
       <footer class="modal-card-foot">
         <button class="button is-primary" v-on:click="addMemberToCommittee()">Add
@@ -48,6 +58,7 @@
       return {
         showAddMemberToCommitteeForm: true,
         addMemberMember: null,
+        addMemberRole: null,
         addMemberResponse: {
           show: false,
           message: null,
@@ -61,6 +72,7 @@
         this.addMemberResponse.message = null
         this.addMemberResponse.success = null
         this.addMemberMember = null
+        this.addMemberRole = null
         this.showAddMemberToCommitteeForm = false
         document.documentElement.style.overflow = 'visible'
         this.$emit('close-add-member')
@@ -77,7 +89,8 @@
         this.$socket.emit('add_member_committee', {
           token: this.getToken(),
           user_id: this.addMemberMember.match(/\(([^)]+)\)/)[1],
-          committee_id: this.addMemberCommittee
+          committee_id: this.addMemberCommittee,
+          role: this.addMemberRole
         })
       }
     },
@@ -113,5 +126,9 @@
   .vue-simple-suggest.designed .suggestions{
     max-height: 200px;
     overflow-y: auto;
+  }
+
+  .select{
+    margin-bottom: 10%;
   }
 </style>
