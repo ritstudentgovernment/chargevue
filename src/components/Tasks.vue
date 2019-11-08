@@ -138,6 +138,7 @@ export default {
         this.addTaskResponse.success = true
         this.addTaskResponse.show = true
         this.addTaskResponse.message = data.success
+        setTimeout(() => { this.clearTaskModal() }, 2000)
       } else if (data.error) {
         this.addTaskResponse.success = false
         this.addTaskResponse.show = true

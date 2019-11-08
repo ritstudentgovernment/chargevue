@@ -72,6 +72,7 @@ export default {
         this.removeMemberResponse.show = true
         this.removeMemberResponse.success = true
         this.removeMemberResponse.message = data.success
+        setTimeout(() => { this.closeRemoveMember() }, 2000)
       } else if (data.error) {
         this.removeMemberResponse.show = true
         this.removeMemberResponse.success = false
