@@ -19,8 +19,8 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="right">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
-        <button class = "customButton" @click="redirectLogin()" v-if="!authenticated && !isLdap">Login</button>
-        <button class = "customButton" @click="redirectLogout()" v-if="authenticated && !isLdap">Logout</button>
+        <span class="link" v-if="!authenticated && !isLdap"><router-link to="/saml/login">Login</router-link></span>
+        <span class="link" v-if="authenticated && !isLdap"><router-link to="/saml/logout">Logout</router-link></span>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
       </div>
     </header>
@@ -78,14 +78,6 @@ export default {
     }
   },
   methods: {
-    redirectLogin () {
-      this.$router.push('/saml/login')
-      this.$router.go()
-    },
-    redirectLogout () {
-      this.$router.push('/saml/logout')
-      this.$router.go()
-    },
     submitLogin () {
       this.showAuthError = false
       this.showLoginLoading = true
@@ -109,7 +101,7 @@ export default {
     ...mapGetters({
       authenticated: 'authenticated',
       admin: 'admin',
-      isLdap: false
+      isLdap: 'isLdap'
     })
   }
 }
