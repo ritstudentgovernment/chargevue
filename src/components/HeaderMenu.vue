@@ -119,7 +119,7 @@ export default {
     color: inherit;
   }
 
-  header { 
+  header {
     padding-top: 15px;
     padding-bottom: 15px;
     display: inline-block;
@@ -147,7 +147,7 @@ export default {
     display: inline-block;
     padding-left: 20px;
   }
-  
+
   header .left {
     float: left;
     padding: 0px;
