@@ -19,8 +19,8 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="right">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
-        <a href="./saml/login" class="link" v-if="!authenticated && !isLdap">Login</a>
-        <a href="./saml/logout" class="link" v-if="authenticated && !isLdap">Logout</a>
+        <span class="link" v-if="!authenticated && !isLdap"><router-link to="/saml/login">Login</router-link></span>
+        <span class="link" v-if="authenticated && !isLdap"><router-link to="/saml/logout">Logout</router-link></span>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
       </div>
     </header>
