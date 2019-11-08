@@ -93,7 +93,6 @@ export default {
   }
 
   .head {
-    FONT-WEIGHT: 300;
     color: #fff;
     font-size: 14pt;
     font-weight: 300;
