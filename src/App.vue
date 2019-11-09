@@ -79,11 +79,11 @@ export default {
 /* Create a custom checkbox */
   .checkmark {
     position: absolute;
-    top: 0;
+    top: 15;
     left: 0;
     height: 25px;
     width: 25px;
-    background-color: #eee;
+    background-color: rgba(150, 143, 143, 0.849);
   }
 
 /* On mouse-over, add a grey background color */
@@ -91,7 +91,7 @@ export default {
     background-color: #ccc;
   }
 
-/* When the checkbox is checked, add a blue background */
+/* When the checkbox is checked, add an orange background */
   .container input:checked ~ .checkmark {
     background-color: #f36e21;
   }
