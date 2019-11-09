@@ -19,11 +19,14 @@
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
       <div style="display: flex; flex-direction: row; justify-content: flex-end;">
-          <div><label class="container label"> Make this minute private?  
-                <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
-                <span class="checkmark is-primary"></span>
-          </label></div>
-          <div><button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button></div>
+        <div>
+          <label class="container label">
+            <span style="margin-right: 5px;">Make Private</span>  
+            <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
+            <span class="checkmark is-primary"></span>
+          </label>
+        </div>
+        <button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button>
       </div>
     </div>
   </div>
@@ -235,10 +238,6 @@ export default {
     margin-right: 15vw;
   }
 
-  .container {
-    padding-top: 15px;
-  }
-  
   .container {
     padding-top: 15px;
   }
