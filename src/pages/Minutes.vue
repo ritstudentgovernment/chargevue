@@ -18,18 +18,16 @@
     <div id='quillcontainer'>
       <div ref="scriptHolder"></div>
       <div id='editor' ></div>
-<<<<<<< HEAD
-      <button class="button is-primary" id='saveMinutes' v-on:click="saveMinutes()">Save Minutes</button>
-=======
-
       <div style="display: flex; flex-direction: row; justify-content: flex-end;">
-          <div><label class="container label"> Make this minute private?  
-                <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
-                <span class="checkmark is-primary"></span>
-          </label></div>
-          <div><button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button></div>
+        <div>
+          <label class="container label">
+            <span style="margin-right: 5px;">Make Private</span>  
+            <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
+            <span class="checkmark is-primary"></span>
+          </label>
+        </div>
+        <button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button>
       </div>
->>>>>>> Finished implementing the checkbox to make the minutes private
     </div>
   </div>
 </template>
@@ -50,16 +48,8 @@ export default {
   },
   data () {
     return {
-<<<<<<< HEAD
       minute: Object,
       isNew: false,
-=======
-      minute: {
-        committee_id: 'test',
-        title: 'temporary_title',
-        private: false
-      },
->>>>>>> Finished implementing the checkbox to make the minutes private
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null,
@@ -75,7 +65,6 @@ export default {
       this.minute.charges = charges
     },
     saveMinutes () {
-<<<<<<< HEAD
       this.checkAuth().then((token) => {
         this.$socket.emit('create_minute', {
           token: token,
@@ -87,12 +76,6 @@ export default {
           charges: this.minute.charges
         })
       })
-=======
-      let delta = this.quill.getContents()
-      console.log(delta)
-      this.getDeltaHTML(delta)
-      console.log(this.minute.private)
->>>>>>> Finished implementing the checkbox to make the minutes private
     },
     removeSaveMinuteResponse () {
       this.saveMinuteResponse.show = false
@@ -247,17 +230,16 @@ export default {
     font-weight: 300;
   }
 
-<<<<<<< HEAD
   .message {
     position: fixed;
     top: 0;
     width: 70%;
     margin-left: 15vw;
     margin-right: 15vw;
-=======
+  }
+
   .container {
     padding-top: 15px;
->>>>>>> Finished implementing the checkbox to make the minutes private
   }
 
   @keyframes fadein {
