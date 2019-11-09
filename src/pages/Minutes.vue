@@ -48,7 +48,7 @@ export default {
   },
   data () {
     return {
-      minute: Object,
+      minute: {'private': false},
       isNew: false,
       backgroundImage: null,
       showLoadingIndicator: true,
@@ -71,7 +71,7 @@ export default {
           committee_id: this.minute.committee_id,
           title: this.minute.title,
           date: Date.now(),
-          private: true,
+          private: this.minute.private,
           body: document.querySelector('.ql-editor').innerHTML,
           charges: this.minute.charges
         })
