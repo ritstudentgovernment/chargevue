@@ -10,13 +10,9 @@
     <div class="title">Committee Members</div>
     <div class="divider"></div>
     <div class="content">
-      <div class="head" :key="committee.head">
-          <span class="head-label">HEAD</span>
-          <span class="head-container">{{ committee.head }}</span>
-      </div>
-      <div class="member" v-for="member in members" :key="member.id">
-        <span>{{ member.id }}</span>
-
+      <div class="membersbox" v-for="member in members" :key="member.id">
+        <span v-if="member.role === 'CommitteeHead'" class="members-label">HEAD</span>
+        <span class="members-container">{{ member.id }}</span>
       </div>
     </div>
   </div>
@@ -75,31 +71,15 @@ export default {
     border-top: 1px solid #000;
   }
 
-  .member {
+  .membersbox {
     color: #fff;
     font-size: 14pt;
     font-weight: 300;
     display: inline-block;
-    width: 25%;
+    padding: 5px;
   }
-
-  .member span {
-    background-color: #f36e21;
-    padding: 10px;
-    margin: 10px;
-    display: inline-block;
-    width: 80%;
-    text-align: center;
-  }
-
-  .head {
-    color: #fff;
-    font-size: 14pt;
-    font-weight: 300;
-    display: inline-block;
-    width: 24%;
-  }
-  .head-container {
+  
+  .members-container {
     background-color: #f36e21;
     display: inline-block;
     padding: 10px 45px 10px 45px;
@@ -107,7 +87,7 @@ export default {
     text-align: center;
   }
 
-  .head-label {
+  .members-label {
     float: left;
     -webkit-writing-mode: vertical-rl;
     -ms-writing-mode: tb-rl;
@@ -118,10 +98,6 @@ export default {
     letter-spacing: 0.05rem;
     padding: 0.2rem;
     margin: 10px 0 10px 10px;
-  }
-
-  .head-content {
-    width: 100%;
   }
 
   .content {
