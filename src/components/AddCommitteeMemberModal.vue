@@ -111,7 +111,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .modal-card{
     overflow: visible;
   }
