@@ -48,7 +48,7 @@ export default {
   },
   data () {
     return {
-      minute: {'private': false},
+      minute: Object,
       isNew: false,
       backgroundImage: null,
       showLoadingIndicator: true,
@@ -71,9 +71,9 @@ export default {
           committee_id: this.minute.committee_id,
           title: this.minute.title,
           date: Date.now(),
-          private: this.minute.private,
+          private: (this.minute.private !== undefined) ? this.minute.private : false,
           body: document.querySelector('.ql-editor').innerHTML,
-          charges: this.minute.charges
+          charges: this.minute.charges.map(charge => charge.id)
         })
       })
     },
