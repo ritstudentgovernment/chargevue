@@ -4,29 +4,35 @@
     <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
-      <div v-if="isNew">
-        <input v-model="minute.title" type="text" placeholder="Insert Minute Title"/>
-      </div>
-      <div v-else>
+      <div v-if="currentMode === mode.VIEW">
         <h1>{{ minute.title }}</h1>
       </div>
+      <div v-else>
+        <input v-model="minute.title" type="text" placeholder="Insert Minute Title"/>
+      </div>
     </div>
-    <MinutesControls @updateCharges ="updateCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:existing_charges="minute.charges"/>
+    <MinutesControls @updateCharges ="updateCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:currentMode="currentMode" v-bind:existing_charges="minute.charges"/>
     <article class="message" v-if="saveMinuteResponse.show" v-bind:class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
       <div class="message-body">{{ saveMinuteResponse.message }}</div>
     </article>
-    <div id='quillcontainer'>
-      <div ref="scriptHolder"></div>
-      <div id='editor' ></div>
-      <div style="display: flex; flex-direction: row; justify-content: flex-end;">
-        <div>
-          <label class="container label">
-            <span style="margin-right: 5px;">Make Private</span>  
-            <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
-            <span class="checkmark is-primary"></span>
-          </label>
+    <div class="minute-body">
+      <div class="body-header">
+        <div class="title">Description</div>
+        <div class='divider'></div>
+      </div>
+      <div style="padding: 10px;" v-if="currentMode == mode.VIEW" v-html="minute.body"></div>
+      <div v-else style="height: 50vh;">
+        <QuillEditor v-model="minute.body" />
+        <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+          <div>
+            <label class="container label">
+              <span style="margin-right: 5px;">Make Private</span>  
+              <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
+              <span class="checkmark is-primary"></span>
+            </label>
+          </div>
+          <button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button>
         </div>
-        <button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button>
       </div>
     </div>
   </div>
@@ -36,6 +42,7 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
+import QuillEditor from '../components/QuillEditor'
 import Auth from '../mixins/auth'
 
 export default {
@@ -44,12 +51,18 @@ export default {
   components: {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
-    'MinutesControls': MinutesControls
+    'MinutesControls': MinutesControls,
+    'QuillEditor': QuillEditor
   },
   data () {
     return {
       minute: Object,
-      isNew: false,
+      mode: {
+        VIEW: 'view',
+        EDIT: 'edit',
+        NEW: 'new'
+      },
+      currentMode: String,
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null,
@@ -96,13 +109,14 @@ export default {
     },
     get_minute: function (data) {
       this.minute = data
+      this.currentMode = this.mode.VIEW
     }
   },
   beforeMount () {
     if (this.$router.history.current.params['minute'] === 'new') {
       this.minute.committee_id = this.$router.history.current.query['committee_id']
       this.minute.charges = []
-      this.isNew = true
+      this.currentMode = this.mode.NEW
       return
     }
     this.checkAuth().then((token) => {
@@ -111,21 +125,6 @@ export default {
         minute_id: this.$router.history.current.params['minute']
       })
     })
-  },
-  mounted () {
-    let quillEle = document.createElement('script')
-    quillEle.setAttribute('src', 'https://cdn.quilljs.com/1.3.6/quill.js')
-    quillEle.setAttribute('id', 'quillScript')
-    this.$refs.scriptHolder.appendChild(quillEle)
-    let quillRef = document.getElementById('quillScript')
-    quillRef.onload = () => {
-      // initialize quill
-      // eslint-disable-next-line
-      this.quill = new Quill('#editor', {
-        theme: 'snow',
-        placeholder: 'Begin taking minutes here'
-      })
-    }
   },
   watch: {
     '$route.params.committee': function (committee) {
@@ -140,11 +139,21 @@ export default {
     text-align: center;
   }
 
-  #quillcontainer {
-    height: 50vh;
-    margin: 15px auto;
+  .minute-body{
     width: 70%;
+    margin: 15px auto;
     background-color: #fff;
+    border: 1px solid #ddd;
+  }
+
+  .title {
+    text-align: left;
+    font-size: 18pt;
+    padding: 7px;
+  }
+
+  .divider {
+    border-top: 1px solid #000;
   }
 
   #editor {
