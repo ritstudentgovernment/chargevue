@@ -21,7 +21,7 @@
         <button v-if="currentMode == mode.VIEW" class="button is-primary" @click="currentMode = mode.EDIT">Edit</button>
       </div>
       <div style="padding: 10px;" v-if="currentMode == mode.VIEW" v-html="minute.body"></div>
-      <div v-else style="height: 50vh;">
+      <div v-else>
         <QuillEditor v-model="minute.body" />
         <div style="display: flex; flex-direction: row; justify-content: flex-end;">
           <div>
@@ -31,7 +31,8 @@
               <span class="checkmark is-primary"></span>
             </label>
           </div>
-          <button class="button is-primary" id='saveMinutes' @click="saveMinutes()">Save Minutes</button>
+          <button class="button is-primary" id='saveMinutes' v-if="currentMode == mode.NEW" @click="createMinute()">Create Minute</button>
+          <button class="button is-primary" id='saveMinutes' v-if="currentMode == mode.EDIT" @click="editMinute()">Edit Minute</button>
         </div>
       </div>
     </div>
@@ -77,7 +78,7 @@ export default {
     updateCharges (charges) {
       this.minute.charges = charges
     },
-    saveMinutes () {
+    createMinute () {
       this.checkAuth().then((token) => {
         this.$socket.emit('create_minute', {
           token: token,
@@ -85,7 +86,19 @@ export default {
           title: this.minute.title,
           date: Date.now(),
           private: (this.minute.private !== undefined) ? this.minute.private : false,
-          body: document.querySelector('.ql-editor').innerHTML,
+          body: this.minute.body,
+          charges: this.minute.charges.map(charge => charge.id)
+        })
+      })
+    },
+    editMinute () {
+      this.checkAuth().then((token) => {
+        this.$socket.emit('edit_minute', {
+          token: token,
+          minute_id: this.minute.id,
+          title: this.minute.title,
+          private: (this.minute.private !== undefined) ? this.minute.private : false,
+          body: this.minute.body,
           charges: this.minute.charges.map(charge => charge.id)
         })
       })
@@ -107,6 +120,18 @@ export default {
       }
       setTimeout(this.removeSaveMinuteResponse, 3000)
     },
+    edit_minute: function (data) {
+      if (data.error) {
+        this.saveMinuteResponse.show = true
+        this.saveMinuteResponse.success = false
+        this.saveMinuteResponse.message = data.error
+      } else if (data.success) {
+        this.saveMinuteResponse.show = true
+        this.saveMinuteResponse.success = true
+        this.saveMinuteResponse.message = data.success
+      }
+      setTimeout(this.window.reload(), 3000)
+    },
     get_minute: function (data) {
       this.minute = data
       this.currentMode = this.mode.VIEW
@@ -125,11 +150,6 @@ export default {
         minute_id: this.$router.history.current.params['minute']
       })
     })
-  },
-  watch: {
-    '$route.params.committee': function (committee) {
-      this.$socket.emit('get_committee', committee)
-    }
   }
 }
 </script>
@@ -160,26 +180,12 @@ export default {
     width: 100%;
   }
 
-  .edit{
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .divider {
-    border-top: 1px solid #000;
-  }
-
   #editor {
     background-color: #fff;
   }
 
   #saveMinutes {
     margin: 1vh 0 1vh 1vh;
-  }
-
-  .columns {
-    width: 70%;
-    margin: 0 auto;
   }
 
   .pagename {
