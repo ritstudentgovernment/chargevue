@@ -4,7 +4,7 @@
       <div class="title">Relevant Charges</div>
       <div class='divider'></div>
       <div class='content'>
-        <div class="control">
+        <div v-if="currentMode !== mode.VIEW" class="control">
           <div class="select">
             <select v-model="selected_charge">
               <option v-for="x in charges" :key="x.id" v-bind:value="x">{{x.title}}</option>
@@ -15,7 +15,7 @@
         <div class="charges">
           <div class='charge' v-for="charge in minute_charges" :key="charge.id">
             <span v-on:click="openCharge(charge.id)">{{charge.title}}</span>
-            <i v-on:click="removeCharge(charge)" class="mdi mdi-close"></i>
+            <i v-if="currentMode !== mode.VIEW" v-on:click="removeCharge(charge)" class="mdi mdi-close"></i>
           </div>
         </div>
       </div>
@@ -33,10 +33,15 @@ export default {
     return {
       charges: [],
       selected_charge: null,
-      minute_charges: []
+      minute_charges: [],
+      mode: {
+        VIEW: 'view',
+        EDIT: 'edit',
+        NEW: 'new'
+      }
     }
   },
-  props: ['committee_id', 'existing_charges'],
+  props: ['committee_id', 'existing_charges', 'currentMode'],
   sockets: {
     get_charges: function (data) {
       this.charges = data

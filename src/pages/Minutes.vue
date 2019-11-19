@@ -18,7 +18,7 @@
     <div class="minute-body">
       <div class="body-header">
         <div class="title">Description</div>
-        <div class='divider'></div>
+        <button v-if="currentMode == mode.VIEW" class="button is-primary" @click="currentMode = mode.EDIT">Edit</button>
       </div>
       <div style="padding: 10px;" v-if="currentMode == mode.VIEW" v-html="minute.body"></div>
       <div v-else style="height: 50vh;">
@@ -146,10 +146,23 @@ export default {
     border: 1px solid #ddd;
   }
 
+  .body-header{
+    padding: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #000;
+  }
+
   .title {
     text-align: left;
     font-size: 18pt;
-    padding: 7px;
+    width: 100%;
+  }
+
+  .edit{
+    display: inline-block;
+    vertical-align: middle;
   }
 
   .divider {
