@@ -41,6 +41,7 @@ export default {
   @import '../node_modules/bulma/sass/elements/box'
   @import '../node_modules/bulma/sass/components/tabs'
   @import '../node_modules/bulma/sass/components/navbar'
+  @import '../node_modules/bulma-checkradio/src/sass/index'
 
   html, body
     padding: 0

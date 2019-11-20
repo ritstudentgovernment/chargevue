@@ -23,13 +23,10 @@
       <div style="padding: 10px;" v-if="currentMode == mode.VIEW" v-html="minute.body"></div>
       <div v-else>
         <QuillEditor v-model="minute.body" />
-        <div style="display: flex; flex-direction: row; justify-content: flex-end;">
-          <div>
-            <label class="container label">
-              <span style="margin-right: 5px;">Make Private</span>  
-              <input type="checkbox" class="is-primary" autocomplete="off" v-model="minute.private">
-              <span class="checkmark is-primary"></span>
-            </label>
+        <div class="action-menu">
+          <div class="field">
+            <input class="is-checkradio" id="isPrivate" type="checkbox" v-model="minute.private">
+            <label class="noselect" for="isPrivate">Private</label>
           </div>
           <button class="button is-primary" id='saveMinutes' v-if="currentMode == mode.NEW" @click="createMinute()">Create Minute</button>
           <button class="button is-primary" id='saveMinutes' v-if="currentMode == mode.EDIT" @click="editMinute()">Edit Minute</button>
@@ -85,7 +82,7 @@ export default {
           committee_id: this.minute.committee_id,
           title: this.minute.title,
           date: Date.now(),
-          private: (this.minute.private !== undefined) ? this.minute.private : false,
+          private: this.minute.private,
           body: this.minute.body,
           charges: this.minute.charges.map(charge => charge.id)
         })
@@ -97,7 +94,7 @@ export default {
           token: token,
           minute_id: this.minute.id,
           title: this.minute.title,
-          private: (this.minute.private !== undefined) ? this.minute.private : false,
+          private: this.minute.private,
           body: this.minute.body,
           charges: this.minute.charges.map(charge => charge.id)
         })
@@ -133,14 +130,17 @@ export default {
       setTimeout(this.window.reload(), 3000)
     },
     get_minute: function (data) {
-      this.minute = data
-      this.currentMode = this.mode.VIEW
+      if (!data.error) {
+        this.minute = data
+        this.currentMode = this.mode.VIEW
+      }
     }
   },
   beforeMount () {
     if (this.$router.history.current.params['minute'] === 'new') {
       this.minute.committee_id = this.$router.history.current.query['committee_id']
       this.minute.charges = []
+      this.minute.private = true
       this.currentMode = this.mode.NEW
       return
     }
@@ -250,6 +250,27 @@ export default {
     margin-right: 15vw;
     margin-top:5vh;
     margin-bottom:5vh;
+  }
+
+  .noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .action-menu{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 5px;
+  }
+
+  .field:not(:last-child) {
+    margin-bottom: 0px;
   }
 
   h4 {
