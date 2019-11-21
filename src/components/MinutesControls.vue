@@ -101,6 +101,7 @@ export default {
 
   .select{
     width: 100%;
+    padding-right: 10px
   }
 
   select{
