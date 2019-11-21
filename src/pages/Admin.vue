@@ -533,4 +533,9 @@ export default {
   .action-buttons {
     width: 32vw;
   }
+
+  .action-buttons .button {
+    margin: 0.25vw 0.1vw;
+  }
+
 </style>
