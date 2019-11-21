@@ -22,6 +22,10 @@ author: Gabe Landau <gll1872@rit.edu>
         <span class="link" v-if="!authenticated && !isLdap"><a href="/saml/login">Login</a></span>
         <span class="link" v-if="authenticated && !isLdap"><a href="/saml/logout">Logout</a></span>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <button class="btn"><i class="fa fa-bell"></i></button>
+
       </div>
     </header>
 
@@ -188,4 +192,18 @@ export default {
   .control {
     padding-right: 20px;
   }
+
+  .btn {
+  background-color: #f36e21; 
+  border: none; 
+  color: white; 
+  padding: 10px 12px 10px 12px; 
+  font-size: 16px; 
+  margin-left: 18px;
+  cursor: pointer; 
+}
+
+.btn:hover {
+  background-color: #d16424;
+}
 </style>
