@@ -13,7 +13,12 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <div class="charge_header">
       <div class="charge_header_text">{{ this.charge.title }}</div>
-      <div class="charge_header_tag"><span>{{ this.charge.committee }}</span></div>
+
+      <div class="charge_header_tag"><span>
+        <button class="redirect_button" @click="redirect()">{{ this.charge.committee }}</button>
+        </span>
+      </div>
+
     </div>
     <ChargeAdmin v-bind:charge="this.charge"/>
     <ChargeStatusBar v-bind:actions="this.actions"/>
@@ -85,6 +90,12 @@ export default {
       })
       this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
     })
+  },
+  methods: {
+    redirect () {
+      this.$router.push('/committee/' + this.charge.committee)
+      this.$router.go()
+    }
   }
 }
 </script>
@@ -114,4 +125,16 @@ export default {
     background-color: #FD9131;
     padding: 5px;
   }
+
+  .redirect_button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    text-transform: uppercase;
+    font-size: 1em;
+    font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+    color: #fff;
+    cursor: pointer;
+  }
+
 </style>
