@@ -22,15 +22,18 @@
           </div>
         </div>
 
-        <div class="select">
-          <label class="label">Role</label>
-          <select v-model="addMemberRole">
-            <option selected disabled>Select an Option</option>
-            <option value="NormalMember">Normal Member</option>
-            <option value="ActiveMember">Active Member</option>
-            <option value="MinuteTaker">Minute Taker</option>
-          </select>
-        </div>
+        <label class="label">Role</label>
+        <div class="control">
+          <div class="select">
+            <select v-model="addMemberRole">
+              <option selected disabled>Select an Option</option>
+              <option value="NormalMember">Normal Member</option>
+              <option value="ActiveMember">Active Member</option>
+              <option value="MinuteTaker">Minute Taker</option>
+            </select>
+          </div>
+        </div>        
+    
       </section>
       <footer class="modal-card-foot">
         <button class="button is-primary" v-on:click="addMemberToCommittee()">Add
