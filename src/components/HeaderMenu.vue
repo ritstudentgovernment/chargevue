@@ -24,7 +24,14 @@ author: Gabe Landau <gll1872@rit.edu>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <button class="btn"><i class="fa fa-bell"></i></button>
+        <div class="dropdown"> 
+          <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell badge"></i></button>
+          <div id="notificationDropdown" class="dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+          </div>
+        </div>
 
       </div>
     </header>
@@ -99,6 +106,9 @@ export default {
     submitLogout () {
       this.logout()
       this.$router.push({ path: '/' })
+    },
+    toggleNotifications () {
+      document.getElementById('notificationDropdown').classList.toggle('show')
     }
   },
   computed: {
@@ -205,5 +215,58 @@ export default {
 
 .btn:hover {
   background-color: #d16424;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  right: 0;
+  display: none;
+  padding-top: 5px;
+  margin-top: 5px;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 20vw;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+}
+
+.badge:after{
+    content:"3";
+    position: absolute;
+    background: red;
+    height:2rem;
+    bottom:1rem;
+    left:3rem;
+    width:1.5rem;
+    text-align: center;
+    line-height: 2rem;;
+    font-size: 1rem;
+    border-radius: 50%;
+    color:white;
 }
 </style>
