@@ -9,7 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div>
-    <ModalForms :formData="this.formData" />
+    <ModalForms v-if="this.formData.visible" :formData="this.formData" />
     <div class="committee_admin">
       <div class="title">Committee Controls</div>
       <div class="divider"></div>
@@ -18,63 +18,6 @@ author: Gabe Landau <gll1872@rit.edu>
         <button class="button is-primary" @click="openAddCommitteeMember()">Add Member</button>
         <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm()">Remove Member</button>
         <button class="button is-primary" @click="showAddMeetingMinutes()">New Minutes</button>
-      </div>
-    </div>
-
-    <div class="modal" v-bind:class="{ 'is-active': showAddNewCharge}">
-      <div class="modal-background" @click="closeAddNewCharge()"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Create Charge</p>
-        </header>
-        <section class="modal-card-body" @keyup.enter="createNewCharge()">
-          <article class="message" v-if="createChargeResponse.show" v-bind:class="createChargeResponse.success ? 'is-success' : 'is-danger'">
-            <div class="message-body">{{ createChargeResponse.message }}</div>
-          </article>
-          <div class="field">
-            <label class="label">Title</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Title" v-model="createChargeTitle">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Description</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Description" v-model="createChargeDescription">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">PawPrints Link</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="PawPrints Petition Link" v-model="createChargePawLink">
-            </div>
-          </div>
-
-          <!-- <label class="label">Priority</label>
-            <div class="field">
-              <div class="control">
-                <div class="select">
-                  <select v-model="createChargePriority">
-                    <option value="0">Low</option>
-                    <option value="1">Medium</option>
-                    <option value="2">High</option>
-                  </select>
-                </div>
-              </div>
-            </div> -->
-
-          <label class="container label"> Make this charge public?  
-            <input type="checkbox" class="is-primary" autocomplete="off" v-model="isPrivate">
-            <span class="checkmark is-primary"></span>
-          </label>
-
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-primary" @click="createNewCharge()">Create</button>
-          <button class="button" @click="closeAddNewCharge()">Cancel</button>
-        </footer>
       </div>
     </div>
     <div v-if="showAddMemberToCommitteeForm">
@@ -115,7 +58,13 @@ export default {
       },
       allMembers: null,
       showMeetingMinutes: false,
-      formData: {
+      formData: Object
+    }
+  },
+  methods: {
+    openAddNewCharge () {
+      this.formData = {
+        'visible': true,
         'title': 'Create Charge',
         'fields': [
           {
@@ -126,40 +75,20 @@ export default {
           {
             'name': 'Description',
             'type': 'String',
-            'value': 'This is description'
+            'value': ''
           },
           {
             'name': 'PawPrints Link',
             'type': 'String',
-            'value': 'link'
+            'value': ''
           },
           {
-            'name': 'Make this charge public?',
+            'name': 'Private',
             'type': 'Checkbox',
             'value': true
-          },
-          {
-            'name': 'Meeting Time',
-            'type': 'DateTime',
-            'value': {}
           }
         ]
       }
-    }
-  },
-  methods: {
-    openAddNewCharge () {
-      this.showAddNewCharge = true
-    },
-    closeAddNewCharge () {
-      this.createChargeTitle = null
-      this.createChargeDescription = null
-      this.createChargePriority = null
-      this.showAddNewCharge = false
-      this.createChargeResponse.show = false
-      this.createChargeResponse.message = null
-      this.createChargeResponse.success = null
-      this.isPrivate = null
     },
     createNewCharge () {
       this.$socket.emit('create_charge', {

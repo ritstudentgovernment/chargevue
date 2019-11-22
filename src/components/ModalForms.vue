@@ -1,6 +1,6 @@
 <template>
   <div class="modal is-active">
-    <div class="modal-background"></div>
+    <div class="modal-background" @click="closeModal()"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">{{ formData.title }}</p>
@@ -57,7 +57,7 @@
       </section>
       <footer class="modal-card-foot">
         <button class="button is-primary" @click="createNewCharge()">Create</button>
-        <button class="button" @click="closeAddNewCharge()">Cancel</button>
+        <button class="button" @click="closeModal()">Cancel</button>
       </footer>
     </div>
   </div>
@@ -77,7 +77,10 @@
     },
     methods: {
       createNewCharge () {
-        console.log(this.$props.formData.fields)
+        this.$props.formData.visible = false
+      },
+      closeModal () {
+        this.$props.formData.visible = false
       }
     },
     sockets: {
@@ -96,7 +99,7 @@
   padding-right: 20px;
 }
 
-.checkbox{
+.checkbox:not(:last-child) {
   padding-bottom: 20px;
 }
 
