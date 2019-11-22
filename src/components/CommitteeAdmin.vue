@@ -9,7 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div>
-
+    <ModalForms :formData="this.formData" />
     <div class="committee_admin">
       <div class="title">Committee Controls</div>
       <div class="divider"></div>
@@ -90,10 +90,11 @@ author: Gabe Landau <gll1872@rit.edu>
 import Auth from '../mixins/auth'
 import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
 import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
+import ModalForms from '../components/ModalForms'
 
 export default {
   name: 'committee-admin',
-  components: {AddCommitteeMemberModal: AddCommitteeMember, RemoveCommitteeMemberModal: RemoveCommitteeMember},
+  components: {AddCommitteeMemberModal: AddCommitteeMember, RemoveCommitteeMemberModal: RemoveCommitteeMember, 'ModalForms': ModalForms},
   mixins: [Auth],
   props: ['committee'],
   data () {
@@ -113,7 +114,37 @@ export default {
         success: null
       },
       allMembers: null,
-      showMeetingMinutes: false
+      showMeetingMinutes: false,
+      formData: {
+        'title': 'Create Charge',
+        'fields': [
+          {
+            'name': 'Title',
+            'type': 'String',
+            'value': ''
+          },
+          {
+            'name': 'Description',
+            'type': 'String',
+            'value': 'This is description'
+          },
+          {
+            'name': 'PawPrints Link',
+            'type': 'String',
+            'value': 'link'
+          },
+          {
+            'name': 'Make this charge public?',
+            'type': 'Checkbox',
+            'value': true
+          },
+          {
+            'name': 'Meeting Time',
+            'type': 'DateTime',
+            'value': {}
+          }
+        ]
+      }
     }
   },
   methods: {

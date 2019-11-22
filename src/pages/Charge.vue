@@ -31,6 +31,7 @@ import ChargeStatusBar from '../components/ChargeStatusBar'
 import Tasks from '../components/Tasks'
 import Purpose from '../components/Purpose'
 import ChargeAdmin from '../components/ChargeAdmin'
+import ModalForms from '../components/ModalForms'
 import moment from 'moment'
 import Auth from '../mixins/auth'
 
@@ -43,7 +44,8 @@ export default {
     'ChargeStatusBar': ChargeStatusBar,
     'Tasks': Tasks,
     'Purpose': Purpose,
-    'ChargeAdmin': ChargeAdmin
+    'ChargeAdmin': ChargeAdmin,
+    'ModalForms': ModalForms
   },
   data () {
     return {
