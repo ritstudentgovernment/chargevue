@@ -25,13 +25,16 @@ author: Gabe Landau <gll1872@rit.edu>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
-          <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell badge"></i></button>
+          <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell"></i></button>
+          <div><span v-if="showBadge" id="notificationBadge" class="badge">{{ number }}</span></div>
           <div id="notificationDropdown" class="dropdown-content">
             <a href="#">Link 1</a>
             <a href="#">Link 2</a>
             <a href="#">Link 3</a>
           </div>
         </div>
+
+        <button @click="testbadge()">TEST</button>
 
       </div>
     </header>
@@ -73,6 +76,7 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
+
 import Auth from '../mixins/auth'
 import { mapGetters } from 'vuex'
 
@@ -81,6 +85,9 @@ export default {
   mixins: [Auth],
   data () {
     return {
+      notifications: [],
+      number: null,
+      showBadge: false,
       showLoginForm: false,
       showLoginLoading: false,
       showAuthError: false,
@@ -109,6 +116,21 @@ export default {
     },
     toggleNotifications () {
       document.getElementById('notificationDropdown').classList.toggle('show')
+    },
+    testbadge () {
+      this.number--
+      if (this.number === 0) {
+        this.showBadge = false
+      }
+    },
+    populateNotificationMenu () {
+      for (var i = 0; i < this.notifications.length; i++) {
+        console.log('gottem')
+        this.number++
+      }
+      if (this.number > 0) {
+        this.showBadge = true
+      }
     }
   },
   computed: {
@@ -116,6 +138,19 @@ export default {
       authenticated: 'authenticated',
       admin: 'admin',
       isLdap: 'isLdap'
+    })
+  },
+  sockets: {
+    get_notifications: function (data) {
+      this.notifications = data
+      this.populateNotificationMenu()
+    }
+  },
+  beforeMount () {
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_notifications', {
+        token: token
+      })
     })
   }
 }
@@ -227,7 +262,7 @@ export default {
 .dropdown-content {
   right: 0;
   display: none;
-  padding-top: 5px;
+  padding-top: 8px;
   margin-top: 5px;
   position: absolute;
   background-color: #f9f9f9;
@@ -250,23 +285,16 @@ export default {
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #f1f1f1}
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-  background-color: #3e8e41;
-}
-
-.badge:after{
-    content:"3";
-    position: absolute;
-    background: red;
-    height:2rem;
-    bottom:1rem;
-    left:3rem;
-    width:1.5rem;
-    text-align: center;
-    line-height: 2rem;;
-    font-size: 1rem;
-    border-radius: 50%;
-    color:white;
+.badge{
+  position: absolute;
+  background: rgb(212, 0, 0);
+  height:2.4rem;
+  bottom:0rem;
+  left:3.6rem;
+  width:1.75rem;
+  text-align: center;
+  line-height: 2rem;;
+  font-size: 20px;
+  color:white;
 }
 </style>
