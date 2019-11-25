@@ -16,7 +16,7 @@ author: Gabe Landau <gll1872@rit.edu>
         </div>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
-      <div class="right">
+      <div class="right flex-container">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
         <span class="link" v-if="!authenticated && !isLdap"><a href="/saml/login">Login</a></span>
@@ -26,15 +26,16 @@ author: Gabe Landau <gll1872@rit.edu>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
           <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell"></i></button>
-          <div><span v-if="showBadge" id="notificationBadge" class="badge">{{ number }}</span></div>
-          <div id="notificationDropdown" class="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
-          </div>
-        </div>
 
-        <button @click="testbadge()">TEST</button>
+          <div><span v-if="showBadge" id="notificationBadge" class="badge">{{ number }}</span></div>
+
+          <div id="notificationDropdown" class="dropdown-content form-control" name="people">
+            <div>
+              <a v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
+            </div>
+          </div>
+          
+        </div>
 
       </div>
     </header>
@@ -76,7 +77,8 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-
+var i
+// var key
 import Auth from '../mixins/auth'
 import { mapGetters } from 'vuex'
 
@@ -86,6 +88,7 @@ export default {
   data () {
     return {
       notifications: [],
+      menuMessages: [],
       number: null,
       showBadge: false,
       showLoginForm: false,
@@ -117,20 +120,30 @@ export default {
     toggleNotifications () {
       document.getElementById('notificationDropdown').classList.toggle('show')
     },
-    testbadge () {
-      this.number--
-      if (this.number === 0) {
-        this.showBadge = false
-      }
-    },
     populateNotificationMenu () {
-      for (var i = 0; i < this.notifications.length; i++) {
-        console.log('gottem')
+      for (i = 0; i < this.notifications.length; i++) {
         this.number++
+        this.notifications[i].seen = false // Used to flag if the message is new or not
+        this.notifications[i].message = this.generateMessage(this.notifications[i])
       }
       if (this.number > 0) {
         this.showBadge = true
       }
+    },
+    // TODO: These could be more informative, refactor the notifications to contain
+    // more information? Maybe tell them who performed the action they are being notified about
+    generateMessage (notification) {
+      var message
+      if (notification.type === 'MadeCommitteeHead') {
+        message = 'You have been made the head of a committee.'
+      } else if (notification.type === 'AssignedToAction') {
+        message = 'You have been assigned to an action.'
+      } else if (notification.type === 'MentionedInNote') {
+        message = 'You have been mentioned in a note.'
+      } else if (notification.type === 'UserRequest') {
+        message = 'A user has a request for you.'
+      }
+      return message
     }
   },
   computed: {
@@ -252,6 +265,11 @@ export default {
   background-color: #d16424;
 }
 
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
 /* The container <div> - needed to position the dropdown content */
 .dropdown {
   position: relative;
@@ -288,13 +306,14 @@ export default {
 .badge{
   position: absolute;
   background: rgb(212, 0, 0);
-  height:2.4rem;
-  bottom:0rem;
-  left:3.6rem;
+  height:2rem;
+  bottom:.6rem;
+  left:3rem;
   width:1.75rem;
   text-align: center;
   line-height: 2rem;;
   font-size: 20px;
+  border-radius: 50%;
   color:white;
 }
 </style>
