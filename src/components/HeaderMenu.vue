@@ -169,7 +169,7 @@ export default {
     // This would allow us to only show the user notifications that they haven't 'witnessed' yet
     // Otherwise they will be shown the same notifications every time
     get_notifications: function (data) {
-      this.notifications = data 
+      this.notifications = data
       for (i = 0; i < this.notifications.length; i++) {
         this.notifications[i].seen = false // initialize new notifications as unseen
       }
