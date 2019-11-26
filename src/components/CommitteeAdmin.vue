@@ -9,7 +9,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <template>
   <div>
-    <ModalForms v-if="this.formData.visible" :formData="this.formData" />
+    <ModalForms v-if="this.formData.visible" :formData="this.formData" submitTitle="Create" cancelTitle="Cancel" @sendTo="createNewCharge"/>
     <div class="committee_admin">
       <div class="title">Committee Controls</div>
       <div class="divider"></div>
@@ -90,16 +90,8 @@ export default {
         ]
       }
     },
-    createNewCharge () {
-      this.$socket.emit('create_charge', {
-        token: this.getToken(),
-        title: this.createChargeTitle,
-        committee: this.committee.id,
-        priority: parseInt(this.createChargePriority),
-        description: this.createChargeDescription,
-        paw_links: this.createChargePawLink,
-        private: !(this.isPrivate) // The logic of the checkbox is backwards intentionally
-      })
+    createNewCharge (data) {
+      console.log(data)
     },
     openAddCommitteeMember () {
       this.$socket.emit('get_all_users')

@@ -56,7 +56,7 @@
         </div>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-primary" @click="createNewCharge()">Create</button>
+        <button class="button is-primary" @click="sendData()">Create</button>
         <button class="button" @click="closeModal()">Cancel</button>
       </footer>
     </div>
@@ -76,7 +76,13 @@
       }
     },
     methods: {
-      createNewCharge () {
+      sendData () {
+        var data = this.$props.formData.fields.reduce((obj, item) => {
+          let attr = item.name.toLowerCase().replace(' ', '_')
+          obj[attr] = item.value
+          return obj
+        })
+        this.$emit('sendTo', data)
         this.$props.formData.visible = false
       },
       closeModal () {
