@@ -26,12 +26,10 @@ author: Gabe Landau <gll1872@rit.edu>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
           <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell"></i></button>
-
-          <div><span v-if="showBadge" id="notificationBadge" class="badge">{{ number }}</span></div>
-
+          <div><span v-if="showBadge" id="notificationBadge" class="badge">{{ badgeNumber }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <div>
-              <a v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
+              <a @mouseover="witnessNotification(notification)" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
             </div>
           </div>
           
@@ -78,7 +76,6 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <script>
 var i
-// var key
 import Auth from '../mixins/auth'
 import { mapGetters } from 'vuex'
 
@@ -89,7 +86,7 @@ export default {
     return {
       notifications: [],
       menuMessages: [],
-      number: null,
+      badgeNumber: null,
       showBadge: false,
       showLoginForm: false,
       showLoginLoading: false,
@@ -99,6 +96,18 @@ export default {
     }
   },
   methods: {
+    badgeController () {
+      if (this.badgeNumber > 0) {
+        this.showBadge = true
+      } else if (this.badgeNumber <= 0) {
+        this.showBadge = false
+      }
+    },
+    witnessNotification (notification) {
+      notification.seen = true
+      this.badgeNumber--
+      this.badgeController()
+    },
     submitLogin () {
       this.showAuthError = false
       this.showLoginLoading = true
@@ -122,16 +131,17 @@ export default {
     },
     populateNotificationMenu () {
       for (i = 0; i < this.notifications.length; i++) {
-        this.number++
-        this.notifications[i].seen = false // Used to flag if the message is new or not
         this.notifications[i].message = this.generateMessage(this.notifications[i])
+
+        if (this.notifications[i].seen === false) { // Used to flag if the message is new or not
+          this.badgeNumber++
+        }
       }
-      if (this.number > 0) {
-        this.showBadge = true
-      }
+      this.badgeController()
     },
-    // TODO: These could be more informative, refactor the notifications to contain
-    // more information? Maybe tell them who performed the action they are being notified about
+    // TODO: These could be more informative, maybe we should refactor the notifications to contain
+    // more information? Maybe tell the user who performed the action they are being notified about, and when.
+    // Also, these messages could be generated in the backend instead of here.
     generateMessage (notification) {
       var message
       if (notification.type === 'MadeCommitteeHead') {
@@ -156,6 +166,9 @@ export default {
   sockets: {
     get_notifications: function (data) {
       this.notifications = data
+      for (i = 0; i < this.notifications.length; i++) {
+        this.notifications[i].seen = false // initialize new notifications as unseen
+      }
       this.populateNotificationMenu()
     }
   },
@@ -298,10 +311,14 @@ export default {
 }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {display:block;}
+.show {
+  display:block;
+}
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
 
 .badge{
   position: absolute;
