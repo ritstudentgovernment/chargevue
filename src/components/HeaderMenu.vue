@@ -29,7 +29,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div><span v-if="showBadge" id="notificationBadge" class="badge">{{ badgeNumber }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <div>
-              <a @mouseover="witnessNotification(notification)" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
+              <a class="notification" @click="witnessNotification(notification)" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
             </div>
           </div>
           
@@ -103,6 +103,7 @@ export default {
         this.showBadge = false
       }
     },
+    // This should eventually emit to the backend to delete the notification
     witnessNotification (notification) {
       notification.seen = true
       this.badgeNumber--
@@ -164,8 +165,11 @@ export default {
     })
   },
   sockets: {
+    // These notifications should be stored in a way that lets them be sorted by new and old
+    // This would allow us to only show the user notifications that they haven't 'witnessed' yet
+    // Otherwise they will be shown the same notifications every time
     get_notifications: function (data) {
-      this.notifications = data
+      this.notifications = data 
       for (i = 0; i < this.notifications.length; i++) {
         this.notifications[i].seen = false // initialize new notifications as unseen
       }
@@ -332,5 +336,9 @@ export default {
   font-size: 20px;
   border-radius: 50%;
   color:white;
+}
+
+.notification {
+  cursor: pointer;
 }
 </style>
