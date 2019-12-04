@@ -26,11 +26,12 @@ author: Gabe Landau <gll1872@rit.edu>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
           <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell"></i></button>
-          <div><span v-if="showBadge" id="notificationBadge" class="badge">{{ badgeNumber }}</span></div>
+          <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
-            <div>
-              <a class="notification" @click="witnessNotification(notification)" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
-            </div>
+            <span>
+              <button v-for="notification in notifications" v-bind:key ="notification">Test</button>
+              <a class="notification" @click="goToDestination(notification)" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
+            </span>
           </div>
           
         </div>
@@ -97,17 +98,31 @@ export default {
   },
   methods: {
     badgeController () {
+      this.badgeNumber = 0
+      for (i = 0; i < this.notifications.length; i++) {
+        if (this.notifications[i].viewed === false) {
+          this.badgeNumber++
+        }
+      }
       if (this.badgeNumber > 0) {
         this.showBadge = true
-      } else if (this.badgeNumber <= 0) {
+      } else {
         this.showBadge = false
       }
     },
-    // This should eventually emit to the backend to delete the notification
-    witnessNotification (notification) {
-      notification.seen = true
-      this.badgeNumber--
+    goToDestination (notification) {
+      if (notification.viewed === false) {
+        this.checkAuth().then((token) => {
+          this.$socket.emit('update_notification', {
+            token: token,
+            notificationId: notification.id
+          })
+        })
+        notification.viewed = true
+      }
       this.badgeController()
+      this.$router.push(notification.redirectString)
+      this.$router.go()
     },
     submitLogin () {
       this.showAuthError = false
@@ -132,27 +147,25 @@ export default {
     },
     populateNotificationMenu () {
       for (i = 0; i < this.notifications.length; i++) {
-        this.notifications[i].message = this.generateMessage(this.notifications[i])
-
-        if (this.notifications[i].seen === false) { // Used to flag if the message is new or not
-          this.badgeNumber++
-        }
+        this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
       }
-      this.badgeController()
     },
     // TODO: These could be more informative, maybe we should refactor the notifications to contain
     // more information? Maybe tell the user who performed the action they are being notified about, and when.
     // Also, these messages could be generated in the backend instead of here.
-    generateMessage (notification) {
+    generateMessageAndRedirectString (notification) {
       var message
       if (notification.type === 'MadeCommitteeHead') {
-        message = 'You have been made the head of a committee.'
+        message = 'You have been made the head of the committee: ' + notification.destination
+        notification.redirectString = '/committee/' + notification.destination
       } else if (notification.type === 'AssignedToAction') {
-        message = 'You have been assigned to an action.'
+        message = 'You have been assigned to the action: ' + notification.destination
+        // notification.redirectString = '/charge/' + notification.destination TODO add functionality to open modal
       } else if (notification.type === 'MentionedInNote') {
-        message = 'You have been mentioned in a note.'
+        message = 'You have been mentioned the note: ' + notification.destination
+        notification.redirectString = '/charge/' + notification.destination
       } else if (notification.type === 'UserRequest') {
-        message = 'A user has a request for you.'
+        message = notification.destination + ' has a request for you.'
       }
       return message
     }
@@ -165,15 +178,11 @@ export default {
     })
   },
   sockets: {
-    // These notifications should be stored in a way that lets them be sorted by new and old
-    // This would allow us to only show the user notifications that they haven't 'witnessed' yet
-    // Otherwise they will be shown the same notifications every time
     get_notifications: function (data) {
       this.notifications = data
-      for (i = 0; i < this.notifications.length; i++) {
-        this.notifications[i].seen = false // initialize new notifications as unseen
-      }
+      console.log(this.notifications) // TODO for testing
       this.populateNotificationMenu()
+      this.badgeController()
     }
   },
   beforeMount () {
@@ -272,10 +281,11 @@ export default {
   background-color: #f36e21; 
   border: none; 
   color: white; 
-  padding: 10px 12px 10px 12px; 
-  font-size: 16px; 
+  padding: 4px 6px 4px 6px; 
+  font-size: 14px; 
   margin-left: 18px;
   cursor: pointer; 
+  /* border-radius: 50%; For a circular button */
 }
 
 .btn:hover {
@@ -298,7 +308,7 @@ export default {
   right: 0;
   display: none;
   padding-top: 8px;
-  margin-top: 5px;
+  margin-top: 19px;
   position: absolute;
   background-color: #f9f9f9;
   min-width: 20vw;
@@ -324,16 +334,14 @@ export default {
   background-color: #f1f1f1;
 }
 
-.badge{
+.w3-badge{
   position: absolute;
   background: rgb(212, 0, 0);
-  height:2rem;
-  bottom:.6rem;
-  left:3rem;
-  width:1.75rem;
-  text-align: center;
-  line-height: 2rem;;
-  font-size: 20px;
+  height:1.2rem;
+  bottom:1rem;
+  left:2.3rem;
+  width:1.2rem;
+  font-size: 14px;
   border-radius: 50%;
   color:white;
 }
