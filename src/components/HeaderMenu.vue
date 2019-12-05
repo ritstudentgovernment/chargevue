@@ -25,11 +25,10 @@ author: Gabe Landau <gll1872@rit.edu>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
-          <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell"></i></button>
+          <button class="btn"><i class="fa fa-bell"></i></button>
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
-              <button v-for="notification in notifications" v-bind:key ="notification">Test</button>
               <a class="notification" @click="goToDestination(notification)" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
             </span>
           </div>
@@ -78,6 +77,7 @@ author: Gabe Landau <gll1872@rit.edu>
 <script>
 var i
 import Auth from '../mixins/auth'
+import EventBus from './EventBus'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -121,6 +121,10 @@ export default {
         notification.viewed = true
       }
       this.badgeController()
+      // Eventually will move all this to another 'redirect' function
+      if (notification.type === 'AssignedToAction') {
+        localStorage.setItem('openModal', true)
+      }
       this.$router.push(notification.redirectString)
       this.$router.go()
     },
@@ -142,9 +146,9 @@ export default {
       this.logout()
       this.$router.push({ path: '/' })
     },
-    toggleNotifications () {
-      document.getElementById('notificationDropdown').classList.toggle('show')
-    },
+    // toggleNotifications () {
+    //   document.getElementById('notificationDropdown').classList.toggle('show')
+    // },
     populateNotificationMenu () {
       for (i = 0; i < this.notifications.length; i++) {
         this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
@@ -160,14 +164,19 @@ export default {
         notification.redirectString = '/committee/' + notification.destination
       } else if (notification.type === 'AssignedToAction') {
         message = 'You have been assigned to the action: ' + notification.destination
-        // notification.redirectString = '/charge/' + notification.destination TODO add functionality to open modal
+        notification.redirectString = '/charge/' + notification.destination
       } else if (notification.type === 'MentionedInNote') {
         message = 'You have been mentioned the note: ' + notification.destination
-        notification.redirectString = '/charge/' + notification.destination
+        notification.redirectString = '/charge/' + notification.destination // TODO is this the correct redirect?
       } else if (notification.type === 'UserRequest') {
+        // This notification should be changed so that we can see who has the request.
+        // Should redirect to... the committee?
         message = notification.destination + ' has a request for you.'
       }
       return message
+    },
+    closeNotifications (string) {
+      console.log(string)
     }
   },
   computed: {
@@ -191,6 +200,21 @@ export default {
         token: token
       })
     })
+  },
+  mounted () {
+    // Handles the notification menu opening and closing. This event is generated in the App.vue main page
+    EventBus.$on('controlNotifications', function (event) {
+      if (event.target.classList.contains('btn') || event.target.classList.contains('fa-bell')) {
+        document.getElementById('notificationDropdown').classList.toggle('show')
+      } else if (!event.target.classList.contains('notification')) {
+        document.getElementById('notificationDropdown').classList.remove('show')
+      }
+    })
+  },
+  watch: {
+    closeNotifications (update) {
+      localStorage.closeNotifications = update
+    }
   }
 }
 </script>
