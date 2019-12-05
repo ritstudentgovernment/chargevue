@@ -29,7 +29,13 @@ author: Gabe Landau <gll1872@rit.edu>
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
-              <a class="notification" @click="goToDestination(notification)" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}</a>
+              <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
+              <ul class="notificationButtons">
+                <li class="delete"><button @click="deleteNotifiction()">Delete</button></li>
+                <li class="open"><button @click="goToDestination(notification)">Open</button></li>
+              </ul>
+              </a>
+              
             </span>
           </div>
           
@@ -110,6 +116,9 @@ export default {
         this.showBadge = false
       }
     },
+    deleteNotifiction () {
+      console.log('GOTTEM!')
+    },
     goToDestination (notification) {
       if (notification.viewed === false) {
         this.checkAuth().then((token) => {
@@ -147,7 +156,6 @@ export default {
       this.$router.push({ path: '/' })
     },
     toggleNotifications () {
-      console.log('gottem')
       document.getElementById('notificationDropdown').classList.toggle('show')
     },
     populateNotificationMenu () {
@@ -175,9 +183,6 @@ export default {
         message = notification.destination + ' has a request for you.'
       }
       return message
-    },
-    closeNotifications (string) {
-      console.log(string)
     }
   },
   computed: {
@@ -300,10 +305,10 @@ export default {
   border: none; 
   color: white; 
   padding: 4px 6px 4px 6px; 
-  font-size: 14px; 
+  font-size: 12px; 
   margin-left: 18px;
   cursor: pointer; 
-  /* border-radius: 50%; For a circular button */
+  border-radius: 20%;
 }
 
 .btn:hover {
@@ -326,7 +331,7 @@ export default {
   right: 0;
   display: none;
   padding-top: 8px;
-  margin-top: 19px;
+  margin-top: 21px;
   position: absolute;
   background-color: #f9f9f9;
   min-width: 20vw;
@@ -355,16 +360,47 @@ export default {
 .w3-badge{
   position: absolute;
   background: rgb(212, 0, 0);
-  height:1.2rem;
+  height:1.4rem;
   bottom:1rem;
   left:2.3rem;
   width:1.2rem;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 50%;
   color:white;
+  overflow: hidden;
 }
 
 .notification {
   cursor: pointer;
+}
+
+.notificationButtons {
+  float: right;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.delete, .open {
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  background: none!important;
+  border: none;
+  padding: 0!important;
+  /*optional*/
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  /*input has OS specific font-family*/
+  color: rgb(0,0,0);
+}
+
+.delete {
+  float: right;
+  background-color: red;
+}
+
+.open {
+  float: left;
+  background-color: green;
 }
 </style>
