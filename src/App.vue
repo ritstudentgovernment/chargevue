@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @click="notificationController()">
+  <div id="app" @click="closeNotifications()">
     <router-view></router-view>
   </div>
 </template>
@@ -25,8 +25,8 @@ export default {
     }
   },
   methods: {
-    notificationController () {
-      EventBus.$emit('controlNotifications', event)
+    closeNotifications () {
+      EventBus.$emit('closeNotifications', event)
     }
   }
 }

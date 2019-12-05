@@ -25,7 +25,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
-          <button class="btn"><i class="fa fa-bell"></i></button>
+          <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell"></i></button>
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
@@ -146,9 +146,10 @@ export default {
       this.logout()
       this.$router.push({ path: '/' })
     },
-    // toggleNotifications () {
-    //   document.getElementById('notificationDropdown').classList.toggle('show')
-    // },
+    toggleNotifications () {
+      console.log('gottem')
+      document.getElementById('notificationDropdown').classList.toggle('show')
+    },
     populateNotificationMenu () {
       for (i = 0; i < this.notifications.length; i++) {
         this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
@@ -202,19 +203,12 @@ export default {
     })
   },
   mounted () {
-    // Handles the notification menu opening and closing. This event is generated in the App.vue main page
-    EventBus.$on('controlNotifications', function (event) {
-      if (event.target.classList.contains('btn') || event.target.classList.contains('fa-bell')) {
-        document.getElementById('notificationDropdown').classList.toggle('show')
-      } else if (!event.target.classList.contains('notification')) {
+    // Handles the notification menu closing. This event is generated in the App.vue main page
+    EventBus.$on('closeNotifications', function (event) {
+      if (!(event.target.classList.contains('notification') || event.target.classList.contains('fa-bell'))) {
         document.getElementById('notificationDropdown').classList.remove('show')
       }
     })
-  },
-  watch: {
-    closeNotifications (update) {
-      localStorage.closeNotifications = update
-    }
   }
 }
 </script>
