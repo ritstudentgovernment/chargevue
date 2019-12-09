@@ -31,7 +31,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <span>
               <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
               <ul class="notificationButtons">
-                <li class="delete"><button @click="deleteNotifiction()">Delete</button></li>
+                <li class="delete"><button @click="deleteNotifiction(notification)">Delete</button></li>
                 <li class="open"><button @click="goToDestination(notification)">Open</button></li>
               </ul>
               </a>
@@ -116,8 +116,10 @@ export default {
         this.showBadge = false
       }
     },
-    deleteNotifiction () {
-      console.log('GOTTEM!')
+    deleteNotifiction (notification) {
+      var index = this.notifications.indexOf(notification)
+      // Emit the deleteNotification call to the backend here
+      this.notifications.splice(index, index + 1) // Splice is used to avoid 'holes' in the array
     },
     goToDestination (notification) {
       if (notification.viewed === false) {
