@@ -26,8 +26,8 @@ author: Gabe Landau <gll1872@rit.edu>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
           <button class="btn notification_button" @click="toggleNotifications()"><i class="fa fa-bell notification_button"></i></button>
-          <!--  -->
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
+
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
               <div>
@@ -38,7 +38,6 @@ author: Gabe Landau <gll1872@rit.edu>
                 </ul>
                 </a>
               </div>
-              
             </span>
           </div>
           
@@ -351,8 +350,9 @@ export default {
 
 /* Links inside the dropdown */
 .dropdown-content a {
+  overflow: auto;
   color: black;
-  padding: 12px 16px;
+  padding-top: 12px;
   text-decoration: none;
   display: block;
 }
@@ -397,14 +397,12 @@ export default {
 .delete, .open {
   display: block;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   background: none!important;
-  border: none;
+  border: 1px solid rgb(189, 189, 189);
   padding: 0!important;
-  /*optional*/
   font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-  /*input has OS specific font-family*/
-  color: rgb(0,0,0);
+  border-radius: 20%
 }
 
 .delete {
