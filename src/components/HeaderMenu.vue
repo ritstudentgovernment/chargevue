@@ -25,16 +25,19 @@ author: Gabe Landau <gll1872@rit.edu>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
-          <button @click="toggleNotifications()" class="btn"><i class="fa fa-bell"></i></button>
+          <button class="btn notification_button" @click="toggleNotifications()"><i class="fa fa-bell notification_button"></i></button>
+          <!--  -->
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
-              <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
-              <ul class="notificationButtons">
-                <li class="delete"><button @click="deleteNotifiction(notification)">Delete</button></li>
-                <li class="open"><button @click="goToDestination(notification)">Open</button></li>
-              </ul>
-              </a>
+              <div>
+                <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
+                <ul class="notificationButtons">
+                  <li class="delete"><button class="delete" @click="deleteNotifiction(notification)">Delete</button></li>
+                  <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
+                </ul>
+                </a>
+              </div>
               
             </span>
           </div>
@@ -117,9 +120,15 @@ export default {
       }
     },
     deleteNotifiction (notification) {
-      var index = this.notifications.indexOf(notification)
-      // Emit the deleteNotification call to the backend here
-      this.notifications.splice(index, index + 1) // Splice is used to avoid 'holes' in the array
+      // var index = this.notifications.indexOf(notification)
+      console.log('GOTTEM')
+      // this.checkAuth().then((token) => {
+      //   this.$socket.emit('delete_notification', {
+      //     token: token,
+      //     notificationId: notification.id
+      //   })
+      // })
+      // this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
     },
     goToDestination (notification) {
       if (notification.viewed === false) {
@@ -197,7 +206,6 @@ export default {
   sockets: {
     get_notifications: function (data) {
       this.notifications = data
-      console.log(this.notifications) // TODO for testing
       this.populateNotificationMenu()
       this.badgeController()
     }
@@ -212,7 +220,8 @@ export default {
   mounted () {
     // Handles the notification menu closing. This event is generated in the App.vue main page
     EventBus.$on('closeNotifications', function (event) {
-      if (!(event.target.classList.contains('notification') || event.target.classList.contains('fa-bell'))) {
+      console.log(event.target.classList)
+      if (!(event.target.classList.contains('notification') || event.target.classList.contains('notification_button') || event.target.classList.contains('delete'))) {
         document.getElementById('notificationDropdown').classList.remove('show')
       }
     })
@@ -332,7 +341,6 @@ export default {
 .dropdown-content {
   right: 0;
   display: none;
-  padding-top: 8px;
   margin-top: 21px;
   position: absolute;
   background-color: #f9f9f9;
@@ -362,18 +370,21 @@ export default {
 .w3-badge{
   position: absolute;
   background: rgb(212, 0, 0);
-  height:1.4rem;
+  height:1.2rem;
   bottom:1rem;
-  left:2.3rem;
+  left:2.2rem;
   width:1.2rem;
-  font-size: 12px;
+  font-size: 14px;
   border-radius: 50%;
   color:white;
   overflow: hidden;
 }
 
 .notification {
+  position: relative;
   cursor: pointer;
+  margin: 0 0 0 0;
+  border-bottom: 1px solid #f36e21;
 }
 
 .notificationButtons {
@@ -398,11 +409,11 @@ export default {
 
 .delete {
   float: right;
-  background-color: red;
+  color: red;
 }
 
 .open {
   float: left;
-  background-color: green;
+  color: green;
 }
 </style>
