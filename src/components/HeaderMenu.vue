@@ -31,6 +31,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
               <div>
+
                 <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
                 <ul class="notificationButtons">
                   <li class="delete"><button class="delete" @click="deleteNotifiction(notification)">Delete</button></li>
@@ -93,6 +94,7 @@ export default {
   mixins: [Auth],
   data () {
     return {
+      test: false,
       notifications: [],
       menuMessages: [],
       badgeNumber: null,
@@ -119,15 +121,14 @@ export default {
       }
     },
     deleteNotifiction (notification) {
-      // var index = this.notifications.indexOf(notification)
-      console.log('GOTTEM')
-      // this.checkAuth().then((token) => {
-      //   this.$socket.emit('delete_notification', {
-      //     token: token,
-      //     notificationId: notification.id
-      //   })
-      // })
-      // this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
+      var index = this.notifications.indexOf(notification)
+      this.checkAuth().then((token) => {
+        this.$socket.emit('delete_notification', {
+          token: token,
+          notificationId: notification.id
+        })
+      })
+      this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
     },
     goToDestination (notification) {
       if (notification.viewed === false) {
@@ -140,7 +141,6 @@ export default {
         notification.viewed = true
       }
       this.badgeController()
-      // Eventually will move all this to another 'redirect' function
       if (notification.type === 'AssignedToAction') {
         localStorage.setItem('openModal', true)
       }
@@ -173,7 +173,8 @@ export default {
         this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
       }
     },
-    // TODO: These could be more informative, maybe we should refactor the notifications to contain
+    // TODO: Notes for PR
+    // These notes could be more informative, maybe we should refactor the notifications to contain
     // more information? Maybe tell the user who performed the action they are being notified about, and when.
     // Also, these messages could be generated in the backend instead of here.
     generateMessageAndRedirectString (notification) {
@@ -182,15 +183,14 @@ export default {
         message = 'You have been made the head of the committee: ' + notification.destination
         notification.redirectString = '/committee/' + notification.destination
       } else if (notification.type === 'AssignedToAction') {
-        message = 'You have been assigned to the action: ' + notification.destination
+        message = 'You have been assigned to the task: ' + notification.destination
         notification.redirectString = '/charge/' + notification.destination
       } else if (notification.type === 'MentionedInNote') {
-        message = 'You have been mentioned the note: ' + notification.destination
-        notification.redirectString = '/charge/' + notification.destination // TODO is this the correct redirect?
+        message = 'You have been mentioned in the note: ' + notification.destination
+        notification.redirectString = '/charge/' + notification.destination
       } else if (notification.type === 'UserRequest') {
-        // This notification should be changed so that we can see who has the request.
-        // Should redirect to... the committee?
-        message = notification.destination + ' has a request for you.'
+        message = 'The user ' + notification.destination + ' has a request for you.' // TODO: Not sure where this should redirect
+        notification.redirectString = '/committee/' + notification.destination
       }
       return message
     }
@@ -362,7 +362,6 @@ export default {
   display:block;
 }
 
-/* Change color of dropdown links on hover */
 .dropdown-content a:hover {
   background-color: #f1f1f1;
 }
@@ -382,7 +381,6 @@ export default {
 
 .notification {
   position: relative;
-  cursor: pointer;
   margin: 0 0 0 0;
   border-bottom: 1px solid #f36e21;
 }
@@ -398,11 +396,23 @@ export default {
   display: block;
   text-align: center;
   font-size: 14px;
-  background: none!important;
+  background: none;
   border: 1px solid rgb(189, 189, 189);
   padding: 0!important;
   font-family: 'Montserrat', Helvetica, Arial, sans-serif;
   border-radius: 20%
+}
+
+.delete :hover {
+  background-color: red;
+  color: white;
+  cursor: pointer;
+}
+
+.open :hover {
+  background-color: green;
+  color: white;
+  cursor: pointer;
 }
 
 .delete {
