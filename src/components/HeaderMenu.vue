@@ -173,10 +173,6 @@ export default {
         this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
       }
     },
-    // TODO: Notes for PR
-    // These notes could be more informative, maybe we should refactor the notifications to contain
-    // more information? Maybe tell the user who performed the action they are being notified about, and when.
-    // Also, these messages could be generated in the backend instead of here.
     generateMessageAndRedirectString (notification) {
       var message
       if (notification.type === 'MadeCommitteeHead') {
@@ -189,7 +185,7 @@ export default {
         message = 'You have been mentioned in the note: ' + notification.destination
         notification.redirectString = '/charge/' + notification.destination
       } else if (notification.type === 'UserRequest') {
-        message = 'The user ' + notification.destination + ' has a request for you.' // TODO: Not sure where this should redirect
+        message = 'The user ' + notification.destination + ' has a request for you.'
         notification.redirectString = '/committee/' + notification.destination
       }
       return message
