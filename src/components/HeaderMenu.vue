@@ -16,12 +16,34 @@ author: Gabe Landau <gll1872@rit.edu>
         </div>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
-      <div class="right">
+      <div class="right flex-container">
         <span class="link" @click="showLoginForm = true" v-if="!authenticated && isLdap">Login</span>
         <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
         <span class="link" v-if="!authenticated && !isLdap"><a href="/saml/login">Login</a></span>
         <span class="link" v-if="authenticated && !isLdap"><a href="/saml/logout">Logout</a></span>
         <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <div class="dropdown"> 
+          <button class="btn notification_button" @click="toggleNotifications()"><i class="fa fa-bell notification_button"></i></button>
+          <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
+
+          <div id="notificationDropdown" class="dropdown-content form-control" name="people">
+            <span>
+              <div>
+
+                <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
+                <ul class="notificationButtons">
+                  <li class="delete"><button class="delete" @click="deleteNotifiction(notification)">Delete</button></li>
+                  <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
+                </ul>
+                </a>
+              </div>
+            </span>
+          </div>
+          
+        </div>
+
       </div>
     </header>
 
@@ -62,7 +84,9 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
+var i
 import Auth from '../mixins/auth'
+import EventBus from './EventBus'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -70,6 +94,11 @@ export default {
   mixins: [Auth],
   data () {
     return {
+      test: false,
+      notifications: [],
+      menuMessages: [],
+      badgeNumber: null,
+      showBadge: false,
       showLoginForm: false,
       showLoginLoading: false,
       showAuthError: false,
@@ -78,6 +107,46 @@ export default {
     }
   },
   methods: {
+    badgeController () {
+      this.badgeNumber = 0
+      for (i = 0; i < this.notifications.length; i++) {
+        if (this.notifications[i].viewed === false) {
+          this.badgeNumber++
+        }
+      }
+      if (this.badgeNumber > 0) {
+        this.showBadge = true
+      } else {
+        this.showBadge = false
+      }
+    },
+    deleteNotifiction (notification) {
+      var index = this.notifications.indexOf(notification)
+      this.checkAuth().then((token) => {
+        this.$socket.emit('delete_notification', {
+          token: token,
+          notificationId: notification.id
+        })
+      })
+      this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
+    },
+    goToDestination (notification) {
+      if (notification.viewed === false) {
+        this.checkAuth().then((token) => {
+          this.$socket.emit('update_notification', {
+            token: token,
+            notificationId: notification.id
+          })
+        })
+        notification.viewed = true
+      }
+      this.badgeController()
+      if (notification.type === 'AssignedToAction') {
+        localStorage.setItem('openModal', true)
+      }
+      this.$router.push(notification.redirectString)
+      this.$router.go()
+    },
     submitLogin () {
       this.showAuthError = false
       this.showLoginLoading = true
@@ -95,6 +164,31 @@ export default {
     submitLogout () {
       this.logout()
       this.$router.push({ path: '/' })
+    },
+    toggleNotifications () {
+      document.getElementById('notificationDropdown').classList.toggle('show')
+    },
+    populateNotificationMenu () {
+      for (i = 0; i < this.notifications.length; i++) {
+        this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
+      }
+    },
+    generateMessageAndRedirectString (notification) {
+      var message
+      if (notification.type === 'MadeCommitteeHead') {
+        message = 'You have been made the head of the committee: ' + notification.destination
+        notification.redirectString = '/committee/' + notification.destination
+      } else if (notification.type === 'AssignedToAction') {
+        message = 'You have been assigned to the task: ' + notification.destination
+        notification.redirectString = '/charge/' + notification.destination
+      } else if (notification.type === 'MentionedInNote') {
+        message = 'You have been mentioned in the note: ' + notification.destination
+        notification.redirectString = '/charge/' + notification.destination
+      } else if (notification.type === 'UserRequest') {
+        message = 'The user ' + notification.destination + ' has a request for you.'
+        notification.redirectString = '/committee/' + notification.destination
+      }
+      return message
     }
   },
   computed: {
@@ -102,6 +196,29 @@ export default {
       authenticated: 'authenticated',
       admin: 'admin',
       isLdap: 'isLdap'
+    })
+  },
+  sockets: {
+    get_notifications: function (data) {
+      this.notifications = data
+      this.populateNotificationMenu()
+      this.badgeController()
+    }
+  },
+  beforeMount () {
+    this.checkAuth().then((token) => {
+      this.$socket.emit('get_notifications', {
+        token: token
+      })
+    })
+  },
+  mounted () {
+    // Handles the notification menu closing. This event is generated in the App.vue main page
+    EventBus.$on('closeNotifications', function (event) {
+      console.log(event.target.classList)
+      if (!(event.target.classList.contains('notification') || event.target.classList.contains('notification_button') || event.target.classList.contains('delete'))) {
+        document.getElementById('notificationDropdown').classList.remove('show')
+      }
     })
   }
 }
@@ -188,4 +305,119 @@ export default {
   .control {
     padding-right: 20px;
   }
+
+  .btn {
+  background-color: #f36e21; 
+  border: none; 
+  color: white; 
+  padding: 4px 6px 4px 6px; 
+  font-size: 12px; 
+  margin-left: 18px;
+  cursor: pointer; 
+  border-radius: 20%;
+}
+
+.btn:hover {
+  background-color: #d16424;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  right: 0;
+  display: none;
+  margin-top: 21px;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 20vw;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  overflow: auto;
+  color: black;
+  padding-top: 12px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+  display:block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.w3-badge{
+  position: absolute;
+  background: rgb(212, 0, 0);
+  height:1.2rem;
+  bottom:1rem;
+  left:2.2rem;
+  width:1.2rem;
+  font-size: 14px;
+  border-radius: 50%;
+  color:white;
+  overflow: hidden;
+}
+
+.notification {
+  position: relative;
+  margin: 0 0 0 0;
+  border-bottom: 1px solid #f36e21;
+}
+
+.notificationButtons {
+  float: right;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.delete, .open {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  background: none;
+  border: 1px solid rgb(189, 189, 189);
+  padding: 0!important;
+  font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+  border-radius: 20%
+}
+
+.delete :hover {
+  background-color: red;
+  color: white;
+  cursor: pointer;
+}
+
+.open :hover {
+  background-color: green;
+  color: white;
+  cursor: pointer;
+}
+
+.delete {
+  float: right;
+  color: red;
+}
+
+.open {
+  float: left;
+  color: green;
+}
 </style>

@@ -1,11 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" @click="closeNotifications()">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import Auth from '@/mixins/auth'
+import EventBus from './components/EventBus'
 
 export default {
   name: 'app',
@@ -21,6 +22,11 @@ export default {
       } else {
         this.logout()
       }
+    }
+  },
+  methods: {
+    closeNotifications () {
+      EventBus.$emit('closeNotifications', event)
     }
   }
 }

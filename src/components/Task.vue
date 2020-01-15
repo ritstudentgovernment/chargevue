@@ -174,6 +174,11 @@ export default {
     }
   },
   beforeMount () {
+    // Used for notification redirect
+    if (localStorage.openModal === 'true') {
+      this.active = true
+      localStorage.removeItem('openModal')
+    }
     this.status = this.task.status
     switch (this.task.status) {
       case 0:
