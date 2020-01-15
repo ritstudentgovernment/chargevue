@@ -7,7 +7,7 @@ describe('Dashboard.vue', () => {
     const Constructor = Vue.extend(Dashboard)
     const vm = new Constructor({router}).$mount()
     expect(vm.$el.querySelector('#dashboard_title').textContent)
-      .to.equal('Projects In Progress')
+      .to.equal('Charges In Progress')
   })
 
   it('returns a function', () => {

@@ -324,36 +324,32 @@ export default {
       })
     },
     createNewCommittee () {
-      // let timeDateObj = this.convertFrontendToBackend(this.createMeetingAmPm, this.createMeetingHour, this.createMeetingMinute, this.createMeetingDay)
-      // let time = timeDateObj.time
-      // let day = timeDateObj.day
+      let timeDateObj = this.convertFrontendToBackend(this.createMeetingAmPm, this.createMeetingHour, this.createMeetingMinute, this.createMeetingDay)
+      let time = timeDateObj.time
+      let day = timeDateObj.day
 
-      // if (this.createImage) {
-      //   this.$socket.emit('create_committee', {
-      //     token: this.getToken(),
-      //     title: this.createTitle,
-      //     description: this.createDescription,
-      //     location: this.createLocation,
-      //     meeting_time: time,
-      //     meeting_day: day,
-      //     head: this.createCommitteeHead,
-      //     committee_img: this.createImage
-      //   })
-      // } else {
-      //   this.$socket.emit('create_committee', {
-      //     token: this.getToken(),
-      //     title: this.createTitle,
-      //     description: this.createDescription,
-      //     location: this.createLocation,
-      //     meeting_time: time,
-      //     meeting_day: day,
-      //     head: this.createCommitteeHead
-      //   })
-
-        // TODO this works for now...
-      console.log(this)
-        // this.closeCreateCommittee()
-      // }
+      if (this.createImage) {
+        this.$socket.emit('create_committee', {
+          token: this.getToken(),
+          title: this.createTitle,
+          description: this.createDescription,
+          location: this.createLocation,
+          meeting_time: time,
+          meeting_day: day,
+          head: this.createCommitteeHead,
+          committee_img: this.createImage
+        })
+      } else {
+        this.$socket.emit('create_committee', {
+          token: this.getToken(),
+          title: this.createTitle,
+          description: this.createDescription,
+          location: this.createLocation,
+          meeting_time: time,
+          meeting_day: day,
+          head: this.createCommitteeHead
+        })
+      }
     },
     closeCreateCommittee () {
       this.createTitle = null
