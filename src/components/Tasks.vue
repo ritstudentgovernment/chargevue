@@ -12,7 +12,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="tasks_title">Tasks</div>
         </div>
         <div class="column">
-          <div class="tasks_button" @click="showAddTaskForm = true">New</div>
+          <button class="tasks_button button is-primary" @click="showAddTaskForm = true">New</button>
         </div>
       </div>
       <div class="taskbar">
@@ -205,12 +205,8 @@ export default {
     padding: 10px;
   }
   .tasks_button {
-    text-align: right;
-    font-size: 14pt;
-    color: #555;
-    padding: 10px;
-    text-decoration: underline;
-    cursor: pointer;
+    float: right;
+    margin-top: 6.5px;
   }
   .columns, .column {
     padding: 0;
