@@ -44,27 +44,26 @@ author: Gabe Landau <gll1872@rit.edu>
               <input class="input" type="text" placeholder="Description" v-model="createChargeDescription">
             </div>
           </div>
-
+          <div class="select">
+            <label class="label">Status</label>
+            <select v-model="createChargeStatus">
+              <option selected disabled>Select an Option</option>
+                <option value="0">Unapproved</option>
+                <option value="1">Failed</option>
+                <option value="2">InProgress</option>
+                <option value="3">Indefinite</option>
+                <option value="4">Unknown</option>
+                <option value="5">Completed</option>
+                <option value="6">NotStarted</option>
+                <option value="7">Stopped</option>
+            </select>
+          </div>
           <div class="field">
             <label class="label">PawPrints Link</label>
             <div class="control">
               <input class="input" type="text" placeholder="PawPrints Petition Link" v-model="createChargePawLink">
             </div>
           </div>
-
-          <!-- <label class="label">Priority</label>
-            <div class="field">
-              <div class="control">
-                <div class="select">
-                  <select v-model="createChargePriority">
-                    <option value="0">Low</option>
-                    <option value="1">Medium</option>
-                    <option value="2">High</option>
-                  </select>
-                </div>
-              </div>
-            </div> -->
-
           <label class="container label"> Make this charge public?  
             <input type="checkbox" class="is-primary" autocomplete="off" v-model="isPrivate">
             <span class="checkmark is-primary"></span>
@@ -106,6 +105,7 @@ export default {
       createChargePriority: 1,
       createChargeDescription: null,
       createChargePawLink: null,
+      createChargeStatus: null,
       isPrivate: null,
       createChargeResponse: {
         show: false,
@@ -124,6 +124,7 @@ export default {
       this.createChargeTitle = null
       this.createChargeDescription = null
       this.createChargePriority = null
+      this.createChargeStatus = null
       this.showAddNewCharge = false
       this.createChargeResponse.show = false
       this.createChargeResponse.message = null
@@ -138,6 +139,7 @@ export default {
         priority: parseInt(this.createChargePriority),
         description: this.createChargeDescription,
         paw_links: this.createChargePawLink,
+        status: this.createChargeStatus,
         private: !(this.isPrivate) // The logic of the checkbox is backwards intentionally
       })
     },
@@ -211,6 +213,10 @@ export default {
 
   .field {
     padding-right: 20px;
+  }
+
+  .select {
+    margin-bottom: 7%;
   }
   
 </style>
