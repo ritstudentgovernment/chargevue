@@ -86,32 +86,42 @@ export default {
 /* Create a custom checkbox */
   .checkmark {
     position: absolute;
-    top: 15;
+    top: 0;
     left: 0;
     height: 25px;
     width: 25px;
     background-color: rgba(150, 143, 143, 0.849);
   }
 
+  .radio {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background-color: rgba(150, 143, 143, 0.849);
+  }
+
 /* On mouse-over, add a grey background color */
-  .container:hover input ~ .checkmark {
+  .container:hover input ~ .checkmark, .container:hover input ~ .radio {
     background-color: #ccc;
   }
 
 /* When the checkbox is checked, add an orange background */
-  .container input:checked ~ .checkmark {
+  .container input:checked ~ .checkmark, .container input:checked ~ .radio {
     background-color: #f36e21;
   }
 
 /* Create the checkmark/indicator (hidden when not checked) */
-  .checkmark:after {
+  .checkmark:after, .radio:after {
     content: "";
     position: absolute;
     display: none;
   }
 
 /* Show the checkmark when checked */
-  .container input:checked ~ .checkmark:after {
+  .container input:checked ~ .checkmark:after, .container input:checked ~ .radio:after {
     display: block;
   }
 
@@ -126,5 +136,14 @@ export default {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+  }
+
+  .container .radio:after {
+    left: 5px;
+    top: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color:  white;
   }
 </style>
