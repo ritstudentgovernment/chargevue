@@ -48,27 +48,41 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" :placeholder="[[this.charge.title]]" v-model="chargeTitle">
+                <input class="input" type="text" :placeholder="[[this.charge.title]]" v-model="this.newTitle">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Description</label>
               <div class="control">
-                <input class="input" type="text" :placeholder="[[this.charge.description]]" v-model="chargeDescription">
+                <input class="input" type="text" :placeholder="[[this.charge.description]]" v-model="this.newDescription">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">PawPrints Link</label>
+                <div class="control">
+                  <input class="input" type="text" placeholder="PawPrints Petition Link" v-model="this.charge.paw_link">
+                </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Committee</label>
+              <div class="control">
+                <input class="input" type="text" :placeholder="[[this.charge.committee]]" v-model="this.newCommittee">
               </div>
             </div>
 
             <div class="field">
               <label class="container label"> Make this charge public?  
-                <input type="checkbox" class="is-primary" autocomplete="off" v-model="chargePrivacy">
+                <input type="checkbox" class="is-primary" autocomplete="off" v-model="this.newPrivate">
                 <span class="checkmark is-primary"></span>
               </label>
             </div>
 
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="TEST()" v-bind:class="{ 'is-loading' : createDisabled }">Confirm Edit</button>
+            <button class="button is-primary" v-on:click="editCharge()" v-bind:class="{ 'is-loading' : createDisabled }">Confirm Edit</button>
             <button class="button" v-on:click="closeEditModal()">Cancel</button>
           </footer>
         </div>
@@ -85,6 +99,10 @@ export default {
   props: ['charge'],
   data () {
     return {
+      newTitle: null,
+      newDescription: null,
+      newCommittee: null,
+      newPrivate: null,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
@@ -95,8 +113,16 @@ export default {
     }
   },
   methods: {
-    TEST () {
-      console.log(this.charge)
+    editCharge () {
+      this.$socket.emit('edit_charge', {
+        token: this.getToken(),
+        charge: this.charge.id, // The user cannot edit this field
+        title: this.newTitle,
+        description: this.newDescription,
+        committee: this.newCommittee,
+        // TODO status and priority, dead code?
+        private: this.newPrivate
+      })
     },
     closeCharge () {
       this.$socket.emit('edit_charge', {
@@ -118,6 +144,12 @@ export default {
       this.showConfirmModal = true
     },
     openEditModal () {
+      // Copying the data from the old charge
+      this.newTitle = this.charge.title
+      this.newDescription = this.charge.description
+      this.newCommittee = this.charge.committee
+      this.newPrivate = this.charge.private
+
       this.showEditModal = true
     }
   },
