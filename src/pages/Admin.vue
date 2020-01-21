@@ -458,6 +458,7 @@ export default {
         this.createCommitteeResponse.show = true
         this.createCommitteeResponse.success = true
         this.createCommitteeResponse.message = data.success
+        setTimeout(() => { this.closeCreateCommittee() }, 2000)
       } else if (data.error) {
         this.createCommitteeResponse.show = true
         this.createCommitteeResponse.success = false
