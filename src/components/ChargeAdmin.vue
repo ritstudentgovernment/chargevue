@@ -48,34 +48,34 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" v-model="this.localCharge.title" @change="updateProp(1, $event)">
+                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateProp(1, $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Description</label>
               <div class="control">
-                <input class="input" type="text" v-model="this.localCharge.description" @change="updateProp(2, $event)">
+                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateProp(2, $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
-                  <input class="input" type="text" v-model="this.localCharge.paw_link" @change="updateProp(3, $event)">
+                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp(3, $event)">
                 </div>
             </div>
 
             <div class="field">
               <label class="label">Committee</label>
               <div class="control">
-                <input class="input" type="text" v-model="this.localCharge.committee" @change="updateProp(4, $event)">
+                <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp(4, $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="container label"> Make this charge public?  
-                <input type="checkbox" class="is-primary" autocomplete="off" v-model="this.localCharge.private" @change="updateProp(5, $event)">
+                <input type="checkbox" class="is-primary" autocomplete="off" :value="[[this.charge.private]]" @change="updateProp(5, $event)">
                 <span class="checkmark is-primary"></span>
               </label>
             </div>
@@ -119,11 +119,11 @@ export default {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
         charge: this.charge.id, // The user cannot edit this field
-        title: this.localCharge.title,
-        description: this.localCharge.description,
-        committee: this.localCharge.committee,
+        title: this.charge.title,
+        description: this.charge.description,
+        committee: this.charge.committee,
         // TODO status and priority, dead code?
-        private: this.localCharge.private
+        private: this.charge.private
       })
     },
     closeCharge () {
@@ -158,17 +158,17 @@ export default {
     // Dynamically updates the new prop as the user types
     updateProp (field, event) {
       if (field === 1) {
-        this.localCharge.title = event.target.value
+        this.charge.title = event.target.value
       } else if (field === 2) {
-        this.localCharge.description = event.target.value
+        this.charge.description = event.target.value
       } else if (field === 3) {
-        this.localCharge.paw_link = event.target.value
+        this.charge.paw_link = event.target.value
       } else if (field === 4) {
-        this.localCharge.committee = event.target.value
+        this.charge.committee = event.target.value
       } else {
         console.log(event)
         // TODO this doesnt work yet
-        this.localCharge.private = event.target.value
+        this.charge.private = event.target.value
       }
     }
   },
