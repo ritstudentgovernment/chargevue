@@ -215,7 +215,6 @@ export default {
   mounted () {
     // Handles the notification menu closing. This event is generated in the App.vue main page
     EventBus.$on('closeNotifications', function (event) {
-      console.log(event.target.classList)
       if (!(event.target.classList.contains('notification') || event.target.classList.contains('notification_button') || event.target.classList.contains('delete'))) {
         document.getElementById('notificationDropdown').classList.remove('show')
       }

@@ -48,41 +48,41 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" :placeholder="[[this.charge.title]]" v-model="this.newTitle">
+                <input class="input" type="text" v-model="this.localCharge.title" @change="updateProp(1, $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Description</label>
               <div class="control">
-                <input class="input" type="text" :placeholder="[[this.charge.description]]" v-model="this.newDescription">
+                <input class="input" type="text" v-model="this.localCharge.description" @change="updateProp(2, $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="PawPrints Petition Link" v-model="this.charge.paw_link">
+                  <input class="input" type="text" v-model="this.localCharge.paw_link" @change="updateProp(3, $event)">
                 </div>
             </div>
 
             <div class="field">
               <label class="label">Committee</label>
               <div class="control">
-                <input class="input" type="text" :placeholder="[[this.charge.committee]]" v-model="this.newCommittee">
+                <input class="input" type="text" v-model="this.localCharge.committee" @change="updateProp(4, $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="container label"> Make this charge public?  
-                <input type="checkbox" class="is-primary" autocomplete="off" v-model="this.newPrivate">
+                <input type="checkbox" class="is-primary" autocomplete="off" v-model="this.localCharge.private" @change="updateProp(5, $event)">
                 <span class="checkmark is-primary"></span>
               </label>
             </div>
 
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="editCharge()" v-bind:class="{ 'is-loading' : createDisabled }">Confirm Edit</button>
+            <button class="button is-primary" v-on:click="editCharge()">Confirm Edit</button>
             <button class="button" v-on:click="closeEditModal()">Cancel</button>
           </footer>
         </div>
@@ -102,7 +102,9 @@ export default {
       newTitle: null,
       newDescription: null,
       newCommittee: null,
+      newPawlink: null,
       newPrivate: null,
+      localCharge: null,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
@@ -117,18 +119,18 @@ export default {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
         charge: this.charge.id, // The user cannot edit this field
-        title: this.newTitle,
-        description: this.newDescription,
-        committee: this.newCommittee,
+        title: this.localCharge.title,
+        description: this.localCharge.description,
+        committee: this.localCharge.committee,
         // TODO status and priority, dead code?
-        private: this.newPrivate
+        private: this.localCharge.private
       })
     },
     closeCharge () {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
         charge: this.charge.id,
-        status: 5
+        status: 5 // This status saves the charge as closed
       })
     },
     closeConfirmModal () {
@@ -144,14 +146,35 @@ export default {
       this.showConfirmModal = true
     },
     openEditModal () {
-      // Copying the data from the old charge
-      this.newTitle = this.charge.title
-      this.newDescription = this.charge.description
-      this.newCommittee = this.charge.committee
-      this.newPrivate = this.charge.private
-
       this.showEditModal = true
+    },
+    // Stores the incoming prop locally
+    onProp (charge) {
+      this.localCharge = charge
+      console.log('HERE')
+      console.log(charge)
+      console.log(this.localCharge)
+    },
+    // Dynamically updates the new prop as the user types
+    updateProp (field, event) {
+      if (field === 1) {
+        this.localCharge.title = event.target.value
+      } else if (field === 2) {
+        this.localCharge.description = event.target.value
+      } else if (field === 3) {
+        this.localCharge.paw_link = event.target.value
+      } else if (field === 4) {
+        this.localCharge.committee = event.target.value
+      } else {
+        console.log(event)
+        // TODO this doesnt work yet
+        this.localCharge.private = event.target.value
+      }
     }
+  },
+  mounted () {
+    this.onProp(this.charge)
+    this.$watch('charge', this.onProp)
   },
   sockets: {
     edit_charge: function (data) {
