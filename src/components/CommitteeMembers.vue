@@ -10,12 +10,18 @@
     <div class="title">Committee Members</div>
     <div class="divider"></div>
     <div class="content">
-      <div class="membersbox" v-for="member in members" :key="member.id">
-        <span v-if="member.role === 'CommitteeHead'" class="members-label">HEAD</span>
-        <span class="members-container">{{ member.id }}</span>
+      <div class="head" :key="committee.head">
+          <span class="head-label">HEAD</span>
+          <span class="head-container">{{ committee.head }}</span>
+      </div>
+      <div class="member" v-for="member in members" :key="member.id">
+        <span>{{ member.id }}</span>
+
       </div>
     </div>
   </div>
+
+  
 </template>
 
 <script>
