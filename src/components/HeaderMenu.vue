@@ -145,7 +145,6 @@ export default {
         localStorage.setItem('openModal', true)
       }
       this.$router.push(notification.redirectString)
-      this.$router.go()
     },
     submitLogin () {
       this.showAuthError = false
