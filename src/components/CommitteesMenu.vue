@@ -8,7 +8,7 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <div id="committee_bar" class="committees-menu">
+  <div id="committee_bar" class="committees-menu" style="overflow-x: scroll;">
     <ul class="menu">
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
