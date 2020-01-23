@@ -170,7 +170,6 @@ export default {
         this.createChargeResponse.message = data.success
         setTimeout(() => { this.closeAddNewCharge() }, 2000)
       } else if (data.error) {
-        console.log(data.error)
         this.createChargeResponse.show = true
         this.createChargeResponse.success = false
         this.createChargeResponse.message = data.error
