@@ -8,7 +8,7 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <div id="committee_bar" class="committees-menu" style="overflow-x: scroll;">
+  <div id="committee_bar" class="committees-menu">
     <ul class="menu">
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
@@ -61,6 +61,7 @@ export default {
     font-weight: 300;
     text-transform: uppercase;
     padding: 5px 0;
+    overflow-x: scroll;
   }
 
   #committee_bar ul {
