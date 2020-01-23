@@ -45,37 +45,41 @@ author: Gabe Landau <gll1872@rit.edu>
           </header>
           <section class="modal-card-body">
 
+            <article class="message" v-if="editChargeResponse.show" v-bind:class="editChargeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ editChargeResponse.message }}</div>
+            </article>
+            
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateProp(1, $event)">
+                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateProp('title', $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Description</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateProp(2, $event)">
+                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateProp('description', $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
-                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp(3, $event)">
+                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('pawlink', $event)">
                 </div>
             </div>
 
             <div class="field">
               <label class="label">Committee</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp(4, $event)">
+                <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp('committee', $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="container label"> Make this charge public?  
-                <input type="checkbox" class="is-primary" autocomplete="off" :value="[[this.charge.private]]" @change="updateProp(5, $event)">
+                <input type="checkbox" class="is-primary" autocomplete="off" :checked="[[this.charge.private]]" @change="updateProp('private', $event)">
                 <span class="checkmark is-primary"></span>
               </label>
             </div>
@@ -104,7 +108,6 @@ export default {
       newCommittee: null,
       newPawlink: null,
       newPrivate: null,
-      localCharge: null,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
@@ -151,24 +154,19 @@ export default {
     // Stores the incoming prop locally
     onProp (charge) {
       this.localCharge = charge
-      console.log('HERE')
-      console.log(charge)
-      console.log(this.localCharge)
     },
     // Dynamically updates the new prop as the user types
     updateProp (field, event) {
-      if (field === 1) {
+      if (field === 'title') {
         this.charge.title = event.target.value
-      } else if (field === 2) {
+      } else if (field === 'description') {
         this.charge.description = event.target.value
-      } else if (field === 3) {
+      } else if (field === 'pawlink') {
         this.charge.paw_link = event.target.value
-      } else if (field === 4) {
+      } else if (field === 'committee') {
         this.charge.committee = event.target.value
       } else {
-        console.log(event)
-        // TODO this doesnt work yet
-        this.charge.private = event.target.value
+        this.charge.private = !(event.target.checked) // TODO this will be changed once this is made a radio selector
       }
     }
   },
