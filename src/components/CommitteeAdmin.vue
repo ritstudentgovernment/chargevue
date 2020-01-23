@@ -44,8 +44,9 @@ author: Gabe Landau <gll1872@rit.edu>
               <input class="input" type="text" placeholder="Description" v-model="createChargeDescription">
             </div>
           </div>
+          
+          <label class="label">Status</label>
           <div class="select">
-            <label class="label">Status</label>
             <select v-model="createChargeStatus">
               <option selected disabled>Select an Option</option>
                 <option value="0">Unapproved</option>
