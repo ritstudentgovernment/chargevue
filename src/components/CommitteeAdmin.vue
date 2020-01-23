@@ -151,7 +151,7 @@ export default {
         priority: parseInt(this.createChargePriority),
         description: this.createChargeDescription,
         paw_links: this.createChargePawLink,
-        private: !(this.isPrivate) // The logic of the checkbox is backwards intentionally
+        private: this.isPrivate
       })
     },
     openAddCommitteeMember () {
