@@ -19,7 +19,7 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
 
     <div class="modal" v-bind:class="{ 'is-active': showConfirmModal }">
-        <div class="modal-background" v-on:click="closeConfirmModal()"></div>
+        <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Close Charge</p>
@@ -32,13 +32,13 @@ author: Gabe Landau <gll1872@rit.edu>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="closeCharge()">Close Charge</button>
-            <button class="button" v-on:click="closeConfirmModal()">Cancel</button>
+            <button class="button" v-on:click="closeModals()">Cancel</button>
           </footer>
         </div>
     </div>
 
     <div class="modal" v-bind:class="{ 'is-active': showEditModal }">
-        <div class="modal-background" v-on:click="closeEditModal()"></div>
+        <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Edit Charge</p>
@@ -48,7 +48,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <article class="message" v-if="editChargeResponse.show" v-bind:class="editChargeResponse.success ? 'is-success' : 'is-danger'">
               <div class="message-body">{{ editChargeResponse.message }}</div>
             </article>
-            
+
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
@@ -87,7 +87,7 @@ author: Gabe Landau <gll1872@rit.edu>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="editCharge()">Confirm Edit</button>
-            <button class="button" v-on:click="closeEditModal()">Cancel</button>
+            <button class="button" v-on:click="closeModals()">Cancel</button>
           </footer>
         </div>
       </div>
@@ -132,18 +132,17 @@ export default {
     closeCharge () {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
+        title: this.charge.title,
         charge: this.charge.id,
         status: 5 // This status saves the charge as closed
       })
     },
-    closeConfirmModal () {
+    closeModals () {
       this.showConfirmModal = false
+      this.showEditModal = false
       this.editChargeResponse.show = false
       this.editChargeResponse.message = null
       this.editChargeResponse.success = null
-    },
-    closeEditModal () {
-      this.showEditModal = false
     },
     openConfirmModal () {
       this.showConfirmModal = true
@@ -185,6 +184,7 @@ export default {
           that.$router.push({path: '/committee/' + that.charge.committee})
         }, 2000)
       } else if (data.error) {
+        console.log(data.error)
         this.editChargeResponse.show = true
         this.editChargeResponse.success = false
         this.editChargeResponse.message = data.error
