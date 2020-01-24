@@ -103,11 +103,7 @@ export default {
   props: ['charge'],
   data () {
     return {
-      newTitle: null,
-      newDescription: null,
-      newCommittee: null,
-      newPawlink: null,
-      newPrivate: null,
+      localCharge: null,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
@@ -156,17 +152,7 @@ export default {
     },
     // Dynamically updates the new prop as the user types
     updateProp (field, event) {
-      if (field === 'title') {
-        this.charge.title = event.target.value
-      } else if (field === 'description') {
-        this.charge.description = event.target.value
-      } else if (field === 'pawlink') {
-        this.charge.paw_link = event.target.value
-      } else if (field === 'committee') {
-        this.charge.committee = event.target.value
-      } else {
-        this.charge.private = !(event.target.checked) // TODO this will be changed once this is made a radio selector
-      }
+      this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: event.target.value}))
     }
   },
   mounted () {
@@ -184,7 +170,6 @@ export default {
           that.$router.push({path: '/committee/' + that.charge.committee})
         }, 2000)
       } else if (data.error) {
-        console.log(data.error)
         this.editChargeResponse.show = true
         this.editChargeResponse.success = false
         this.editChargeResponse.message = data.error
