@@ -107,17 +107,26 @@ export default {
     }
   },
   beforeMount () {
-    this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
-    this.checkAuth().then((token) => {
-      this.$socket.emit('get_charges', {
-        token: token,
-        committee_id: this.$router.history.current.params['committee']
+    this.updatePage()
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.updatePage()
+    next()
+  },
+  methods: {
+    updatePage () {
+      this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+      this.checkAuth().then((token) => {
+        this.$socket.emit('get_charges', {
+          token: token,
+          committee_id: this.$router.history.current.params['committee']
+        })
+        this.$socket.emit('get_minutes', {
+          token: token,
+          committee_id: this.$router.history.current.params['committee']
+        })
       })
-      this.$socket.emit('get_minutes', {
-        token: token,
-        committee_id: this.$router.history.current.params['committee']
-      })
-    })
+    }
   },
   computed: {
     inProgressCount () {
@@ -139,15 +148,6 @@ export default {
       username: 'username',
       admin: 'admin'
     })
-  },
-  /* Since this component is used for each committee page, we have to
-    watch for changes in the URL and update the props on the page
-    when the route changes */
-  watch: {
-    '$route.params.committee': function (committee) {
-      this.$socket.emit('get_committee', committee)
-      this.$socket.emit('get_charges', committee)
-    }
   }
 }
 </script>

@@ -41,10 +41,27 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="field">
             <label class="label">Description</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Description" v-model="createChargeDescription">
+              <input class="input" type="text" placeholder="Description" v-model="createChargeDescription" maxlength="255">
             </div>
           </div>
 
+          <div class = "field">
+            <label class="label">Status</label>
+            <div class="select">
+              <select v-model="createChargeStatus">
+                <option selected disabled>Select an Option</option>
+                  <option value="0">Unapproved</option>
+                  <option value="1">Failed</option>
+                  <option value="2">InProgress</option>
+                  <option value="3">Indefinite</option>
+                  <option value="4">Unknown</option>
+                  <option value="5">Completed</option>
+                  <option value="6">NotStarted</option>
+                  <option value="7">Stopped</option>
+              </select>
+            </div>
+          </div>
+          
           <div class="field">
             <label class="label">PawPrints Link</label>
             <div class="control">
@@ -52,24 +69,18 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
           </div>
 
-          <!-- <label class="label">Priority</label>
-            <div class="field">
-              <div class="control">
-                <div class="select">
-                  <select v-model="createChargePriority">
-                    <option value="0">Low</option>
-                    <option value="1">Medium</option>
-                    <option value="2">High</option>
-                  </select>
-                </div>
-              </div>
-            </div> -->
+          <div class="field" style="display: inline-flex;">
+            <label class="container label">Public  
+              <input type="radio" class="is-primary" v-model="isPrivate" :value="false">
+              <span class="radio is-primary"></span>
+            </label>
 
-          <label class="container label"> Make this charge public?  
-            <input type="checkbox" class="is-primary" autocomplete="off" v-model="isPrivate">
-            <span class="checkmark is-primary"></span>
-          </label>
-
+            <label class="container label" style="margin-left: 25px;">Private  
+              <input type="radio" class="is-primary" v-model="isPrivate" :value="true">
+              <span class="radio is-primary"></span>
+            </label>
+          </div>
+          
         </section>
         <footer class="modal-card-foot">
           <button class="button is-primary" @click="createNewCharge()">Create</button>
@@ -102,11 +113,12 @@ export default {
       members: null,
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
+      createChargeStatus: 1, // TODO remember input validation
       createChargeTitle: null,
       createChargePriority: 1,
       createChargeDescription: null,
       createChargePawLink: null,
-      isPrivate: null,
+      isPrivate: true,
       createChargeResponse: {
         show: false,
         message: null,
@@ -123,22 +135,23 @@ export default {
     closeAddNewCharge () {
       this.createChargeTitle = null
       this.createChargeDescription = null
-      this.createChargePriority = null
+      this.createChargePriority = 1
       this.showAddNewCharge = false
       this.createChargeResponse.show = false
       this.createChargeResponse.message = null
       this.createChargeResponse.success = null
-      this.isPrivate = null
+      this.isPrivate = true
     },
     createNewCharge () {
       this.$socket.emit('create_charge', {
         token: this.getToken(),
         title: this.createChargeTitle,
         committee: this.committee.id,
+        status: parseInt(this.createChargeStatus),
         priority: parseInt(this.createChargePriority),
         description: this.createChargeDescription,
         paw_links: this.createChargePawLink,
-        private: !(this.isPrivate) // The logic of the checkbox is backwards intentionally
+        private: this.isPrivate
       })
     },
     openAddCommitteeMember () {

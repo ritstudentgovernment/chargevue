@@ -42,7 +42,6 @@ export default {
   methods: {
     redirect (itemId) {
       this.$router.push('/committee/' + itemId)
-      this.$router.go()
     }
   }
 }

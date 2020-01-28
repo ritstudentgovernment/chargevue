@@ -91,7 +91,6 @@ export default {
   methods: {
     redirect () {
       this.$router.push('/committee/' + this.charge.committee)
-      this.$router.go()
     }
   }
 }

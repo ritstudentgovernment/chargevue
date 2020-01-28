@@ -25,7 +25,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <article class="message" v-if="editChargeResponse.show" v-bind:class="editChargeResponse.success ? 'is-success' : 'is-danger'">
               <div class="message-body">{{ editChargeResponse.message }}</div>
             </article>
-            <p>Are you sure you want to close this committee?</p>
+            <p>Are you sure you want to close this charge?</p>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="closeCharge()">Close Charge</button>

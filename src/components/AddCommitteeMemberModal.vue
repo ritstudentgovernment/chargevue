@@ -89,9 +89,11 @@
       },
       addMemberToCommittee () {
         // switch to id if username
+        var matches = this.addMemberMember ? this.addMemberMember.match(/\(([^)]+)\)/) : null
+        var userId = matches ? matches[1] : null
         this.$socket.emit('add_member_committee', {
           token: this.getToken(),
-          user_id: this.addMemberMember.match(/\(([^)]+)\)/)[1],
+          user_id: userId,
           committee_id: this.addMemberCommittee,
           role: this.addMemberRole
         })
