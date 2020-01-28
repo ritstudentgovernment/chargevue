@@ -150,7 +150,7 @@ export default {
     onProp (charge) {
       this.localCharge = charge
     },
-    // Dynamically updates the new prop as the user types
+    // Dynamically emits updates to the parent component, updating the prop as the user types
     updateProp (field, event) {
       this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: event.target.value}))
     }
