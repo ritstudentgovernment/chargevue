@@ -49,7 +49,11 @@ export default {
     return {
       charge: {
         title: '',
-        committee: ''
+        committee: '',
+        description: '',
+        paw_links: '',
+        status: 0,
+        private: false
       },
       actions: []
     }
