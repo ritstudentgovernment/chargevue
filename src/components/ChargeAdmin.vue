@@ -103,7 +103,6 @@ export default {
   props: ['charge'],
   data () {
     return {
-      localCharge: null,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
@@ -146,17 +145,12 @@ export default {
     openEditModal () {
       this.showEditModal = true
     },
-    // Stores the incoming prop locally
-    onProp (charge) {
-      this.localCharge = charge
-    },
     // Dynamically emits updates to the parent component, updating the prop as the user types
     updateProp (field, event) {
       this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: event.target.value}))
     }
   },
   mounted () {
-    this.onProp(this.charge)
     this.$watch('charge', this.onProp)
   },
   sockets: {
