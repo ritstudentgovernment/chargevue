@@ -122,7 +122,10 @@ export default {
         this.saveMinuteResponse.success = true
         this.saveMinuteResponse.message = data.success
       }
-      setTimeout(this.removeSaveMinuteResponse, 3000)
+      setTimeout(() => {
+        this.removeSaveMinuteResponse()
+        if (data.success) this.$router.push(`/committee/${this.minute.committee_id}`)
+      }, 3000)
     },
     edit_minute: function (data) {
       if (data.error) {
