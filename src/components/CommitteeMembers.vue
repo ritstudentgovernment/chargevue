@@ -10,7 +10,7 @@
     <div class="title">Committee Members</div>
     <div class="divider"></div>
     <div class="content">
-      <div class="head" :key="committee.head">
+      <div class="head">
           <span class="head-label">HEAD</span>
           <span class="head-container">{{ committee.head }}</span>
       </div>
