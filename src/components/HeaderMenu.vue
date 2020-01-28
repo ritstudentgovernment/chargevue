@@ -32,7 +32,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <span>
               <div>
 
-                <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
+                <a class="notification" v-bind:key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
                 <ul class="notificationButtons">
                   <li class="delete"><button class="delete" @click="deleteNotifiction(notification)">Delete</button></li>
                   <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
