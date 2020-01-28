@@ -54,13 +54,20 @@ export default {
   },
   data () {
     return {
-      minute: Object,
+      minute: {
+        id: null,
+        charges: [],
+        committee_id: '',
+        title: '',
+        body: '',
+        private: true
+      },
       mode: {
         VIEW: 'view',
         EDIT: 'edit',
         NEW: 'new'
       },
-      currentMode: String,
+      currentMode: '',
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null,
