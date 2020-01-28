@@ -181,10 +181,8 @@ export default {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = true
         this.createChargeResponse.message = data.success
-        setTimeout(() => {
-          this.closeAddNewCharge()
-          this.$emit('chargeCreated')
-        }, 2000)
+        setTimeout(() => { this.closeAddNewCharge() }, 2000)
+        this.$emit('chargeCreated')
       } else if (data.error) {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = false
