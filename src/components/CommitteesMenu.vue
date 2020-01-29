@@ -60,6 +60,7 @@ export default {
     font-weight: 300;
     text-transform: uppercase;
     padding: 5px 0;
+    overflow-x: scroll;
   }
 
   #committee_bar ul {
