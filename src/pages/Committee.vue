@@ -17,7 +17,7 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
 
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
-    <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee"/>
+    <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee" @chargeCreated="updatePage"/>
     <CommitteeMembers />
     <div class="tabs is-boxed is-centered">
       <ul>
