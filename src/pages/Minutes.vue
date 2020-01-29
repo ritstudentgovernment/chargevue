@@ -54,13 +54,20 @@ export default {
   },
   data () {
     return {
-      minute: Object,
+      minute: {
+        id: null,
+        charges: [],
+        committee_id: '',
+        title: '',
+        body: '',
+        private: true
+      },
       mode: {
         VIEW: 'view',
         EDIT: 'edit',
         NEW: 'new'
       },
-      currentMode: String,
+      currentMode: '',
       backgroundImage: null,
       showLoadingIndicator: true,
       quill: null,
@@ -115,7 +122,10 @@ export default {
         this.saveMinuteResponse.success = true
         this.saveMinuteResponse.message = data.success
       }
-      setTimeout(this.removeSaveMinuteResponse, 3000)
+      setTimeout(() => {
+        this.removeSaveMinuteResponse()
+        if (data.success) this.$router.push(`/committee/${this.minute.committee_id}`)
+      }, 3000)
     },
     edit_minute: function (data) {
       if (data.error) {
