@@ -17,7 +17,7 @@ author: Gabe Landau <gll1872@rit.edu>
         <button class="redirect_button" @click="redirect()">{{ this.charge.committee }}</button>
       </div>
     </div>
-    <ChargeAdmin v-bind:charge="this.charge"/>
+    <ChargeAdmin @updateCharge ="updateCharge" v-bind:charge="this.charge"/>
     <ChargeStatusBar v-bind:actions="this.actions"/>
     <Purpose v-bind:chargeDesc="this.charge.description" v-bind:createdAt="this.charge.created_at" />
     <Tasks v-if="this.charge.committee != ''" v-bind:tasks="actions" v-bind:committee="this.charge.committee" />
@@ -91,6 +91,9 @@ export default {
   methods: {
     redirect () {
       this.$router.push('/committee/' + this.charge.committee)
+    },
+    updateCharge (updatedCharge) {
+      this.charge = updatedCharge
     }
   }
 }
