@@ -129,6 +129,7 @@ export default {
         })
       })
       this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
+      this.badgeController()
     },
     goToDestination (notification) {
       if (notification.viewed === false) {
