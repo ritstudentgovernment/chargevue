@@ -14,6 +14,8 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.title }}</h1>
+      <h5>{{committee.meeting_time}} hours</h5>
+      <h5>{{committee.location}}</h5>
     </div>
 
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
@@ -171,16 +173,32 @@ export default {
     background-size: cover;
   }
 
-  .pagename h1 {
+  .pagename h1{
     margin: 0;
     text-align: center;
     text-transform: uppercase;
-    padding: 75px 0;
+    padding-top: 75px;
     color: #fff;
     animation: fadein 0.5s;
     -webkit-animation: fadein 0.5s;
     -moz-animation: fadein 0.5s;
     -ms-animation: fadein 0.5s;
+  }
+
+  .pagename h5 {
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    padding-top: 25px;
+    color: #fff;
+    animation: fadein 0.5s;
+    -webkit-animation: fadein 0.5s;
+    -moz-animation: fadein 0.5s;
+    -ms-animation: fadein 0.5s;
+  }
+
+  .pagename h5:nth-of-type(2){
+    padding-bottom: 75px;
   }
 
   .controlPanel {
