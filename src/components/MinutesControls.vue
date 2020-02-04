@@ -7,7 +7,7 @@
         <div v-if="currentMode !== mode.VIEW" class="control">
           <div class="select">
             <select v-model="selected_charge">
-              <option v-for="x in charges" :key="x.id" v-bind:value="x">{{x.title}}</option>
+              <option v-for="x in charges.filter(x => x.status !== 5)" :key="x.id" v-bind:value="x">{{x.title}}</option>
             </select>
           </div>
           <button class='button is-primary' v-on:click="addCharge()">Add Charge</button>
