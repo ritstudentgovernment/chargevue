@@ -173,7 +173,7 @@ export default {
     background-size: cover;
   }
 
-  .pagename h1{
+  .pagename h1, .pagename h5 {
     margin: 0;
     text-align: center;
     text-transform: uppercase;
@@ -186,15 +186,7 @@ export default {
   }
 
   .pagename h5 {
-    margin: 0;
-    text-align: center;
-    text-transform: uppercase;
     padding-top: 25px;
-    color: #fff;
-    animation: fadein 0.5s;
-    -webkit-animation: fadein 0.5s;
-    -moz-animation: fadein 0.5s;
-    -ms-animation: fadein 0.5s;
   }
 
   .pagename h5:nth-of-type(2){
