@@ -22,7 +22,7 @@
       </div>
       <div style="padding: 10px;" v-if="currentMode == mode.VIEW" v-html="minute.body"></div>
       <div v-else>
-        <QuillEditor v-model="minute.body" />
+        <text-editor :text="minute.body" @input="updateMinuteText"/>
         <div class="action-menu">
           <div class="field">
             <input class="is-checkradio" id="isPrivate" type="checkbox" v-model="minute.private">
@@ -40,7 +40,7 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
-import QuillEditor from '../components/QuillEditor'
+import TextEditor from '../components/TextEditor'
 import Auth from '../mixins/auth'
 
 export default {
@@ -50,7 +50,7 @@ export default {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
     'MinutesControls': MinutesControls,
-    'QuillEditor': QuillEditor
+    'TextEditor': TextEditor
   },
   data () {
     return {
@@ -109,6 +109,9 @@ export default {
     },
     removeSaveMinuteResponse () {
       this.saveMinuteResponse.show = false
+    },
+    updateMinuteText (updatedText) {
+      this.minute.body = updatedText
     }
   },
   sockets: {
