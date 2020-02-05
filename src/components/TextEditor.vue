@@ -1,9 +1,11 @@
 <!--
 
-filename: QuillEditor.vue
-description: Component for Quill text editor.
+filename: TextEditor.vue
+description: A rich-text editor component that uses CKEditor 5.
+Takes a 'text' prop that initially populates the editor, and 
+emits an 'input' event whenever a user changes data in the editor.
 
-author: Omar De La Hoz <oed7416@rit.edu>
+author: Monty Watts <mjw4633@rit.edu>
 
 -->
 <template>
@@ -14,6 +16,7 @@ author: Omar De La Hoz <oed7416@rit.edu>
       @ready="prefillEditor"
     ></ckeditor>
 </template>
+
 <script>
   import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
   import CKEditor from '@ckeditor/ckeditor5-vue'

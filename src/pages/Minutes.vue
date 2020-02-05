@@ -1,6 +1,5 @@
 <template>
   <div class='dashboard'>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
@@ -70,7 +69,6 @@ export default {
       currentMode: '',
       backgroundImage: null,
       showLoadingIndicator: true,
-      quill: null,
       saveMinuteResponse: {
         show: false,
         message: null,
