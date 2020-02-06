@@ -14,7 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.title }}</h1>
-      <h5>{{committee.meeting_time}} hours</h5>
+      <h5>{{this.convertTimeDay(committee.meeting_day, committee.meeting_time).day}} {{this.convertTimeDay(committee.meeting_day, committee.meeting_time).hour}}:{{this.convertTimeDay(committee.meeting_day, committee.meeting_time).minute}} {{this.convertTimeDay(committee.meeting_day, committee.meeting_time).ampm}}</h5>
       <h5>{{committee.location}}</h5>
     </div>
 
@@ -128,6 +128,48 @@ export default {
           committee_id: this.$router.history.current.params['committee']
         })
       })
+    },
+    convertTimeDay (oldDay, oldTime) {
+      let day = ''
+      switch (oldDay) {
+        case 0:
+          day = 'Sunday'
+          break
+        case 1:
+          day = 'Monday'
+          break
+        case 2:
+          day = 'Tuesday'
+          break
+        case 3:
+          day = 'Wednesday'
+          break
+        case 4:
+          day = 'Thursday'
+          break
+        case 5:
+          day = 'Friday'
+          break
+        case 6:
+          day = 'Saturday'
+          break
+        default:
+          day = 'Sunday'
+      }
+
+      let ampm = ''
+      let hour = parseInt(oldTime.substr(0, 2))
+      if (hour > 12) {
+        hour = hour - 12 + ''
+        ampm = 'PM'
+      } else {
+        hour = hour + ''
+        ampm = 'AM'
+      }
+
+      let minute = oldTime.substring(2, 5)
+
+      return {ampm, day, hour, minute}
     }
   },
   computed: {
