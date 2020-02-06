@@ -14,7 +14,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.title }}</h1>
-      <h5>{{this.convertTimeDay(committee.meeting_day, committee.meeting_time).day}} {{this.convertTimeDay(committee.meeting_day, committee.meeting_time).hour}}:{{this.convertTimeDay(committee.meeting_day, committee.meeting_time).minute}} {{this.convertTimeDay(committee.meeting_day, committee.meeting_time).ampm}}</h5>
+      <h5>{{getDay}} {{getHour}}:{{getMinutes}} {{getAMPM}}</h5>
       <h5>{{committee.location}}</h5>
     </div>
 
@@ -191,7 +191,19 @@ export default {
     ...mapGetters({
       username: 'username',
       admin: 'admin'
-    })
+    }),
+    getDay () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).day
+    },
+    getHour () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).hour
+    },
+    getMinutes () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).minute
+    },
+    getAMPM () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).ampm
+    }
   }
 }
 </script>
