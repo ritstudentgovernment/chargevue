@@ -148,6 +148,10 @@ export default {
       username: 'username',
       admin: 'admin'
     })
+  },
+  mounted () {
+    this.$store.commit('charges', { charges: this.charges })
+    this.$store.commit('minutes', { minutes: this.minutes })
   }
 }
 </script>
