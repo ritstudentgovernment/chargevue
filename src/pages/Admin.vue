@@ -308,7 +308,6 @@ export default {
         this.createDisabled = false
       }).catch((error) => {
         this.createDisabled = false
-        console.log(error)
       })
     },
     editFileSelected (file) {
@@ -320,7 +319,6 @@ export default {
         this.editDisabled = false
       }).catch((error) => {
         this.editDisabled = false
-        console.log(error)
       })
     },
     createNewCommittee () {
