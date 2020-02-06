@@ -307,6 +307,7 @@ export default {
         this.createImage = image
         this.createDisabled = false
       }).catch((error) => {
+        console.log(error)
         this.createDisabled = false
       })
     },
@@ -318,6 +319,7 @@ export default {
         this.editImage = image
         this.editDisabled = false
       }).catch((error) => {
+        console.log(error)
         this.editDisabled = false
       })
     },
