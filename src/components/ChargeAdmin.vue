@@ -77,10 +77,15 @@ author: Gabe Landau <gll1872@rit.edu>
               </div>
             </div>
 
-            <div class="field">
-              <label class="container label"> Make this charge public?  
-                <input type="checkbox" class="is-primary" autocomplete="off" :checked="[[this.charge.private]]" @change="updateProp('private', $event)">
-                <span class="checkmark is-primary"></span>
+            <div class="field" style="display: inline-flex;">
+              <label class="container label">Public  
+                <input type="radio" class="is-primary" v-model="isPrivate" :value="false" @change="updateProp('private', $event)">
+                <span class="radio is-primary"></span>
+              </label>
+
+              <label class="container label" style="margin-left: 25px;">Private  
+                <input type="radio" class="is-primary" v-model="isPrivate" :value="true" @change="updateProp('private', $event)">
+                <span class="radio is-primary"></span>
               </label>
             </div>
 
@@ -103,6 +108,7 @@ export default {
   props: ['charge'],
   data () {
     return {
+      isPrivate: true,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {

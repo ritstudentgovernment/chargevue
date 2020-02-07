@@ -177,6 +177,7 @@ export default {
   },
   sockets: {
     get_notifications: function (data) {
+      console.log(data)
       this.notifications = data
       this.badgeController()
     }

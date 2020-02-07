@@ -93,7 +93,9 @@ export default {
       this.$router.push('/committee/' + this.charge.committee)
     },
     updateCharge (updatedCharge) {
+      console.log(updatedCharge.private)
       this.charge = updatedCharge
+      console.log(this.charge)
     }
   }
 }
