@@ -150,9 +150,6 @@ export default {
       this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: event.target.value}))
     }
   },
-  mounted () {
-    this.$watch('charge', this.onProp)
-  },
   sockets: {
     edit_charge: function (data) {
       if (data.success) {
