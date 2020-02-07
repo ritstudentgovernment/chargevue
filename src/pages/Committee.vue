@@ -14,6 +14,8 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.title }}</h1>
+      <h5>{{getDay}} {{getHour}}:{{getMinutes}} {{getAMPM}}</h5>
+      <h5>{{committee.location}}</h5>
     </div>
 
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
@@ -126,6 +128,48 @@ export default {
           committee_id: this.$router.history.current.params['committee']
         })
       })
+    },
+    convertTimeDay (oldDay, oldTime) {
+      let day = ''
+      switch (oldDay) {
+        case 0:
+          day = 'Sunday'
+          break
+        case 1:
+          day = 'Monday'
+          break
+        case 2:
+          day = 'Tuesday'
+          break
+        case 3:
+          day = 'Wednesday'
+          break
+        case 4:
+          day = 'Thursday'
+          break
+        case 5:
+          day = 'Friday'
+          break
+        case 6:
+          day = 'Saturday'
+          break
+        default:
+          day = 'Sunday'
+      }
+
+      let ampm = ''
+      let hour = parseInt(oldTime.substr(0, 2))
+      if (hour > 12) {
+        hour = hour - 12 + ''
+        ampm = 'PM'
+      } else {
+        hour = hour + ''
+        ampm = 'AM'
+      }
+
+      let minute = oldTime.substring(2, 5)
+
+      return {ampm, day, hour, minute}
     }
   },
   computed: {
@@ -147,7 +191,19 @@ export default {
     ...mapGetters({
       username: 'username',
       admin: 'admin'
-    })
+    }),
+    getDay () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).day
+    },
+    getHour () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).hour
+    },
+    getMinutes () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).minute
+    },
+    getAMPM () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).ampm
+    }
   }
 }
 </script>
@@ -171,16 +227,24 @@ export default {
     background-size: cover;
   }
 
-  .pagename h1 {
+  .pagename h1, .pagename h5 {
     margin: 0;
     text-align: center;
     text-transform: uppercase;
-    padding: 75px 0;
+    padding-top: 75px;
     color: #fff;
     animation: fadein 0.5s;
     -webkit-animation: fadein 0.5s;
     -moz-animation: fadein 0.5s;
     -ms-animation: fadein 0.5s;
+  }
+
+  .pagename h5 {
+    padding-top: 25px;
+  }
+
+  .pagename h5:nth-of-type(2){
+    padding-bottom: 75px;
   }
 
   .controlPanel {
