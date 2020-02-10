@@ -11,13 +11,14 @@
     <div class="divider"></div>
 
     <div class="member-labels">
-      
-      <div class="head">
-        <span class="head-label">HEAD</span>
-        <span class="head-container">{{ committeeHead}}</span>
-     </div>
 
-      <div class="member">
+      <div class="members">
+
+        <div class="head">
+          <span class="head-label">HEAD</span>
+          <span class="head-container">{{ committeeHead}}</span>
+        </div>
+
         <div v-for="member in members" :key="member.id">
           <span v-if="member.id != committeeHead" class="member-container">{{ member.id }}</span>
         </div>
@@ -47,7 +48,6 @@ export default {
     },
     get_members: function (data) {
       this.members = data.members
-      console.log(this.members)
     }
   },
   beforeMount () {
@@ -87,18 +87,20 @@ export default {
     background-color: #f36e21;
     display: inline-block;
     padding: 10px 45px 10px 45px;
-    margin: 10px 0 10px 0;
+    margin: 10px 0px 10px 10px;
     text-align: center;
   }
 
-  .member {
+  .members {
     color: #fff;
     font-size: 14pt;
     font-weight: 300;
-    display: inline-block;
+    display: flex;  
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
-  .member-lables {
+  .member-labels {
     padding: 10px;
     display: flex;
     flex-direction: row;
@@ -109,7 +111,6 @@ export default {
     font-size: 14pt;
     font-weight: 300;
     display: inline-block;
-    width: 24%;
   }
   .head-container {
     background-color: #f36e21;
