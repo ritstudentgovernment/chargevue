@@ -4,7 +4,6 @@ var utils = require('./utils')
 var webpack = require('webpack')
 var merge = require('webpack-merge')
 var baseConfig = require('./webpack.base.conf')
-var TerserPlugin = require('terser-webpack-plugin')
 
 var webpackConfig = merge(baseConfig, {
   mode: 'development',
@@ -23,15 +22,7 @@ var webpackConfig = merge(baseConfig, {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': require('../config/test.env')
-    }),
-    new TerserPlugin({
-      terserOptions: {
-        compress: {
-          warnings: false
-        },
-        sourceMap: true
-      }
-    }),
+    })
   ]
 })
 
