@@ -27,15 +27,13 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="dropdown"> 
           <button class="btn notification_button" @click="toggleNotifications()"><i class="fa fa-bell notification_button"></i></button>
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
-
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
               <div>
-
                 <a class="notification" v-bind:key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
                 <ul class="notificationButtons">
-                  <li class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
-                  <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
+                  <li v-if="!noNotifications" class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
+                  <li v-if="!noNotifications" class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
                 </ul>
                 </a>
               </div>
@@ -101,6 +99,7 @@ export default {
   mixins: [Auth],
   data () {
     return {
+      noNotifications: null,
       notificationToDelete: null,
       showDeleteModal: false,
       test: false,
@@ -131,10 +130,15 @@ export default {
           this.badgeNumber++
         }
       }
-      if (this.badgeNumber >= 0) {
+      if (this.badgeNumber > 0) {
+        this.noNotifications = false
         this.showBadge = true
       } else {
+        this.noNotifications = true
         this.showBadge = false
+        this.notifications.push({
+          message: 'No notifications yet...'
+        })
       }
     },
     deleteNotification () {
