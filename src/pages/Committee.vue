@@ -19,8 +19,8 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
 
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
-    <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee" @chargeCreated="updatePage"/>
-    <CommitteeMembers />
+    <CommitteeAdmin v-if="inCommittee || admin" :committee="committee" :is-privileged="committee.head == username || admin" @chargeCreated="updatePage"/>
+    <CommitteeMembers :members="members" :committee-head="committee.head"/>
     <div class="tabs is-boxed is-centered">
       <ul>
         <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Charges</a></li>
@@ -72,6 +72,7 @@ export default {
   data () {
     return {
       committee: {'description': 'committee'},
+      members: [],
       backgroundImage: null,
       showLoadingIndicator: true,
       showProjects: true,
@@ -106,6 +107,9 @@ export default {
     },
     get_minutes: function (data) {
       this.minutes = data
+    },
+    get_members: function (data) {
+      this.members = data.members
     }
   },
   beforeMount () {
@@ -118,6 +122,7 @@ export default {
   methods: {
     updatePage () {
       this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+      this.$socket.emit('get_members', this.$router.history.current.params['committee'])
       this.checkAuth().then((token) => {
         this.$socket.emit('get_charges', {
           token: token,
@@ -173,6 +178,10 @@ export default {
     }
   },
   computed: {
+    inCommittee () {
+      let usernames = this.members.map(member => member.id)
+      return usernames.indexOf(this.username) !== -1
+    },
     inProgressCount () {
       return this.charges.filter(x => x.status === 0).length
     },
