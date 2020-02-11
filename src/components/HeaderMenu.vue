@@ -34,7 +34,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
                 <a class="notification" v-bind:key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
                 <ul class="notificationButtons">
-                  <li class="delete"><button class="delete" @click="deleteNotifiction(notification)">Delete</button></li>
+                  <li class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
                   <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
                 </ul>
                 </a>
@@ -80,6 +80,11 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
       </div>
     </div>
+
+    <div v-if="showDeleteModal">
+      <DeleteNotificationModal v-on:deleteNotification="deleteNotification()" v-on:closeDeleteModal="closeDeleteModal()"/>
+    </div>
+
   </div>
 </template>
 
@@ -88,12 +93,16 @@ var i
 import Auth from '../mixins/auth'
 import EventBus from './EventBus'
 import { mapGetters } from 'vuex'
+import DeleteNotificationModal from '@/components/DeleteNotificationModal.vue'
 
 export default {
   name: 'headermenu',
+  components: { 'DeleteNotificationModal': DeleteNotificationModal },
   mixins: [Auth],
   data () {
     return {
+      notificationToDelete: null,
+      showDeleteModal: false,
       test: false,
       notifications: [],
       menuMessages: [],
@@ -107,6 +116,14 @@ export default {
     }
   },
   methods: {
+    openDeleteModal (notification) {
+      this.showDeleteModal = true
+      this.notificationToDelete = notification
+    },
+    closeDeleteModal () {
+      this.showDeleteModal = false
+      this.notificationToDelete = null
+    },
     badgeController () {
       this.badgeNumber = 0
       for (i = 0; i < this.notifications.length; i++) {
@@ -120,10 +137,11 @@ export default {
         this.showBadge = false
       }
     },
-    deleteNotifiction (notification) {
-      var index = this.notifications.indexOf(notification)
-      this.notificationController('delete_notification', notification)
+    deleteNotification () {
+      var index = this.notifications.indexOf(this.notificationToDelete)
+      this.notificationController('delete_notification', this.notificationToDelete)
       this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
+      this.showDeleteModal = false
       this.badgeController()
     },
     notificationController (controllerType, notification) {
