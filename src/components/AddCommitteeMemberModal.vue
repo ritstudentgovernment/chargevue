@@ -122,4 +122,8 @@
   .select{
     margin-bottom: 10%;
   }
+
+  .control {
+    font-size: 2rem;
+  }
 </style>
