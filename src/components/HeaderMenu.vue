@@ -131,7 +131,7 @@ export default {
           this.badgeNumber++
         }
       }
-      if (this.badgeNumber > 0) {
+      if (this.badgeNumber >= 0) {
         this.showBadge = true
       } else {
         this.showBadge = false
