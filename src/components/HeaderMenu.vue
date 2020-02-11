@@ -122,29 +122,29 @@ export default {
     },
     deleteNotifiction (notification) {
       var index = this.notifications.indexOf(notification)
+      this.notificationController('delete_notification', notification)
+      this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
+      this.badgeController()
+    },
+    notificationController (controllerType, notification) {
       this.checkAuth().then((token) => {
-        this.$socket.emit('delete_notification', {
+        this.$socket.emit(controllerType, {
           token: token,
           notificationId: notification.id
         })
       })
-      this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
     },
     goToDestination (notification) {
       if (notification.viewed === false) {
-        this.checkAuth().then((token) => {
-          this.$socket.emit('update_notification', {
-            token: token,
-            notificationId: notification.id
-          })
-        })
+        this.notificationController('update_notification', notification)
         notification.viewed = true
       }
       this.badgeController()
+      // Local Storage used to open the Action modal on the landing page
       if (notification.type === 'AssignedToAction') {
         localStorage.setItem('openModal', true)
       }
-      this.$router.push(notification.redirectString)
+      this.$router.push(notification.redirect)
     },
     submitLogin () {
       this.showAuthError = false
@@ -166,28 +166,6 @@ export default {
     },
     toggleNotifications () {
       document.getElementById('notificationDropdown').classList.toggle('show')
-    },
-    populateNotificationMenu () {
-      for (i = 0; i < this.notifications.length; i++) {
-        this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
-      }
-    },
-    generateMessageAndRedirectString (notification) {
-      var message
-      if (notification.type === 'MadeCommitteeHead') {
-        message = 'You have been made the head of the committee: ' + notification.destination
-        notification.redirectString = '/committee/' + notification.destination
-      } else if (notification.type === 'AssignedToAction') {
-        message = 'You have been assigned to the task: ' + notification.destination
-        notification.redirectString = '/charge/' + notification.destination
-      } else if (notification.type === 'MentionedInNote') {
-        message = 'You have been mentioned in the note: ' + notification.destination
-        notification.redirectString = '/charge/' + notification.destination
-      } else if (notification.type === 'UserRequest') {
-        message = 'The user ' + notification.destination + ' has a request for you.'
-        notification.redirectString = '/committee/' + notification.destination
-      }
-      return message
     }
   },
   computed: {
@@ -200,7 +178,6 @@ export default {
   sockets: {
     get_notifications: function (data) {
       this.notifications = data
-      this.populateNotificationMenu()
       this.badgeController()
     }
   },
