@@ -4,6 +4,7 @@
 //   https://github.com/webpack/karma-webpack
 
 var webpackConfig = require('../../build/webpack.test.conf')
+process.env.CHROME_BIN = require('puppeteer').executablePath()
 
 module.exports = function (config) {
   config.set({
@@ -13,10 +14,6 @@ module.exports = function (config) {
     // 2. add it to the `browsers` array below.
     browsers: ['ChromeHeadless', 'FirefoxHeadless'],
     customLaunchers: {
-      ChromeHeadless: {
-        base: 'Chrome',
-        flags: ['--disable-gpu', '--headless']
-      },
       FirefoxHeadless: {
         base: 'Firefox',
         flags: ['-headless']
