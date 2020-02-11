@@ -11,19 +11,16 @@
     <div class="divider"></div>
 
     <div class="member-labels">
-
       <div class="members">
-
         <div class="head">
           <span class="head-label">HEAD</span>
-          <span class="head-container">{{ committeeHead}}</span>
+          <span class="head-container">{{ committeeHead }}</span>
         </div>
 
         <div v-for="member in members" :key="member.id">
           <span v-if="member.id != committeeHead" class="member-container">{{ member.id }}</span>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -31,36 +28,18 @@
 <script>
 export default {
   name: 'committee-members',
-  data () {
-    return {
-      members: null,
-      committee: {
-        'description': 'committee',
-        'head': ''
-      },
-      committeeHead: null
-    }
-  },
-  sockets: {
-    get_committee: function (data) {
-      this.committee = data
-      this.committeeHead = this.committee.head
+  props: {
+    members: {
+      type: Array,
+      default: []
     },
-    get_members: function (data) {
-      this.members = data.members
+    committeeHead: {
+      type: String,
+      default: ''
     }
   },
-  beforeMount () {
-    this.$socket.emit('get_members', this.$router.history.current.params['committee'])
-    this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
-  },
-  /* Since this component is used for each committee page, we have to
-  watch for changes in the URL and update the props on the page
-  when the route changes */
-  watch: {
-    '$route.params.committee': function (committee) {
-      this.$socket.emit('get_committee', committee)
-    }
+  data () {
+    return {}
   }
 }
 </script>

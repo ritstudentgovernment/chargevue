@@ -14,9 +14,9 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="title">Committee Controls</div>
       <div class="divider"></div>
       <div class="content">
-        <button class="button is-primary" @click="openAddNewCharge()">Create Charge</button>
-        <button class="button is-primary" @click="openAddCommitteeMember()">Add Member</button>
-        <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm()">Remove Member</button>
+        <button class="button is-primary" v-if="isPrivileged" @click="openAddNewCharge()">Create Charge</button>
+        <button class="button is-primary" v-if="isPrivileged" @click="openAddCommitteeMember()">Add Member</button>
+        <button class="button is-primary" v-if="isPrivileged" @click="openRemoveMemberFromCommitteeForm()">Remove Member</button>
         <button class="button is-primary" @click="showAddMeetingMinutes()">New Minutes</button>
       </div>
     </div>
@@ -89,10 +89,10 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div v-if="showAddMemberToCommitteeForm">
-      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id" v-bind:allMembers="this.allMembers"/>
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" :addMemberCommittee="committee.id" :allMembers="allMembers"/>
     </div>
     <div v-if="showRemoveMemberFromCommitteeForm">
-      <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee" />
+      <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" :members="members" :removeMemberCommittee="removeMemberCommittee" />
     </div>
   </div>
 </template>
@@ -106,7 +106,16 @@ export default {
   name: 'committee-admin',
   components: {AddCommitteeMemberModal: AddCommitteeMember, RemoveCommitteeMemberModal: RemoveCommitteeMember},
   mixins: [Auth],
-  props: ['committee'],
+  props: {
+    committee: {
+      type: Object,
+      required: true
+    },
+    isPrivileged: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       showAddNewCharge: false,
