@@ -10,7 +10,6 @@ function resolve (dir) {
 module.exports = {
   entry: {
     app: [
-      require.resolve('regenerator-runtime/runtime.js'),
       'babel-polyfill',
       './src/main.js'
     ]
