@@ -9,19 +9,23 @@
   <div class="committee_members">
     <div class="title">Committee Members</div>
     <div class="divider"></div>
-    <div class="content">
-      <div class="head">
-          <span class="head-label">HEAD</span>
-          <span class="head-container">{{ committee.head }}</span>
-      </div>
-      <div class="member" v-for="member in members" :key="member.id">
-        <span>{{ member.id }}</span>
 
+    <div class="member-labels">
+
+      <div class="members">
+
+        <div class="head">
+          <span class="head-label">HEAD</span>
+          <span class="head-container">{{ committeeHead}}</span>
+        </div>
+
+        <div v-for="member in members" :key="member.id">
+          <span v-if="member.id != committeeHead" class="member-container">{{ member.id }}</span>
+        </div>
       </div>
+
     </div>
   </div>
-
-  
 </template>
 
 <script>
@@ -33,12 +37,14 @@ export default {
       committee: {
         'description': 'committee',
         'head': ''
-      }
+      },
+      committeeHead: null
     }
   },
   sockets: {
     get_committee: function (data) {
       this.committee = data
+      this.committeeHead = this.committee.head
     },
     get_members: function (data) {
       this.members = data.members
@@ -76,46 +82,28 @@ export default {
   .divider {
     border-top: 1px solid #000;
   }
-
-  .membersbox {
-    color: #fff;
-    font-size: 14pt;
-    font-weight: 300;
-    display: inline-block;
-    padding: 5px;
-  }
   
-  .members-container {
+  .member-container {
     background-color: #f36e21;
     display: inline-block;
     padding: 10px 45px 10px 45px;
-    margin: 10px 0 10px 0;
+    margin: 10px 0px 10px 10px;
     text-align: center;
   }
 
-  .members-label {
-    float: left;
-    -webkit-writing-mode: vertical-rl;
-    -ms-writing-mode: tb-rl;
-    writing-mode: vertical-rl;
-    background-color: #000;
-    color: white;
-    font-size: 0.7rem;
-    letter-spacing: 0.05rem;
-    padding: 0.2rem;
-    margin: 10px 0 10px 10px;
-  }
-
-  .content {
-    padding: 10px;
-  }
-
-  .member {
+  .members {
     color: #fff;
     font-size: 14pt;
     font-weight: 300;
-    display: inline-block;
-    width: 25%;
+    display: flex;  
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .member-labels {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
   }
 
   .head {
@@ -123,7 +111,6 @@ export default {
     font-size: 14pt;
     font-weight: 300;
     display: inline-block;
-    width: 24%;
   }
   .head-container {
     background-color: #f36e21;
