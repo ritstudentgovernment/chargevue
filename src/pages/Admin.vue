@@ -307,8 +307,8 @@ export default {
         this.createImage = image
         this.createDisabled = false
       }).catch((error) => {
-        this.createDisabled = false
         console.log(error)
+        this.createDisabled = false
       })
     },
     editFileSelected (file) {
@@ -319,8 +319,8 @@ export default {
         this.editImage = image
         this.editDisabled = false
       }).catch((error) => {
-        this.editDisabled = false
         console.log(error)
+        this.editDisabled = false
       })
     },
     createNewCommittee () {
