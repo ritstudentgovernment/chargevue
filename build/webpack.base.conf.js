@@ -10,6 +10,7 @@ function resolve (dir) {
 module.exports = {
   entry: {
     app: [
+      require.resolve('regenerator-runtime/runtime.js'),
       'babel-polyfill',
       './src/main.js'
     ]
@@ -48,6 +49,17 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
+      },
+      {
+        test: /ckeditor-[^\/\\]+[\/\\].+\.js$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [require('babel-preset-env')]
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
