@@ -27,15 +27,13 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="dropdown"> 
           <button class="btn notification_button" @click="toggleNotifications()"><i class="fa fa-bell notification_button"></i></button>
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
-
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
               <div>
-
                 <a class="notification" v-bind:key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
                 <ul class="notificationButtons">
-                  <li class="delete"><button class="delete" @click="deleteNotifiction(notification)">Delete</button></li>
-                  <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
+                  <li v-if="!noNotifications" class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
+                  <li v-if="!noNotifications" class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
                 </ul>
                 </a>
               </div>
@@ -80,6 +78,11 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
       </div>
     </div>
+
+    <div v-if="showDeleteModal">
+      <DeleteNotificationModal v-on:deleteNotification="deleteNotification()" v-on:closeDeleteModal="closeDeleteModal()"/>
+    </div>
+
   </div>
 </template>
 
@@ -88,12 +91,17 @@ var i
 import Auth from '../mixins/auth'
 import EventBus from './EventBus'
 import { mapGetters } from 'vuex'
+import DeleteNotificationModal from '@/components/DeleteNotificationModal.vue'
 
 export default {
   name: 'headermenu',
+  components: { 'DeleteNotificationModal': DeleteNotificationModal },
   mixins: [Auth],
   data () {
     return {
+      noNotifications: null,
+      notificationToDelete: null,
+      showDeleteModal: false,
       test: false,
       notifications: [],
       menuMessages: [],
@@ -107,6 +115,14 @@ export default {
     }
   },
   methods: {
+    openDeleteModal (notification) {
+      this.showDeleteModal = true
+      this.notificationToDelete = notification
+    },
+    closeDeleteModal () {
+      this.showDeleteModal = false
+      this.notificationToDelete = null
+    },
     badgeController () {
       this.badgeNumber = 0
       for (i = 0; i < this.notifications.length; i++) {
@@ -115,15 +131,21 @@ export default {
         }
       }
       if (this.badgeNumber > 0) {
+        this.noNotifications = false
         this.showBadge = true
       } else {
+        this.noNotifications = true
         this.showBadge = false
+        this.notifications.push({
+          message: 'No notifications yet...'
+        })
       }
     },
-    deleteNotifiction (notification) {
-      var index = this.notifications.indexOf(notification)
-      this.notificationController('delete_notification', notification)
+    deleteNotification () {
+      var index = this.notifications.indexOf(this.notificationToDelete)
+      this.notificationController('delete_notification', this.notificationToDelete)
       this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
+      this.showDeleteModal = false
       this.badgeController()
     },
     notificationController (controllerType, notification) {
