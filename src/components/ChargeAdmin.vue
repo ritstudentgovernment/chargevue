@@ -79,12 +79,12 @@ author: Gabe Landau <gll1872@rit.edu>
 
             <div class="field" style="display: inline-flex;">
               <label class="container label">Public  
-                <input type="radio" class="is-primary" v-model="isPrivate" :value="false" @change="updateProp('private', $event)">
+                <input type="radio" class="is-primary" v-model="charge.private" :value="false" @change="updateProp('private', $event)">
                 <span class="radio is-primary"></span>
               </label>
 
               <label class="container label" style="margin-left: 25px;">Private  
-                <input type="radio" class="is-primary" v-model="isPrivate" :value="true" @change="updateProp('private', $event)">
+                <input type="radio" class="is-primary" v-model="charge.private" :value="true" @change="updateProp('private', $event)">
                 <span class="radio is-primary"></span>
               </label>
             </div>
@@ -108,7 +108,7 @@ export default {
   props: ['charge'],
   data () {
     return {
-      isPrivate: true,
+      updateValue: null,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
@@ -153,7 +153,15 @@ export default {
     },
     // Dynamically emits updates to the parent component, updating the prop as the user types
     updateProp (field, event) {
-      this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: event.target.value}))
+      this.updateValue = event.target.value
+      if (field === 'private') {
+        if (event.target.value === 'true') {
+          this.updateValue = true
+        } else { // 'false'
+          this.updateValue = false
+        }
+      }
+      this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: this.updateValue}))
     }
   },
   sockets: {

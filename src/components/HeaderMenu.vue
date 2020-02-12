@@ -39,7 +39,6 @@ author: Gabe Landau <gll1872@rit.edu>
               </div>
             </span>
           </div>
-          
         </div>
 
       </div>
@@ -199,7 +198,6 @@ export default {
   },
   sockets: {
     get_notifications: function (data) {
-      console.log(data)
       this.notifications = data
       this.badgeController()
     }
