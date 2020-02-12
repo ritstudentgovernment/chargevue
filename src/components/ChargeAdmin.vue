@@ -63,18 +63,28 @@ author: Gabe Landau <gll1872@rit.edu>
               </div>
             </div>
 
+            <div class = "field">
+            <label class="label">Status</label>
+            <div class="select">
+              <select v-model="charge.status" @change="updateProp('status', $event)">
+                <option selected disabled>Select an Option</option>
+                <option value="0">Unapproved</option>
+                <option value="1">Failed</option>
+                <option value="2">InProgress</option>
+                <option value="3">Indefinite</option>
+                <option value="4">Unknown</option>
+                <option value="5">Completed</option>
+                <option value="6">NotStarted</option>
+                <option value="7">Stopped</option>
+              </select>
+            </div>
+          </div>
+
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
                   <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('pawlink', $event)">
                 </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Committee</label>
-              <div class="control">
-                <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp('committee', $event)">
-              </div>
             </div>
 
             <div class="field" style="display: inline-flex;">
@@ -126,7 +136,7 @@ export default {
         title: this.charge.title,
         description: this.charge.description,
         committee: this.charge.committee,
-        // TODO status and priority, dead code?
+        status: this.charge.status,
         private: this.charge.private
       })
     },
@@ -155,13 +165,21 @@ export default {
     updateProp (field, event) {
       this.updateValue = event.target.value
       if (field === 'private') {
-        if (event.target.value === 'true') {
-          this.updateValue = true
-        } else { // 'false'
-          this.updateValue = false
-        }
+        this.convertPrivateToString(event)
+      } else if (field === 'status') {
+        this.convertStatusToInt(event)
       }
       this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: this.updateValue}))
+    },
+    convertPrivateToBool (event) {
+      if (event.target.value === 'true') {
+        this.updateValue = true
+      } else { // 'false'
+        this.updateValue = false
+      }
+    },
+    convertStatusToInt (event) {
+      this.updateValue = parseInt(event.target.value)
     }
   },
   sockets: {
