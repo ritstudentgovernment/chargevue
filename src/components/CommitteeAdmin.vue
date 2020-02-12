@@ -39,7 +39,7 @@ author: Gabe Landau <gll1872@rit.edu>
           </div>
 
           <div class="field">
-            <label class="label">Description</label>
+            <label class="label">Purpose</label>
             <div class="control">
               <input class="input" type="text" placeholder="Description" v-model="createChargeDescription" maxlength="255">
             </div>

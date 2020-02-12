@@ -57,7 +57,7 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
 
             <div class="field">
-              <label class="label">Description</label>
+              <label class="label">Purpose</label>
               <div class="control">
                 <input class="input" type="text" :value="[[this.charge.description]]" @change="updateProp('description', $event)">
               </div>
@@ -83,7 +83,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
-                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('pawlink', $event)">
+                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('paw_links', $event)">
                 </div>
             </div>
 
@@ -137,6 +137,7 @@ export default {
         description: this.charge.description,
         committee: this.charge.committee,
         status: this.charge.status,
+        paw_links: this.charge.paw_links,
         private: this.charge.private
       })
     },

@@ -14,7 +14,8 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="charge_header">
       <div class="charge_header_text">{{ this.charge.title }}</div>
       <div class="charge_header_tag">
-        <button class="redirect_button" @click="redirect()">{{ this.charge.committee }}</button>
+        <span><button class="redirect_button" @click="redirect('committee')">{{ this.charge.committee }}</button></span>
+        <span v-if="this.charge.paw_links"><button class="redirect_button" @click="redirect('paw_links')">Paw Links</button></span>
       </div>
     </div>
     <ChargeAdmin @updateCharge ="updateCharge" v-bind:charge="this.charge"/>
@@ -89,13 +90,15 @@ export default {
     })
   },
   methods: {
-    redirect () {
-      this.$router.push('/committee/' + this.charge.committee)
+    redirect (destination) {
+      if (destination === 'committee') {
+        this.$router.push('/committee/' + this.charge.committee)
+      } else if (destination === 'paw_links') {
+        window.location = 'https://' + this.charge.paw_links
+      }
     },
     updateCharge (updatedCharge) {
-      console.log(updatedCharge)
       this.charge = updatedCharge
-      console.log(this.charge)
     }
   }
 }
