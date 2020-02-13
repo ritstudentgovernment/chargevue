@@ -181,7 +181,7 @@ export default {
           ampm = 'AM'
         }
 
-        minute = (committeeTime.length > 3 ? committeeTime.substring(2) : committeeTime.substring(1)).padStart(2, '0')
+        minute = committeeTime.length > 3 ? committeeTime.substring(2) : committeeTime.substring(1)
       }
 
       return {ampm, day, hour, minute}
