@@ -63,6 +63,13 @@ author: Gabe Landau <gll1872@rit.edu>
               </div>
             </div>
 
+            <div class="field">
+              <label class="label">Progress Note</label>
+              <div class="control">
+                <input class="input" type="text" :value="[[this.charge.progress]]" @change="updateProp('progress', $event)">
+              </div>
+            </div>
+
             <div class = "field">
             <label class="label">Status</label>
             <div class="select">
