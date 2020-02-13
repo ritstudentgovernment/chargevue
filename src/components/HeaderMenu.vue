@@ -164,7 +164,10 @@ export default {
       this.badgeController()
       // Local Storage used to open the Action modal on the landing page
       if (notification.type === 'AssignedToAction') {
-        localStorage.setItem('openModal', true)
+        let taskIndex = notification.message.indexOf(':') + 2
+        let taskTitle = notification.message.substring(taskIndex)
+        localStorage.setItem('openTaskModal', true)
+        localStorage.setItem('taskTitle', taskTitle)
       }
       this.$router.push(notification.redirect)
     },
