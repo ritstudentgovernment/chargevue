@@ -12,7 +12,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="tasks_title">Tasks</div>
         </div>
         <div class="column">
-          <button class="tasks_button button is-primary" @click="showAddTaskForm = true">New</button>
+          <button class="tasks_button button is-primary" @click="showCreateTaskModal">New</button>
         </div>
       </div>
       <div class="taskbar">
@@ -26,45 +26,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
     <Task v-for="task in filteredTasks" :key="task.id" v-bind:task="task"/>
 
-    <div class="add-task modal" v-bind:class="{ 'is-active': showAddTaskForm }">
-      <div class="modal-background" @click="clearTaskModal()"></div>
-      <div class="modal-content">
-        <div class="box">
-          <article class="message" v-if="addTaskResponse.show" v-bind:class="addTaskResponse.success ? 'is-success' : 'is-danger'">
-            <div class="message-body">{{ addTaskResponse.message }}</div>
-          </article>
-          <div class="field">
-            <label class="label">Task Name</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Task Name" v-model="createTaskData.title">
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Assignee</label>
-            <div class="control">
-              <vue-simple-suggest
-                v-model="createTaskData.assignee"
-                :list="memberSuggestions"
-                :filter-by-query="true"
-                :max-suggestions="5"
-                :min-length="0">
-              </vue-simple-suggest>
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">Task Description</label>
-            <div class="control">
-              <textarea class="textarea" placeholder="Purpose and description of this task..." v-model="createTaskData.description"></textarea>
-            </div>
-          </div>
-
-          <button class="button is-primary" @click="createTask()">Create Task</button>
-        </div>
-      </div>
-      <button class="modal-close is-large" @click="clearTaskModal"></button>
-    </div>
+    <create-task-modal ref="createTaskModal" :members="members"/>
   </div>
 </template>
 
@@ -73,13 +35,16 @@ import Task from './Task'
 import Auth from '../mixins/auth'
 import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs'
 import 'vue-simple-suggest/dist/styles.css'
+import CreateTaskModal from './CreateTaskModal'
+
 export default {
   name: 'tasks',
   mixins: [Auth],
   props: ['tasks', 'committee'],
   components: {
     'Task': Task,
-    'VueSimpleSuggest': VueSimpleSuggest
+    'VueSimpleSuggest': VueSimpleSuggest,
+    'CreateTaskModal': CreateTaskModal
   },
   data () {
     return {
@@ -95,8 +60,7 @@ export default {
         success: null,
         message: null
       },
-      members: [],
-      memberSuggestions: []
+      members: []
     }
   },
   methods: {
@@ -122,35 +86,13 @@ export default {
     makeActive (status) {
       this.active_task = status
     },
-    clearTaskModal () {
-      this.showAddTaskForm = false
-      this.createTaskData.title = ''
-      this.createTaskData.description = ''
-      this.createTaskData.assignee = ''
-      this.addTaskResponse.show = false
-      this.addTaskResponse.success = null
-      this.addTaskResponse.message = null
+    showCreateTaskModal () {
+      this.$refs.createTaskModal.show()
     }
   },
   sockets: {
-    create_action: function (data) {
-      if (data.success) {
-        this.addTaskResponse.success = true
-        this.addTaskResponse.show = true
-        this.addTaskResponse.message = data.success
-        setTimeout(() => { this.clearTaskModal() }, 2000)
-      } else if (data.error) {
-        this.addTaskResponse.success = false
-        this.addTaskResponse.show = true
-        this.addTaskResponse.message = data.error
-      }
-    },
     get_members: function (data) {
       this.members = data.members
-      this.members.forEach((member) => {
-        this.memberSuggestions.push(member.id)
-        this.memberSuggestions.push(member.name)
-      })
     }
   },
   beforeMount () {
