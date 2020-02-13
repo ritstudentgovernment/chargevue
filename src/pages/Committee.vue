@@ -56,7 +56,7 @@ import { mapGetters } from 'vuex'
 import Auth from '../mixins/auth'
 
 export default {
-  name: 'dashboard',
+  name: 'committee',
   mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
@@ -113,66 +113,76 @@ export default {
     }
   },
   beforeMount () {
-    this.updatePage()
+    let committeeId = this.$router.history.current.params['committee']
+    this.updatePage(committeeId)
   },
   beforeRouteUpdate (to, from, next) {
-    this.updatePage()
+    let committeeId = to.params['committee']
+    this.updatePage(committeeId)
     next()
   },
   methods: {
-    updatePage () {
-      this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
-      this.$socket.emit('get_members', this.$router.history.current.params['committee'])
+    updatePage (committeeId) {
+      this.$socket.emit('get_committee', committeeId)
+      this.$socket.emit('get_members', committeeId)
       this.checkAuth().then((token) => {
         this.$socket.emit('get_charges', {
           token: token,
-          committee_id: this.$router.history.current.params['committee']
+          committee_id: committeeId
         })
         this.$socket.emit('get_minutes', {
           token: token,
-          committee_id: this.$router.history.current.params['committee']
+          committee_id: committeeId
         })
       })
     },
-    convertTimeDay (oldDay, oldTime) {
+    convertTimeDay (committeeDay, committeeTime) {
       let day = ''
-      switch (oldDay) {
-        case 0:
-          day = 'Sunday'
-          break
-        case 1:
-          day = 'Monday'
-          break
-        case 2:
-          day = 'Tuesday'
-          break
-        case 3:
-          day = 'Wednesday'
-          break
-        case 4:
-          day = 'Thursday'
-          break
-        case 5:
-          day = 'Friday'
-          break
-        case 6:
-          day = 'Saturday'
-          break
-        default:
-          day = 'Sunday'
-      }
-
       let ampm = ''
-      let hour = parseInt(oldTime.substr(0, 2))
-      if (hour > 12) {
-        hour = hour - 12 + ''
-        ampm = 'PM'
-      } else {
-        hour = hour + ''
-        ampm = 'AM'
+      let hour = ''
+      let minute = ''
+
+      if (committeeDay != null) {
+        switch (committeeDay) {
+          case 0:
+            day = 'Sunday'
+            break
+          case 1:
+            day = 'Monday'
+            break
+          case 2:
+            day = 'Tuesday'
+            break
+          case 3:
+            day = 'Wednesday'
+            break
+          case 4:
+            day = 'Thursday'
+            break
+          case 5:
+            day = 'Friday'
+            break
+          case 6:
+            day = 'Saturday'
+            break
+          default:
+            day = 'Sunday'
+            break
+        }
       }
 
-      let minute = oldTime.substring(2, 5)
+      if (committeeTime != null) {
+        hour = committeeTime.length > 3 ? committeeTime.substring(0, 2) : committeeTime.substring(0, 1)
+        if (hour > 12) {
+          hour = hour - 12 + ''
+          ampm = 'PM'
+        } else {
+          hour = hour + ''
+          ampm = 'AM'
+        }
+
+        minute = committeeTime.substring(2).padStart(2, '0')
+      }
 
       return {ampm, day, hour, minute}
     }
