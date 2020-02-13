@@ -100,7 +100,7 @@ author: Gabe Landau <gll1872@rit.edu>
 import Auth from '../mixins/auth'
 
 export default {
-  name: 'tasks',
+  name: 'task',
   components: {},
   props: ['task'],
   mixins: [Auth],
