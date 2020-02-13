@@ -8,9 +8,7 @@ export default new Vuex.Store({
     token: '',
     username: '',
     admin: false,
-    authenticated: false,
-    charges: [],
-    minutes: []
+    authenticated: false
   },
   mutations: {
     token (state, data) {
@@ -24,12 +22,6 @@ export default new Vuex.Store({
     },
     authenticated (state, data) {
       state.authenticated = data.authenticated
-    },
-    charges (state, data) {
-      state.charges = data.charges
-    },
-    minutes (state, data) {
-      state.minutes = data.minutes
     }
   },
   getters: {
@@ -37,8 +29,6 @@ export default new Vuex.Store({
     admin: state => state.admin,
     username: state => state.username,
     authenticated: state => state.authenticated,
-    isLdap: state => process.env.AUTH_METHOD === 'LDAP',
-    charges: state => state.charges,
-    minutes: state => state.minutes
+    isLdap: state => process.env.AUTH_METHOD === 'LDAP'
   }
 })

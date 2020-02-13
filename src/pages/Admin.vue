@@ -35,6 +35,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button>
             <button v-if="committee.enabled" class="button is-danger" @click="deactivateCommittee(committee.id)">Deactivate</button>
             <button v-if="!committee.enabled" class="button reactivate" @click="activateCommittee(committee.id)">Reactivate</button>
+            <button class="button is-success" @click="printCSV(committee.id)">Get CSV</button>
           </td>
         </tr>
         </tbody>
@@ -243,6 +244,7 @@ import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
 import Auth from '../mixins/auth'
 import Base64 from '../mixins/base64'
 import Time from '../mixins/time'
+// import gatherAndWrite from '../components/CSV'
 
 export default {
   name: 'admin',
@@ -255,6 +257,8 @@ export default {
   data () {
     return {
       committees: null,
+      committeeCharges: null,
+      committeeMinutes: null,
       members: null,
       allMembers: null,
       addMemberCommittee: null,
@@ -299,6 +303,22 @@ export default {
     }
   },
   methods: {
+    printCSV (id) {
+      this.$socket.emit('get_committee', id)
+      this.checkAuth().then((token) => {
+        this.$socket.emit('get_charges', {
+          token: token,
+          committee_id: id
+        })
+        this.$socket.emit('get_minutes', {
+          token: token,
+          committee_id: id
+        })
+      })
+
+      // console.log(gatherAndWrite(
+      // this.committeeCharges, this.committeeMinutes))
+    },
     createFileSelected (file) {
       this.createDisabled = true
 
@@ -438,6 +458,12 @@ export default {
     }
   },
   sockets: {
+    get_charges: function (data) {
+      this.committeeCharges = data
+    },
+    get_minutes: function (data) {
+      this.committeeMinutes = data
+    },
     get_committees: function (data) {
       this.committees = data
     },
