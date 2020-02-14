@@ -1,5 +1,5 @@
 <template>
-  <div class="add-task modal" :class="{ 'is-active': showModal }">
+  <div class="modal" :class="{ 'is-active': showModal }">
     <div class="modal-background" @click="closeModal"></div>
     <div class="modal-content">
       <div class="box">
@@ -20,10 +20,6 @@
 export default {
   name: 'Modal',
   props: {
-    closeModal: {
-      type: Function,
-      required: true
-    },
     showModal: {
       type: Boolean,
       default: false
@@ -35,6 +31,11 @@ export default {
     responseSuccess: {
       type: Boolean,
       default: true
+    }
+  },
+  methods: {
+    closeModal () {
+      this.$emit('close-modal')
     }
   }
 }
