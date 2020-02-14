@@ -31,11 +31,11 @@
     <div class="modal-form">
       <div class="field">
         <div class="control">
-          <textarea class="textarea" placeholder="Write a comment or update..." v-model="createNoteText"></textarea>
+          <textarea class="textarea" placeholder="Write a comment or update..." v-model="noteText"></textarea>
         </div>
       </div>
       <div class="field">
-        <button class="button is-primary" id="submitCommentButton" @click="createNote()">Submit Comment</button>
+        <button class="button is-primary" id="submitCommentButton" @click="createNote">Submit Comment</button>
       </div>
       <p class="updates-header">Admin</p>
       <div class="field">
@@ -92,40 +92,30 @@ export default {
       switch (this.task.status) {
         case 0:
           return 'in-progress'
-          break
         case 1:
           return 'stop'
-          break
         case 2:
           return 'complete'
-          break
         case 3:
           return 'on-hold'
-          break
         case 4:
         default:
           return 'indefinite'
-          break
       }
     },
     icon () {
       switch (this.task.status) {
         case 0:
           return 'mdi-play-circle-outline'
-          break
         case 1:
           return 'mdi-minus-circle-outline'
-          break
         case 2:
           return 'mdi-minus-circle-outline'
-          break
         case 3:
           return 'mdi-pause-circle-outline'
-          break
         case 4:
         default:
           return 'mdi-information-outline'
-          break
       }
     }
   },
@@ -175,7 +165,7 @@ export default {
         this.createNoteResponse.message = data.error
       }
     }
-  },
+  }
 }
 </script>
 
