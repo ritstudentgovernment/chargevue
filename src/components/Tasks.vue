@@ -33,6 +33,7 @@ author: Gabe Landau <gll1872@rit.edu>
 <script>
 import Task from './Task'
 import Auth from '../mixins/auth'
+import { mapGetters } from 'vuex'
 import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs'
 import 'vue-simple-suggest/dist/styles.css'
 import CreateTaskModal from './CreateTaskModal'
@@ -78,6 +79,23 @@ export default {
   computed: {
     filteredTasks: function () {
       return this.tasks.filter(task => task.status === this.active_task)
+    },
+    ...mapGetters({
+      taskId: 'taskId'
+    })
+  },
+  watch: {
+    tasks (newTasks, oldTasks) {
+      let selectedTask = newTasks.find(task => task.id === this.taskId)
+      if (selectedTask) {
+        this.showTaskModal(selectedTask)
+      }
+    },
+    taskId (newTaskId, oldTaskId) {
+      let selectedTask = this.tasks.find(task => task.id === newTaskId)
+      if (selectedTask) {
+        this.showTaskModal(selectedTask)
+      }
     }
   }
 }
