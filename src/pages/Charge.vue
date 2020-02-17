@@ -80,13 +80,13 @@ export default {
     }
   },
   beforeMount () {
-    this.checkAuth().then((token) => {
-      this.$socket.emit('get_charge', {
-        token: token,
-        charge: this.$router.history.current.params['charge']
-      })
-      this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
-    })
+    let chargeId = this.$router.history.current.params['charge']
+    this.updatePage(chargeId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    let chargeId = to.params['charge']
+    this.updatePage(chargeId)
+    next()
   },
   methods: {
     redirect () {
@@ -94,6 +94,15 @@ export default {
     },
     updateCharge (updatedCharge) {
       this.charge = updatedCharge
+    },
+    updatePage (chargeId) {
+      this.checkAuth().then((token) => {
+        this.$socket.emit('get_charge', {
+          token: token,
+          charge: chargeId
+        })
+        this.$socket.emit('get_actions', chargeId)
+      })
     }
   }
 }
