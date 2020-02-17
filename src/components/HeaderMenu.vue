@@ -169,9 +169,9 @@ export default {
           this.$store.commit('taskId', {
             taskId: taskId
           })
+          this.$router.push(notification.redirect)
         }
       }
-      this.$router.push(notification.redirect)
     },
     submitLogin () {
       this.showAuthError = false
