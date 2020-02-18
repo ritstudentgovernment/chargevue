@@ -26,15 +26,15 @@ author: Gabe Landau <gll1872@rit.edu>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
           <button class="btn notification_button" @click="toggleNotifications()"><i class="fa fa-bell notification_button"></i></button>
-          <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
+          <div><span v-if="notifications.length > 0" id="notificationBadge" class="w3-badge">{{ notifications.length }}</span></div>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
               <div>
-                <a class="notification" v-bind:key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
-                <ul class="notificationButtons">
-                  <li v-if="!noNotifications" class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
-                  <li v-if="!noNotifications" class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
-                </ul>
+                <a class="notification" :key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
+                  <ul class="notificationButtons">
+                    <li class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
+                    <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
+                  </ul>
                 </a>
               </div>
             </span>
@@ -46,7 +46,7 @@ author: Gabe Landau <gll1872@rit.edu>
     </header>
 
     <div>
-      <div class="modal" v-bind:class="{ 'is-active': showLoginForm }">
+      <div class="modal" :class="{ 'is-active': showLoginForm }">
       <div class="modal-background" @click="showLoginForm = false"></div>
       <div class="modal-card">
         <div class="modal-card-head">
@@ -72,7 +72,7 @@ author: Gabe Landau <gll1872@rit.edu>
           </div>
         </section>
         <div class="modal-card-foot">
-          <button class="button is-primary" @click="submitLogin()" v-bind:class="{ 'is-loading': showLoginLoading }">Login</button>
+          <button class="button is-primary" @click="submitLogin()" :class="{ 'is-loading': showLoginLoading }">Login</button>
           <button class="button" @click="showLoginForm = false">Cancel</button>
         </div>
       </div>
@@ -80,14 +80,13 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
 
     <div v-if="showDeleteModal">
-      <DeleteNotificationModal v-on:deleteNotification="deleteNotification()" v-on:closeDeleteModal="closeDeleteModal()"/>
+      <DeleteNotificationModal @deleteNotification="deleteNotification()" @closeDeleteModal="closeDeleteModal()"/>
     </div>
 
   </div>
 </template>
 
 <script>
-var i
 import Auth from '../mixins/auth'
 import EventBus from './EventBus'
 import { mapGetters } from 'vuex'
@@ -99,14 +98,9 @@ export default {
   mixins: [Auth],
   data () {
     return {
-      noNotifications: null,
       notificationToDelete: null,
       showDeleteModal: false,
-      test: false,
       notifications: [],
-      menuMessages: [],
-      badgeNumber: null,
-      showBadge: false,
       showLoginForm: false,
       showLoginLoading: false,
       showAuthError: false,
@@ -123,30 +117,11 @@ export default {
       this.showDeleteModal = false
       this.notificationToDelete = null
     },
-    badgeController () {
-      this.badgeNumber = 0
-      for (i = 0; i < this.notifications.length; i++) {
-        if (this.notifications[i].viewed === false) {
-          this.badgeNumber++
-        }
-      }
-      if (this.badgeNumber > 0) {
-        this.noNotifications = false
-        this.showBadge = true
-      } else {
-        this.noNotifications = true
-        this.showBadge = false
-        this.notifications.push({
-          message: 'No notifications yet...'
-        })
-      }
-    },
     deleteNotification () {
       var index = this.notifications.indexOf(this.notificationToDelete)
       this.notificationController('delete_notification', this.notificationToDelete)
       this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
       this.showDeleteModal = false
-      this.badgeController()
     },
     notificationController (controllerType, notification) {
       this.checkAuth().then((token) => {
@@ -157,11 +132,8 @@ export default {
       })
     },
     goToDestination (notification) {
-      if (notification.viewed === false) {
-        this.notificationController('update_notification', notification)
-        notification.viewed = true
-      }
-      this.badgeController()
+      this.notificationToDelete = notification
+      this.deleteNotification()
       if (notification.type === 'AssignedToAction') {
         let taskId = parseInt(notification.destination)
         if (!Number.isNaN(taskId)) {
@@ -206,7 +178,6 @@ export default {
   sockets: {
     get_notifications: function (data) {
       this.notifications = data
-      this.badgeController()
     }
   },
   beforeMount () {
