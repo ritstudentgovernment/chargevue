@@ -171,6 +171,8 @@ export default {
           })
           this.$router.push(notification.redirect)
         }
+      } else {
+        this.$router.push(notification.redirect)
       }
     },
     submitLogin () {
