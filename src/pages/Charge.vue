@@ -12,7 +12,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <HeaderMenu />
     <CommitteesMenu />
     <div class="charge_header">
-      <div class="charge_header_text">{{ this.charge.title }}</div>
+      <div class="charge_header_text">{{ charge.title }}</div>
       <div class="charge_header_tag">
         <span><button class="redirect_button" @click="redirect('committee')">{{ this.charge.committee }}</button></span>
         <span v-if="this.charge.paw_links"><button class="redirect_button" @click="redirect('paw_links')">Paw Links</button></span>
@@ -38,7 +38,7 @@ import Auth from '../mixins/auth'
 import ChargeProgress from '../components/ChargeProgress'
 
 export default {
-  name: 'dashboard',
+  name: 'charge',
   mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
@@ -84,13 +84,13 @@ export default {
     }
   },
   beforeMount () {
-    this.checkAuth().then((token) => {
-      this.$socket.emit('get_charge', {
-        token: token,
-        charge: this.$router.history.current.params['charge']
-      })
-      this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
-    })
+    let chargeId = this.$router.history.current.params['charge']
+    this.updatePage(chargeId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    let chargeId = to.params['charge']
+    this.updatePage(chargeId)
+    next()
   },
   methods: {
     redirect (destination) {
@@ -102,6 +102,15 @@ export default {
     },
     updateCharge (updatedCharge) {
       this.charge = updatedCharge
+    },
+    updatePage (chargeId) {
+      this.checkAuth().then((token) => {
+        this.$socket.emit('get_charge', {
+          token: token,
+          charge: chargeId
+        })
+        this.$socket.emit('get_actions', chargeId)
+      })
     }
   }
 }
