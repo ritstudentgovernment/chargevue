@@ -133,7 +133,6 @@ export default {
     },
     goToDestination (notification) {
       this.notificationToDelete = notification
-      
       if (notification.type === 'AssignedToAction') {
         let taskId = parseInt(notification.destination)
         if (!Number.isNaN(taskId)) {
