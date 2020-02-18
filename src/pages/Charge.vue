@@ -101,7 +101,9 @@ export default {
       }
     },
     updateCharge (updatedCharge) {
+      console.log(updatedCharge)
       this.charge = updatedCharge
+      console.log(this.charge)
     },
     updatePage (chargeId) {
       this.checkAuth().then((token) => {

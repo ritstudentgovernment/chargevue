@@ -126,7 +126,6 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <script>
 import Auth from '../mixins/auth'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'charge-admin',
@@ -145,6 +144,21 @@ export default {
     }
   },
   methods: {
+    handleChargeEdits (data) {
+      if (data.success) {
+        this.editChargeResponse.show = true
+        this.editChargeResponse.success = true
+        this.editChargeResponse.message = data.success
+        var that = this
+        setTimeout(function () {
+          that.$router.push({path: '/committee/' + that.charge.committee})
+        }, 2000)
+      } else if (data.error) {
+        this.editChargeResponse.show = true
+        this.editChargeResponse.success = false
+        this.editChargeResponse.message = data.error
+      }
+    },
     editCharge () {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
@@ -158,23 +172,10 @@ export default {
       })
     },
     closeCharge () {
-      if (this.admin) {
-        this.$socket.emit('edit_charge', {
-          token: this.getToken(),
-          title: this.charge.title,
-          charge: this.charge.id,
-          status: 5 // This status saves the charge as closed
-        })
-      } else {
-        console.log('did this even work...')
-        this.$socket.emit('close', {
-          subtype: 'A test',
-          title: 'Mic Check',
-          sender: ['Me', 'ep5756@rit.edu'],
-          recipients: ['elijah.parrish321@gmail.com'],
-          html: '<h1>Hello World!</h1>'
-        })
-      }
+      this.$socket.emit('close_charge', {
+        token: this.getToken(),
+        charge: this.charge.id
+      })
     },
     closeModals () {
       this.showConfirmModal = false
@@ -210,26 +211,12 @@ export default {
       this.updateValue = parseInt(event.target.value)
     }
   },
-  computed: {
-    ...mapGetters({
-      admin: 'admin'
-    })
-  },
   sockets: {
     edit_charge: function (data) {
-      if (data.success) {
-        this.editChargeResponse.show = true
-        this.editChargeResponse.success = true
-        this.editChargeResponse.message = data.success
-        var that = this
-        setTimeout(function () {
-          that.$router.push({path: '/committee/' + that.charge.committee})
-        }, 2000)
-      } else if (data.error) {
-        this.editChargeResponse.show = true
-        this.editChargeResponse.success = false
-        this.editChargeResponse.message = data.error
-      }
+      this.handleChargeEdits(data)
+    },
+    close_charge: function (data) {
+      this.handleChargeEdits(data)
     }
   }
 }
