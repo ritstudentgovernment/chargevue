@@ -162,7 +162,6 @@ export default {
         notification.viewed = true
       }
       this.badgeController()
-      // Local Storage used to open the Action modal on the landing page
       if (notification.type === 'AssignedToAction') {
         let taskId = parseInt(notification.destination)
         if (!Number.isNaN(taskId)) {
