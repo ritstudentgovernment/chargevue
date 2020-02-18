@@ -164,9 +164,14 @@ export default {
       this.badgeController()
       // Local Storage used to open the Action modal on the landing page
       if (notification.type === 'AssignedToAction') {
-        localStorage.setItem('openModal', true)
+        let taskId = parseInt(notification.destination)
+        if (!Number.isNaN(taskId)) {
+          this.$store.commit('taskId', {
+            taskId: taskId
+          })
+          this.$router.push(notification.redirect)
+        }
       }
-      this.$router.push(notification.redirect)
     },
     submitLogin () {
       this.showAuthError = false
