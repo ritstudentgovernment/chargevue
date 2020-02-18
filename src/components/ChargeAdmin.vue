@@ -71,26 +71,33 @@ author: Gabe Landau <gll1872@rit.edu>
             </div>
 
             <div class = "field">
-            <label class="label">Status</label>
-            <div class="select">
-              <select v-model="charge.status" @change="updateProp('status', $event)">
-                <option selected disabled>Select an Option</option>
-                <option value="0">Unapproved</option>
-                <option value="1">Failed</option>
-                <option value="2">InProgress</option>
-                <option value="3">Indefinite</option>
-                <option value="4">Unknown</option>
-                <option value="5">Completed</option>
-                <option value="6">NotStarted</option>
-                <option value="7">Stopped</option>
-              </select>
+              <label class="label">Status</label>
+              <div class="select">
+                <select v-model="charge.status" @change="updateProp('status', $event)">
+                  <option selected disabled>Select an Option</option>
+                  <option value="0">Unapproved</option>
+                  <option value="1">Failed</option>
+                  <option value="2">InProgress</option>
+                  <option value="3">Indefinite</option>
+                  <option value="4">Unknown</option>
+                  <option value="5">Completed</option>
+                  <option value="6">NotStarted</option>
+                  <option value="7">Stopped</option>
+                </select>
+              </div>
             </div>
-          </div>
 
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
                   <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('paw_links', $event)">
+                </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Change Committee</label>
+                <div class="control">
+                  <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp('committee', $event)">
                 </div>
             </div>
 
@@ -119,6 +126,8 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <script>
 import Auth from '../mixins/auth'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'charge-admin',
   mixins: [Auth],
@@ -149,12 +158,23 @@ export default {
       })
     },
     closeCharge () {
-      this.$socket.emit('edit_charge', {
-        token: this.getToken(),
-        title: this.charge.title,
-        charge: this.charge.id,
-        status: 5 // This status saves the charge as closed
-      })
+      if (this.admin) {
+        this.$socket.emit('edit_charge', {
+          token: this.getToken(),
+          title: this.charge.title,
+          charge: this.charge.id,
+          status: 5 // This status saves the charge as closed
+        })
+      } else {
+        console.log('did this even work...')
+        this.$socket.emit('close', {
+          subtype: 'A test',
+          title: 'Mic Check',
+          sender: ['Me', 'ep5756@rit.edu'],
+          recipients: ['elijah.parrish321@gmail.com'],
+          html: '<h1>Hello World!</h1>'
+        })
+      }
     },
     closeModals () {
       this.showConfirmModal = false
@@ -189,6 +209,11 @@ export default {
     convertStatusToInt (event) {
       this.updateValue = parseInt(event.target.value)
     }
+  },
+  computed: {
+    ...mapGetters({
+      admin: 'admin'
+    })
   },
   sockets: {
     edit_charge: function (data) {
@@ -231,5 +256,9 @@ export default {
 
   .content {
     padding: 20px;
+  }
+
+  .field {
+    padding-right: 20px;
   }
 </style>
