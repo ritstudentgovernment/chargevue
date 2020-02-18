@@ -133,16 +133,18 @@ export default {
     },
     goToDestination (notification) {
       this.notificationToDelete = notification
-      this.deleteNotification()
+      
       if (notification.type === 'AssignedToAction') {
         let taskId = parseInt(notification.destination)
         if (!Number.isNaN(taskId)) {
           this.$store.commit('taskId', {
             taskId: taskId
           })
+          this.deleteNotification()
           this.$router.push(notification.redirect)
         }
       } else {
+        this.deleteNotification()
         this.$router.push(notification.redirect)
       }
     },
