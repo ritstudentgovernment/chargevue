@@ -174,7 +174,9 @@ export default {
     closeCharge () {
       this.$socket.emit('close_charge', {
         token: this.getToken(),
-        charge: this.charge.id
+        charge: this.charge.id,
+        committee_id: this.charge.committee,
+        status: 5 // This status closes the charge
       })
     },
     closeModals () {
