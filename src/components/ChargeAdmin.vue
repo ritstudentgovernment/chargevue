@@ -75,14 +75,9 @@ author: Gabe Landau <gll1872@rit.edu>
               <div class="select">
                 <select v-model="charge.status" @change="updateProp('status', $event)">
                   <option selected disabled>Select an Option</option>
-                  <option value="0">Unapproved</option>
-                  <option value="1">Failed</option>
-                  <option value="2">InProgress</option>
-                  <option value="3">Indefinite</option>
-                  <option value="4">Unknown</option>
-                  <option value="5">Completed</option>
-                  <option value="6">NotStarted</option>
-                  <option value="7">Stopped</option>
+                  <option value="0">InProgress</option>
+                  <option value="1">Completed</option>
+                  <option value="2">Indefinite</option>
                 </select>
               </div>
             </div>

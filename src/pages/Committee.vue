@@ -193,19 +193,13 @@ export default {
       return usernames.indexOf(this.username) !== -1
     },
     inProgressCount () {
-      return this.charges.filter(x => x.status === 2).length
-    },
-    incompleteCount () {
-      return this.charges.filter(x => x.status === 6).length
+      return this.charges.filter(x => x.status === 0).length
     },
     completedCount () {
-      return this.charges.filter(x => x.status === 5).length
+      return this.charges.filter(x => x.status === 1).length
     },
     indefiniteCount () {
-      return this.charges.filter(x => x.status === 3).length
-    },
-    stoppedCount () {
-      return this.charges.filter(x => x.status === 7).length
+      return this.charges.filter(x => x.status === 2).length
     },
     ...mapGetters({
       username: 'username',
