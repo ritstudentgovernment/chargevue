@@ -122,7 +122,7 @@ export default {
       members: null,
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
-      createChargeStatus: 1, // TODO remember input validation
+      createChargeStatus: 1,
       createChargeTitle: null,
       createChargePriority: 1,
       createChargeDescription: null,
