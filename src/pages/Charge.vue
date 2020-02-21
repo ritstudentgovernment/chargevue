@@ -21,7 +21,6 @@ author: Gabe Landau <gll1872@rit.edu>
     <ChargeAdmin @updateCharge ="updateCharge" v-bind:charge="this.charge"/>
     <ChargeStatusBar v-bind:actions="this.actions"/>
     <Purpose v-bind:chargeDesc="this.charge.description" v-bind:createdAt="this.charge.created_at" />
-    <ChargeProgress v-bind:charge="this.charge" />
     <Tasks v-if="this.charge.committee != ''" v-bind:tasks="actions" v-bind:committee="this.charge.committee" />
   </div>
 </template>
@@ -35,7 +34,6 @@ import Purpose from '../components/Purpose'
 import ChargeAdmin from '../components/ChargeAdmin'
 import moment from 'moment'
 import Auth from '../mixins/auth'
-import ChargeProgress from '../components/ChargeProgress'
 
 export default {
   name: 'charge',
@@ -46,8 +44,7 @@ export default {
     'ChargeStatusBar': ChargeStatusBar,
     'Tasks': Tasks,
     'Purpose': Purpose,
-    'ChargeAdmin': ChargeAdmin,
-    'ChargeProgress': ChargeProgress
+    'ChargeAdmin': ChargeAdmin
   },
   data () {
     return {
