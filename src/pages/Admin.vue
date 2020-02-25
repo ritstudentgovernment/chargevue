@@ -64,21 +64,21 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Title" v-model="createTitle">
+                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="createTitle">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Description</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Description" v-model="createDescription">
+                <input class="input" type="text" placeholder="Description" maxlength="255" v-model="createDescription">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Meeting Location</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Meeting Location" v-model="createLocation">
+                <input class="input" type="text" placeholder="Meeting Location" maxlength="255" v-model="createLocation">
               </div>
             </div>
 
@@ -151,21 +151,21 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Title" v-model="editTitle" disabled>
+                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="editTitle" disabled>
               </div>
             </div>
 
             <div class="field">
               <label class="label">Description</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Description" v-model="editDescription">
+                <input class="input" type="text" placeholder="Description" maxlength="255" v-model="editDescription">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Meeting Location</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Location" v-model="editLocation">
+                <input class="input" type="text" placeholder="Location" maxlength="255" v-model="editLocation">
               </div>
             </div>
 
