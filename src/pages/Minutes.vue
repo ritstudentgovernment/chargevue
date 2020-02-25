@@ -10,8 +10,10 @@
         <input v-model="minute.title" type="text" placeholder="Insert Minute Title"/>
       </div>
     </div>
-    <MinutesControls @updateCharges ="updateCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:currentMode="currentMode" v-bind:existing_charges="minute.charges"/>
-    <article class="message" v-if="saveMinuteResponse.show" v-bind:class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
+    <MinutesControls @updateCharges="updateCharges" v-if="minute.committee_id" :committee_id="minute.committee_id" :currentMode="currentMode" :existing_charges="minute.charges"/>
+    <button @click="showCreateTaskModal">yer</button>
+    <minute-task-modal ref="createTaskModal" :committee-id="minute.committee_id"/>
+    <article class="message" v-if="saveMinuteResponse.show" :class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
       <div class="message-body">{{ saveMinuteResponse.message }}</div>
     </article>
     <div class="minute-body">
@@ -39,6 +41,7 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
+import MinuteTaskModal from '../components/MinuteTaskModal'
 import TextEditor from '../components/TextEditor'
 import Auth from '../mixins/auth'
 
@@ -46,10 +49,11 @@ export default {
   name: 'minutes',
   mixins: [Auth],
   components: {
-    'HeaderMenu': HeaderMenu,
-    'CommitteesMenu': CommitteesMenu,
-    'MinutesControls': MinutesControls,
-    'TextEditor': TextEditor
+    HeaderMenu,
+    CommitteesMenu,
+    MinutesControls,
+    TextEditor,
+    MinuteTaskModal
   },
   data () {
     return {
@@ -110,6 +114,9 @@ export default {
     },
     updateMinuteText (updatedText) {
       this.minute.body = updatedText
+    },
+    showCreateTaskModal () {
+      this.$refs.createTaskModal.show()
     }
   },
   sockets: {
