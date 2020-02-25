@@ -50,7 +50,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="select">
               <select v-model="createChargeStatus">
                 <option selected disabled>Select an Option</option>
-                  <option value="0">InProgress</option>
+                  <option value="0">In Progress</option>
                   <option value="1">Completed</option>
                   <option value="2">Indefinite</option>
               </select>

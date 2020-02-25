@@ -52,30 +52,30 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateProp('title', $event)">
+                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateCopy('title', $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Purpose</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateProp('description', $event)">
+                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateCopy('description', $event)">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Progress Note</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.progress]]" @change="updateProp('progress', $event)">
+                <input class="input" type="text" :value="[[this.charge.progress]]" @change="updateCopy('progress', $event)">
               </div>
             </div>
 
             <div class = "field">
               <label class="label">Status</label>
               <div class="select">
-                <select v-model="charge.status" @change="updateProp('status', $event)">
+                <select v-model="charge.status" @change="updateCopy('status', $event)">
                   <option selected disabled>Select an Option</option>
-                  <option value="0">InProgress</option>
+                  <option value="0">In Progress</option>
                   <option value="1">Completed</option>
                   <option value="2">Indefinite</option>
                 </select>
@@ -85,25 +85,25 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
-                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('paw_links', $event)">
+                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateCopy('paw_links', $event)">
                 </div>
             </div>
 
             <div class="field">
               <label class="label">Change Committee</label>
                 <div class="control">
-                  <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp('committee', $event)">
+                  <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateCopy('committee', $event)">
                 </div>
             </div>
 
             <div class="field" style="display: inline-flex;">
               <label class="container label">Public  
-                <input type="radio" class="is-primary" v-model="charge.private" :value="false" @change="updateProp('private', $event)">
+                <input type="radio" class="is-primary" v-model="charge.private" :value="false" @change="updateCopy('private', $event)">
                 <span class="radio is-primary"></span>
               </label>
 
               <label class="container label" style="margin-left: 25px;">Private  
-                <input type="radio" class="is-primary" v-model="charge.private" :value="true" @change="updateProp('private', $event)">
+                <input type="radio" class="is-primary" v-model="charge.private" :value="true" @change="updateCopy('private', $event)">
                 <span class="radio is-primary"></span>
               </label>
             </div>
@@ -128,6 +128,7 @@ export default {
   props: ['charge'],
   data () {
     return {
+      localCharge: {},
       updateValue: null,
       showEditModal: false,
       showConfirmModal: false,
@@ -146,7 +147,7 @@ export default {
         this.editChargeResponse.message = data.success
         var that = this
         setTimeout(function () {
-          that.$router.push({path: '/committee/' + that.charge.committee})
+          that.closeModals()
         }, 2000)
       } else if (data.error) {
         this.editChargeResponse.show = true
@@ -155,15 +156,16 @@ export default {
       }
     },
     editCharge () {
+      this.$emit('updateCharge', this.localCharge)
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
-        charge: this.charge.id, // The user cannot edit this field
-        title: this.charge.title,
-        description: this.charge.description,
-        committee: this.charge.committee,
-        status: this.charge.status,
-        paw_links: this.charge.paw_links,
-        private: this.charge.private
+        charge: this.localCharge.id, // The user cannot edit this field
+        title: this.localCharge.title,
+        description: this.localCharge.description,
+        committee: this.localCharge.committee,
+        status: this.localCharge.status,
+        paw_links: this.localCharge.paw_links,
+        private: this.localCharge.private
       })
     },
     closeCharge () {
@@ -185,17 +187,18 @@ export default {
       this.showConfirmModal = true
     },
     openEditModal () {
+      this.localCharge = JSON.parse(JSON.stringify(this.charge))
       this.showEditModal = true
     },
     // Dynamically emits updates to the parent component, updating the prop as the user types
-    updateProp (field, event) {
+    updateCopy (field, event) {
       this.updateValue = event.target.value
       if (field === 'private') {
-        this.convertPrivateToString(event)
+        this.convertPrivateToBool(event)
       } else if (field === 'status') {
         this.convertStatusToInt(event)
       }
-      this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: this.updateValue}))
+      Object.assign(this.localCharge, {[field]: this.updateValue})
     },
     convertPrivateToBool (event) {
       if (event.target.value === 'true') {
