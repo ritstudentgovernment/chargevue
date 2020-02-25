@@ -1,6 +1,5 @@
 <template>
   <div class='dashboard'>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <HeaderMenu />
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
@@ -22,7 +21,7 @@
       </div>
       <div style="padding: 10px;" v-if="currentMode == mode.VIEW" v-html="minute.body"></div>
       <div v-else>
-        <QuillEditor v-model="minute.body" />
+        <text-editor :text="minute.body" @input="updateMinuteText"/>
         <div class="action-menu">
           <div class="field">
             <input class="is-checkradio" id="isPrivate" type="checkbox" v-model="minute.private">
@@ -40,7 +39,7 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
-import QuillEditor from '../components/QuillEditor'
+import TextEditor from '../components/TextEditor'
 import Auth from '../mixins/auth'
 
 export default {
@@ -50,20 +49,26 @@ export default {
     'HeaderMenu': HeaderMenu,
     'CommitteesMenu': CommitteesMenu,
     'MinutesControls': MinutesControls,
-    'QuillEditor': QuillEditor
+    'TextEditor': TextEditor
   },
   data () {
     return {
-      minute: Object,
+      minute: {
+        id: null,
+        charges: [],
+        committee_id: '',
+        title: '',
+        body: '',
+        private: true
+      },
       mode: {
         VIEW: 'view',
         EDIT: 'edit',
         NEW: 'new'
       },
-      currentMode: String,
+      currentMode: '',
       backgroundImage: null,
       showLoadingIndicator: true,
-      quill: null,
       saveMinuteResponse: {
         show: false,
         message: null,
@@ -102,6 +107,9 @@ export default {
     },
     removeSaveMinuteResponse () {
       this.saveMinuteResponse.show = false
+    },
+    updateMinuteText (updatedText) {
+      this.minute.body = updatedText
     }
   },
   sockets: {
@@ -115,7 +123,10 @@ export default {
         this.saveMinuteResponse.success = true
         this.saveMinuteResponse.message = data.success
       }
-      setTimeout(this.removeSaveMinuteResponse, 3000)
+      setTimeout(() => {
+        this.removeSaveMinuteResponse()
+        if (data.success) this.$router.push(`/committee/${this.minute.committee_id}`)
+      }, 3000)
     },
     edit_minute: function (data) {
       if (data.error) {

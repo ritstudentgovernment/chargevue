@@ -12,15 +12,15 @@ author: Gabe Landau <gll1872@rit.edu>
     <HeaderMenu />
     <CommitteesMenu />
     <div class="charge_header">
-      <div class="charge_header_text">{{ this.charge.title }}</div>
+      <div class="charge_header_text">{{ charge.title }}</div>
       <div class="charge_header_tag">
-        <button class="redirect_button" @click="redirect()">{{ this.charge.committee }}</button>
+        <button class="redirect_button" @click="redirect()">{{ charge.committee }}</button>
       </div>
     </div>
-    <ChargeAdmin v-bind:charge="this.charge"/>
-    <ChargeStatusBar v-bind:actions="this.actions"/>
-    <Purpose v-bind:chargeDesc="this.charge.description" v-bind:createdAt="this.charge.created_at" />
-    <Tasks v-if="this.charge.committee != ''" v-bind:tasks="actions" v-bind:committee="this.charge.committee" />
+    <ChargeAdmin @updateCharge="updateCharge" :charge="charge"/>
+    <ChargeStatusBar :actions="actions"/>
+    <Purpose :chargeDesc="charge.description" :createdAt="charge.created_at" />
+    <Tasks v-if="charge.committee" :tasks="actions" :committee="charge.committee" />
   </div>
 </template>
 
@@ -35,7 +35,7 @@ import moment from 'moment'
 import Auth from '../mixins/auth'
 
 export default {
-  name: 'dashboard',
+  name: 'charge',
   mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
@@ -80,17 +80,29 @@ export default {
     }
   },
   beforeMount () {
-    this.checkAuth().then((token) => {
-      this.$socket.emit('get_charge', {
-        token: token,
-        charge: this.$router.history.current.params['charge']
-      })
-      this.$socket.emit('get_actions', this.$router.history.current.params['charge'])
-    })
+    let chargeId = this.$router.history.current.params['charge']
+    this.updatePage(chargeId)
+  },
+  beforeRouteUpdate (to, from, next) {
+    let chargeId = to.params['charge']
+    this.updatePage(chargeId)
+    next()
   },
   methods: {
     redirect () {
       this.$router.push('/committee/' + this.charge.committee)
+    },
+    updateCharge (updatedCharge) {
+      this.charge = updatedCharge
+    },
+    updatePage (chargeId) {
+      this.checkAuth().then((token) => {
+        this.$socket.emit('get_charge', {
+          token: token,
+          charge: chargeId
+        })
+        this.$socket.emit('get_actions', chargeId)
+      })
     }
   }
 }

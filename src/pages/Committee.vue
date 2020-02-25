@@ -14,11 +14,13 @@ author: Gabe Landau <gll1872@rit.edu>
     <CommitteesMenu />
     <div class="pagename" :style="{ 'background-image': 'url(' + backgroundImage + ')' }">
       <h1>{{ committee.title }}</h1>
+      <h5>{{getDay}} {{getHour}}:{{getMinutes}} {{getAMPM}}</h5>
+      <h5>{{committee.location}}</h5>
     </div>
 
     <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
-    <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee"/>
-    <CommitteeMembers />
+    <CommitteeAdmin v-if="inCommittee || admin" :committee="committee" :is-privileged="committee.head == username || admin" @chargeCreated="updatePage(committee.id)"/>
+    <CommitteeMembers :members="members" :committee-head="committee.head"/>
     <div class="tabs is-boxed is-centered">
       <ul>
         <li v-bind:class="{'is-active': showProjects}" v-on:click="showProjects = true"><a>Charges</a></li>
@@ -54,7 +56,7 @@ import { mapGetters } from 'vuex'
 import Auth from '../mixins/auth'
 
 export default {
-  name: 'dashboard',
+  name: 'committee',
   mixins: [Auth],
   components: {
     'HeaderMenu': HeaderMenu,
@@ -70,6 +72,7 @@ export default {
   data () {
     return {
       committee: {'description': 'committee'},
+      members: [],
       backgroundImage: null,
       showLoadingIndicator: true,
       showProjects: true,
@@ -98,31 +101,97 @@ export default {
       }
 
       this.showLoadingIndicator = false
+    },
+    get_charges: function (data) {
+      this.charges = data
+    },
+    get_minutes: function (data) {
+      this.minutes = data
+    },
+    get_members: function (data) {
+      this.members = data.members
     }
   },
   beforeMount () {
-    this.updatePage()
+    let committeeId = this.$router.history.current.params['committee']
+    this.updatePage(committeeId)
   },
   beforeRouteUpdate (to, from, next) {
-    this.updatePage()
+    let committeeId = to.params['committee']
+    this.updatePage(committeeId)
     next()
   },
   methods: {
-    updatePage () {
-      this.$socket.emit('get_committee', this.$router.history.current.params['committee'])
+    updatePage (committeeId) {
+      this.$socket.emit('get_committee', committeeId)
+      this.$socket.emit('get_members', committeeId)
       this.checkAuth().then((token) => {
         this.$socket.emit('get_charges', {
           token: token,
-          committee_id: this.$router.history.current.params['committee']
+          committee_id: committeeId
         })
         this.$socket.emit('get_minutes', {
           token: token,
-          committee_id: this.$router.history.current.params['committee']
+          committee_id: committeeId
         })
       })
+    },
+    convertTimeDay (committeeDay, committeeTime) {
+      let day = ''
+      let ampm = ''
+      let hour = ''
+      let minute = ''
+
+      if (committeeDay != null) {
+        switch (committeeDay) {
+          case 0:
+            day = 'Sunday'
+            break
+          case 1:
+            day = 'Monday'
+            break
+          case 2:
+            day = 'Tuesday'
+            break
+          case 3:
+            day = 'Wednesday'
+            break
+          case 4:
+            day = 'Thursday'
+            break
+          case 5:
+            day = 'Friday'
+            break
+          case 6:
+            day = 'Saturday'
+            break
+          default:
+            day = 'Sunday'
+            break
+        }
+      }
+
+      if (committeeTime != null) {
+        hour = committeeTime.length > 3 ? committeeTime.substring(0, 2) : committeeTime.substring(0, 1)
+        if (hour > 12) {
+          hour = hour - 12 + ''
+          ampm = 'PM'
+        } else {
+          hour = hour + ''
+          ampm = 'AM'
+        }
+
+        minute = committeeTime.length > 3 ? committeeTime.substring(2) : committeeTime.substring(1)
+      }
+
+      return {ampm, day, hour, minute}
     }
   },
   computed: {
+    inCommittee () {
+      let usernames = this.members.map(member => member.id)
+      return usernames.indexOf(this.username) !== -1
+    },
     inProgressCount () {
       return this.charges.filter(x => x.status === 0).length
     },
@@ -141,7 +210,19 @@ export default {
     ...mapGetters({
       username: 'username',
       admin: 'admin'
-    })
+    }),
+    getDay () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).day
+    },
+    getHour () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).hour
+    },
+    getMinutes () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).minute
+    },
+    getAMPM () {
+      return this.convertTimeDay(this.committee.meeting_day, this.committee.meeting_time).ampm
+    }
   }
 }
 </script>
@@ -165,16 +246,24 @@ export default {
     background-size: cover;
   }
 
-  .pagename h1 {
+  .pagename h1, .pagename h5 {
     margin: 0;
     text-align: center;
     text-transform: uppercase;
-    padding: 75px 0;
+    padding-top: 75px;
     color: #fff;
     animation: fadein 0.5s;
     -webkit-animation: fadein 0.5s;
     -moz-animation: fadein 0.5s;
     -ms-animation: fadein 0.5s;
+  }
+
+  .pagename h5 {
+    padding-top: 25px;
+  }
+
+  .pagename h5:nth-of-type(2){
+    padding-bottom: 75px;
   }
 
   .controlPanel {

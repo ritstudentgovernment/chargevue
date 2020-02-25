@@ -12,11 +12,14 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="committee_admin">
       <div class="title">Charge Controls</div>
       <div class="divider"></div>
-      <div class="content"><button class="button is-primary" @click="openConfirmModal()">Close Charge</button></div>
+      <div class="content">
+        <button class="button is-primary" @click="openConfirmModal()">Close Charge</button>
+        <button class="button is-primary" @click="openEditModal()">Edit Charge</button>
+      </div>
     </div>
 
     <div class="modal" v-bind:class="{ 'is-active': showConfirmModal }">
-        <div class="modal-background" v-on:click="closeConfirmModal()"></div>
+        <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Close Charge</p>
@@ -29,10 +32,66 @@ author: Gabe Landau <gll1872@rit.edu>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="closeCharge()">Close Charge</button>
-            <button class="button" v-on:click="closeConfirmModal()">Cancel</button>
+            <button class="button" v-on:click="closeModals()">Cancel</button>
           </footer>
         </div>
     </div>
+
+    <div class="modal" v-bind:class="{ 'is-active': showEditModal }">
+        <div class="modal-background" v-on:click="closeModals()"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Edit Charge</p>
+          </header>
+          <section class="modal-card-body">
+
+            <article class="message" v-if="editChargeResponse.show" v-bind:class="editChargeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ editChargeResponse.message }}</div>
+            </article>
+
+            <div class="field">
+              <label class="label">Title</label>
+              <div class="control">
+                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateProp('title', $event)">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Description</label>
+              <div class="control">
+                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateProp('description', $event)">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">PawPrints Link</label>
+                <div class="control">
+                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('pawlink', $event)">
+                </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Committee</label>
+              <div class="control">
+                <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp('committee', $event)">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="container label"> Make this charge public?  
+                <input type="checkbox" class="is-primary" autocomplete="off" :checked="[[this.charge.private]]" @change="updateProp('private', $event)">
+                <span class="checkmark is-primary"></span>
+              </label>
+            </div>
+
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" v-on:click="editCharge()">Confirm Edit</button>
+            <button class="button" v-on:click="closeModals()">Cancel</button>
+          </footer>
+        </div>
+      </div>
+      
   </div>
 </template>
 
@@ -44,6 +103,7 @@ export default {
   props: ['charge'],
   data () {
     return {
+      showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
         show: false,
@@ -53,21 +113,41 @@ export default {
     }
   },
   methods: {
+    editCharge () {
+      this.$socket.emit('edit_charge', {
+        token: this.getToken(),
+        charge: this.charge.id, // The user cannot edit this field
+        title: this.charge.title,
+        description: this.charge.description,
+        committee: this.charge.committee,
+        // TODO status and priority, dead code?
+        private: this.charge.private
+      })
+    },
     closeCharge () {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
+        title: this.charge.title,
         charge: this.charge.id,
-        status: 5
+        status: 5 // This status saves the charge as closed
       })
     },
-    closeConfirmModal () {
+    closeModals () {
       this.showConfirmModal = false
+      this.showEditModal = false
       this.editChargeResponse.show = false
       this.editChargeResponse.message = null
       this.editChargeResponse.success = null
     },
     openConfirmModal () {
       this.showConfirmModal = true
+    },
+    openEditModal () {
+      this.showEditModal = true
+    },
+    // Dynamically emits updates to the parent component, updating the prop as the user types
+    updateProp (field, event) {
+      this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: event.target.value}))
     }
   },
   sockets: {

@@ -27,15 +27,13 @@ author: Gabe Landau <gll1872@rit.edu>
         <div class="dropdown"> 
           <button class="btn notification_button" @click="toggleNotifications()"><i class="fa fa-bell notification_button"></i></button>
           <div><span v-if="showBadge" id="notificationBadge" class="w3-badge">{{ badgeNumber }}</span></div>
-
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
               <div>
-
-                <a class="notification" v-bind:key="notification" v-for="notification in notifications" :value="notification">{{notification.message}}
+                <a class="notification" v-bind:key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
                 <ul class="notificationButtons">
-                  <li class="delete"><button class="delete" @click="deleteNotifiction(notification)">Delete</button></li>
-                  <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
+                  <li v-if="!noNotifications" class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
+                  <li v-if="!noNotifications" class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
                 </ul>
                 </a>
               </div>
@@ -80,6 +78,11 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
       </div>
     </div>
+
+    <div v-if="showDeleteModal">
+      <DeleteNotificationModal v-on:deleteNotification="deleteNotification()" v-on:closeDeleteModal="closeDeleteModal()"/>
+    </div>
+
   </div>
 </template>
 
@@ -88,12 +91,17 @@ var i
 import Auth from '../mixins/auth'
 import EventBus from './EventBus'
 import { mapGetters } from 'vuex'
+import DeleteNotificationModal from '@/components/DeleteNotificationModal.vue'
 
 export default {
   name: 'headermenu',
+  components: { 'DeleteNotificationModal': DeleteNotificationModal },
   mixins: [Auth],
   data () {
     return {
+      noNotifications: null,
+      notificationToDelete: null,
+      showDeleteModal: false,
       test: false,
       notifications: [],
       menuMessages: [],
@@ -107,6 +115,14 @@ export default {
     }
   },
   methods: {
+    openDeleteModal (notification) {
+      this.showDeleteModal = true
+      this.notificationToDelete = notification
+    },
+    closeDeleteModal () {
+      this.showDeleteModal = false
+      this.notificationToDelete = null
+    },
     badgeController () {
       this.badgeNumber = 0
       for (i = 0; i < this.notifications.length; i++) {
@@ -115,36 +131,48 @@ export default {
         }
       }
       if (this.badgeNumber > 0) {
+        this.noNotifications = false
         this.showBadge = true
       } else {
+        this.noNotifications = true
         this.showBadge = false
+        this.notifications.push({
+          message: 'No notifications yet...'
+        })
       }
     },
-    deleteNotifiction (notification) {
-      var index = this.notifications.indexOf(notification)
+    deleteNotification () {
+      var index = this.notifications.indexOf(this.notificationToDelete)
+      this.notificationController('delete_notification', this.notificationToDelete)
+      this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
+      this.showDeleteModal = false
+      this.badgeController()
+    },
+    notificationController (controllerType, notification) {
       this.checkAuth().then((token) => {
-        this.$socket.emit('delete_notification', {
+        this.$socket.emit(controllerType, {
           token: token,
           notificationId: notification.id
         })
       })
-      this.notifications.splice(index, 1) // Splice is used to avoid 'holes' in the array
     },
     goToDestination (notification) {
       if (notification.viewed === false) {
-        this.checkAuth().then((token) => {
-          this.$socket.emit('update_notification', {
-            token: token,
-            notificationId: notification.id
-          })
-        })
+        this.notificationController('update_notification', notification)
         notification.viewed = true
       }
       this.badgeController()
       if (notification.type === 'AssignedToAction') {
-        localStorage.setItem('openModal', true)
+        let taskId = parseInt(notification.destination)
+        if (!Number.isNaN(taskId)) {
+          this.$store.commit('taskId', {
+            taskId: taskId
+          })
+          this.$router.push(notification.redirect)
+        }
+      } else {
+        this.$router.push(notification.redirect)
       }
-      this.$router.push(notification.redirectString)
     },
     submitLogin () {
       this.showAuthError = false
@@ -166,28 +194,6 @@ export default {
     },
     toggleNotifications () {
       document.getElementById('notificationDropdown').classList.toggle('show')
-    },
-    populateNotificationMenu () {
-      for (i = 0; i < this.notifications.length; i++) {
-        this.notifications[i].message = this.generateMessageAndRedirectString(this.notifications[i])
-      }
-    },
-    generateMessageAndRedirectString (notification) {
-      var message
-      if (notification.type === 'MadeCommitteeHead') {
-        message = 'You have been made the head of the committee: ' + notification.destination
-        notification.redirectString = '/committee/' + notification.destination
-      } else if (notification.type === 'AssignedToAction') {
-        message = 'You have been assigned to the task: ' + notification.destination
-        notification.redirectString = '/charge/' + notification.destination
-      } else if (notification.type === 'MentionedInNote') {
-        message = 'You have been mentioned in the note: ' + notification.destination
-        notification.redirectString = '/charge/' + notification.destination
-      } else if (notification.type === 'UserRequest') {
-        message = 'The user ' + notification.destination + ' has a request for you.'
-        notification.redirectString = '/committee/' + notification.destination
-      }
-      return message
     }
   },
   computed: {
@@ -200,7 +206,6 @@ export default {
   sockets: {
     get_notifications: function (data) {
       this.notifications = data
-      this.populateNotificationMenu()
       this.badgeController()
     }
   },
@@ -214,7 +219,6 @@ export default {
   mounted () {
     // Handles the notification menu closing. This event is generated in the App.vue main page
     EventBus.$on('closeNotifications', function (event) {
-      console.log(event.target.classList)
       if (!(event.target.classList.contains('notification') || event.target.classList.contains('notification_button') || event.target.classList.contains('delete'))) {
         document.getElementById('notificationDropdown').classList.remove('show')
       }
