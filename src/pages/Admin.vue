@@ -303,6 +303,52 @@ export default {
     }
   },
   methods: {
+    convertToCSV (objArray) {
+      var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
+      var str = ''
+
+      for (var i = 0; i < array.length; i++) {
+        var line = ''
+        for (var index in array[i]) {
+          if (line !== '') line += ','
+
+          line += array[i][index]
+        }
+
+        str += line + '\r\n'
+      }
+
+      return str
+    },
+    exportCSVFile (headers, items, fileTitle) {
+      if (headers) {
+        items.unshift(headers)
+      }
+
+      // Convert Object to JSON
+      var jsonObject = JSON.stringify(items)
+
+      var csv = this.convertToCSV(jsonObject)
+
+      var exportedFilenmae = fileTitle + '.csv' || 'export.csv'
+
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+      if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilenmae)
+      } else {
+        var link = document.createElement('a')
+        if (link.download !== undefined) { // feature detection
+          // Browsers that support HTML5 download attribute
+          var url = URL.createObjectURL(blob)
+          link.setAttribute('href', url)
+          link.setAttribute('download', exportedFilenmae)
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      }
+    },
     printCSV (id) {
       this.$socket.emit('get_committee', id)
       this.checkAuth().then((token) => {
@@ -316,6 +362,31 @@ export default {
         })
       })
 
+      var header = {name: 'NAME', description: 'DESCRIPTION', timestamp: 'CREATED_AT', assignment: 'ASSIGNED_TO', status: 'STATUS'}
+      var header2 = {title: 'TITLE', relatedCharges: 'RELATED CHARGES', name: 'COMMITTEE NAME', timestamp: 'CREATED_AT'}
+
+      var itemsFormatted = []
+      var itemsFormatted2 = []
+
+      // format the data
+      this.committeeCharges.forEach((charge) => {
+        itemsFormatted.push({name: charge.title, description: charge.description, timestamp: charge.created_at, assignment: charge.committee, status: charge.status})
+      })
+      this.committeeMinutes.forEach((minute) => {
+        var chargesIds = 'N/A'
+        if (minute.charges.length > 0) {
+          chargesIds = ''
+          minute.charges.forEach((charge) => {
+            chargesIds += `${charge.id} `
+          })
+        }
+        itemsFormatted2.push({title: minute.title, relatedCharges: chargesIds, name: minute.committee_id, timestamp: minute.date})
+      })
+      var fileTitle = 'charges'
+      var fileTitle2 = 'minutes'
+
+      this.exportCSVFile(header, itemsFormatted, fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
+      this.exportCSVFile(header2, itemsFormatted2, fileTitle2) // call the exportCSVFile() function to process the JSON and trigger the download
       // console.log(gatherAndWrite(
       // this.committeeCharges, this.committeeMinutes))
     },
