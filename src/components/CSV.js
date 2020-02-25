@@ -13,7 +13,8 @@ const minuteRecords = [
 chargeWriter.writeRecords(chargeRecords)       // returns a promise
     .then(() => { console.log('...Charges Done') })
 minuteWriter.writeRecords(minuteRecords)
-    .then(() => { console.log('...Minutes Done') })   // returns a promise
+    .then(() => { console.log('...Minutes Done') })     // returns a promise
+    
 // This will produce a file path/to/file.csv with following contents:
 //
 //   NAME,LANGUAGE
