@@ -98,12 +98,6 @@ export default {
       }
 
       this.showLoadingIndicator = false
-    },
-    get_charges: function (data) {
-      this.charges = data
-    },
-    get_minutes: function (data) {
-      this.minutes = data
     }
   },
   beforeMount () {
@@ -148,10 +142,6 @@ export default {
       username: 'username',
       admin: 'admin'
     })
-  },
-  mounted () {
-    this.$store.commit('charges', { charges: this.charges })
-    this.$store.commit('minutes', { minutes: this.minutes })
   }
 }
 </script>
