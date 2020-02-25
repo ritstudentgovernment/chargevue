@@ -244,7 +244,6 @@ import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
 import Auth from '../mixins/auth'
 import Base64 from '../mixins/base64'
 import Time from '../mixins/time'
-// import gatherAndWrite from '../components/CSV'
 
 export default {
   name: 'admin',
@@ -387,8 +386,6 @@ export default {
 
       this.exportCSVFile(header, itemsFormatted, fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
       this.exportCSVFile(header2, itemsFormatted2, fileTitle2) // call the exportCSVFile() function to process the JSON and trigger the download
-      // console.log(gatherAndWrite(
-      // this.committeeCharges, this.committeeMinutes))
     },
     createFileSelected (file) {
       this.createDisabled = true
