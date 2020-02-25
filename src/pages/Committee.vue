@@ -18,7 +18,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <h5>{{committee.location}}</h5>
     </div>
 
-    <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
+    <CommitteeOverview :inProgressCount="inProgressCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" />
     <CommitteeAdmin v-if="inCommittee || admin" :committee="committee" :is-privileged="committee.head == username || admin" @chargeCreated="updatePage(committee.id)"/>
     <CommitteeMembers :members="members" :committee-head="committee.head"/>
     <div class="tabs is-boxed is-centered">
