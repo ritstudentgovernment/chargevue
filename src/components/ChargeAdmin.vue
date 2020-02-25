@@ -217,6 +217,10 @@ export default {
     },
     close_charge: function (data) {
       this.handleChargeEdits(data)
+      // If the user closes the charge or requests a close, then redirect
+      if (data.success) {
+        setTimeout(() => { this.$router.push('/committee/' + this.charge.committee) }, 2000)
+      }
     }
   }
 }
