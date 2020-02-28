@@ -11,7 +11,7 @@
             </select>
           </div>
           <button class='button is-primary' @click="addCharge">Add Charge</button>
-          <button class='button is-primary' @click="showTaskModal">Create New Task</button>
+          <button class='button is-primary' id="task-modal-button" @click="showTaskModal">Create New Task</button>
         </div>
         <div class="charges">
           <div class='charge' v-for="charge in minute_charges" :key="charge.id">
@@ -57,10 +57,10 @@ export default {
     this.checkAuth().then((token) => {
       this.$socket.emit('get_charges', {
         token: token,
-        committee_id: this.$props.committee_id
+        committee_id: this.committee_id
       })
     })
-    this.minute_charges = this.$props.existing_charges
+    this.minute_charges = this.existing_charges
   },
   methods: {
     openCharge (chargeId) {
@@ -84,6 +84,10 @@ export default {
 </script>
 <style scoped>
   @import "../../node_modules/mdi/css/materialdesignicons.css";
+
+  #task-modal-button {
+    margin-left: 5px;
+  }
 
   .minutes_controls, .meeting_charges {
     background-color: #fff;
