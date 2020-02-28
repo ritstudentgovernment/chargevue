@@ -89,7 +89,7 @@ export default {
     color: #fff;
     font-size: 14pt;
     font-weight: 300;
-    display: inline-block;
+    display: inline-flex;
   }
   .head-container {
     background-color: #f36e21;
