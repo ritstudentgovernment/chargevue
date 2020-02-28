@@ -188,16 +188,6 @@ export default {
     openEditModal () {
       this.localCharge = JSON.parse(JSON.stringify(this.charge))
       this.showEditModal = true
-    },
-    convertPrivateToBool (event) {
-      if (event.target.value === 'true') {
-        this.updateValue = true
-      } else { // 'false'
-        this.updateValue = false
-      }
-    },
-    convertStatusToInt (event) {
-      this.updateValue = parseInt(event.target.value)
     }
   },
   sockets: {
