@@ -11,8 +11,6 @@
       </div>
     </div>
     <MinutesControls @updateCharges="updateCharges" v-if="minute.committee_id" :committee_id="minute.committee_id" :currentMode="currentMode" :existing_charges="minute.charges"/>
-    <button @click="showCreateTaskModal">yer</button>
-    <minute-task-modal ref="createTaskModal" :committee-id="minute.committee_id"/>
     <article class="message" v-if="saveMinuteResponse.show" :class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
       <div class="message-body">{{ saveMinuteResponse.message }}</div>
     </article>
@@ -41,7 +39,6 @@
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import MinutesControls from '../components/MinutesControls'
-import MinuteTaskModal from '../components/MinuteTaskModal'
 import TextEditor from '../components/TextEditor'
 import Auth from '../mixins/auth'
 
@@ -52,8 +49,7 @@ export default {
     HeaderMenu,
     CommitteesMenu,
     MinutesControls,
-    TextEditor,
-    MinuteTaskModal
+    TextEditor
   },
   data () {
     return {
@@ -114,9 +110,6 @@ export default {
     },
     updateMinuteText (updatedText) {
       this.minute.body = updatedText
-    },
-    showCreateTaskModal () {
-      this.$refs.createTaskModal.show()
     }
   },
   sockets: {

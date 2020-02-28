@@ -7,28 +7,34 @@
         <div v-if="currentMode !== mode.VIEW" class="control">
           <div class="select">
             <select v-model="selected_charge">
-              <option v-for="x in charges.filter(x => x.status !== 5)" :key="x.id" v-bind:value="x">{{x.title}}</option>
+              <option v-for="x in charges.filter(x => x.status !== 5)" :key="x.id" :value="x">{{x.title}}</option>
             </select>
           </div>
-          <button class='button is-primary' v-on:click="addCharge()">Add Charge</button>
+          <button class='button is-primary' @click="addCharge">Add Charge</button>
+          <button class='button is-primary' @click="showTaskModal">Create New Task</button>
         </div>
         <div class="charges">
           <div class='charge' v-for="charge in minute_charges" :key="charge.id">
-            <span v-on:click="openCharge(charge.id)">{{charge.title}}</span>
-            <i v-if="currentMode !== mode.VIEW" v-on:click="removeCharge(charge)" class="mdi mdi-close"></i>
+            <span @click="openCharge(charge.id)">{{charge.title}}</span>
+            <i v-if="currentMode !== mode.VIEW" @click="removeCharge(charge)" class="mdi mdi-close"></i>
           </div>
         </div>
       </div>
+      <minute-task-modal ref="createTaskModal" :committee-id="committee_id"/>
     </div>
   </div>
 </template>
 
 <script>
 import Auth from '../mixins/auth'
+import MinuteTaskModal from '../components/MinuteTaskModal'
 
 export default {
   name: 'minutesControls',
   mixins: [Auth],
+  components: {
+    MinuteTaskModal
+  },
   data () {
     return {
       charges: [],
@@ -60,15 +66,18 @@ export default {
     openCharge (chargeId) {
       this.$router.push({ path: '/charge/' + chargeId })
     },
-    addCharge: function () {
+    addCharge () {
       if (this.selected_charge && this.minute_charges.filter(c => c.id === this.selected_charge.id).length === 0) {
         this.minute_charges.push(this.selected_charge)
       }
       this.$emit('updateCharges', this.minute_charges) // sends the list of charges to Minutes.vue
     },
-    removeCharge: function (charge) {
+    removeCharge (charge) {
       this.minute_charges = this.minute_charges.filter(e => e !== charge)
       this.$emit('updateCharges', this.minute_charges) // sends the list of charges to Minutes.vue
+    },
+    showTaskModal () {
+      this.$refs.createTaskModal.show()
     }
   }
 }

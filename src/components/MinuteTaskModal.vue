@@ -123,7 +123,7 @@ export default {
       this.createTaskResponse.message = ''
       this.showModal = false
       this.charges = []
-      this.memberSuggestions = []
+      this.members = []
       this.selectedChargeId = null
     },
     show () {
