@@ -52,32 +52,32 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateCopy('title', $event)">
+                <input class="input" type="text" v-model="localCharge.title">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Purpose</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateCopy('description', $event)">
+                <input class="input" type="text" v-model="localCharge.description">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Progress Note</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.progress]]" @change="updateCopy('progress', $event)">
+                <input class="input" type="text" v-model="localCharge.progressNote">
               </div>
             </div>
 
             <div class = "field">
               <label class="label">Status</label>
               <div class="select">
-                <select v-model="localCharge.status" @change="updateCopy('status', $event)">
+                <select v-model="localCharge.status">
                   <option selected disabled>Select an Option</option>
-                  <option value="0">In Progress</option>
-                  <option value="1">Completed</option>
-                  <option value="2">Indefinite</option>
+                  <option :value="0">In Progress</option>
+                  <option :value="1">Completed</option>
+                  <option :value="2">Indefinite</option>
                 </select>
               </div>
             </div>
@@ -85,25 +85,25 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
-                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateCopy('paw_links', $event)">
+                  <input class="input" type="text" v-model="localCharge.paw_links">
                 </div>
             </div>
 
             <div class="field">
               <label class="label">Change Committee</label>
                 <div class="control">
-                  <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateCopy('committee', $event)">
+                  <input class="input" type="text" v-model="localCharge.committee">
                 </div>
             </div>
 
             <div class="field" style="display: inline-flex;">
               <label class="container label">Public  
-                <input type="radio" class="is-primary" v-model="localCharge.private" :value="false" @change="updateCopy('private', $event)">
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="false">
                 <span class="radio is-primary"></span>
               </label>
 
               <label class="container label" style="margin-left: 25px;">Private  
-                <input type="radio" class="is-primary" v-model="localCharge.private" :value="true" @change="updateCopy('private', $event)">
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="true">
                 <span class="radio is-primary"></span>
               </label>
             </div>
@@ -188,16 +188,6 @@ export default {
     openEditModal () {
       this.localCharge = JSON.parse(JSON.stringify(this.charge))
       this.showEditModal = true
-    },
-    // Dynamically emits updates to the parent component, updating the prop as the user types
-    updateCopy (field, event) {
-      this.updateValue = event.target.value
-      if (field === 'private') {
-        this.convertPrivateToBool(event)
-      } else if (field === 'status') {
-        this.convertStatusToInt(event)
-      }
-      Object.assign(this.localCharge, {[field]: this.updateValue})
     },
     convertPrivateToBool (event) {
       if (event.target.value === 'true') {
