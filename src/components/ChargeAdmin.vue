@@ -73,7 +73,7 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class = "field">
               <label class="label">Status</label>
               <div class="select">
-                <select v-model="charge.status" @change="updateCopy('status', $event)">
+                <select v-model="localCharge.status" @change="updateCopy('status', $event)">
                   <option selected disabled>Select an Option</option>
                   <option value="0">In Progress</option>
                   <option value="1">Completed</option>
@@ -98,12 +98,12 @@ author: Gabe Landau <gll1872@rit.edu>
 
             <div class="field" style="display: inline-flex;">
               <label class="container label">Public  
-                <input type="radio" class="is-primary" v-model="charge.private" :value="false" @change="updateCopy('private', $event)">
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="false" @change="updateCopy('private', $event)">
                 <span class="radio is-primary"></span>
               </label>
 
               <label class="container label" style="margin-left: 25px;">Private  
-                <input type="radio" class="is-primary" v-model="charge.private" :value="true" @change="updateCopy('private', $event)">
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="true" @change="updateCopy('private', $event)">
                 <span class="radio is-primary"></span>
               </label>
             </div>
@@ -156,7 +156,6 @@ export default {
       }
     },
     editCharge () {
-      this.$emit('updateCharge', this.localCharge)
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
         charge: this.localCharge.id, // The user cannot edit this field
@@ -214,6 +213,10 @@ export default {
   sockets: {
     edit_charge: function (data) {
       this.handleChargeEdits(data)
+      // Only update the prop if the edit was successful
+      if (data.success) {
+        this.$emit('updateCharge', this.localCharge)
+      }
     },
     close_charge: function (data) {
       this.handleChargeEdits(data)
