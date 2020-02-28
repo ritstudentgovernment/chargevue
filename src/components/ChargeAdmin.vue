@@ -114,14 +114,20 @@ export default {
   },
   methods: {
     editCharge () {
-      this.$socket.emit('edit_charge', {
+      // this.$socket.emit('edit_charge', {
+      //   token: this.getToken(),
+      //   charge: this.charge.id, // The user cannot edit this field
+      //   title: this.charge.title,
+      //   description: this.charge.description,
+      //   committee: this.charge.committee,
+      //   // TODO status and priority, dead code?
+      //   private: this.charge.private
+      // })
+      this.$socket.emit('add_progress_note', {
         token: this.getToken(),
         charge: this.charge.id, // The user cannot edit this field
-        title: this.charge.title,
-        description: this.charge.description,
-        committee: this.charge.committee,
-        // TODO status and priority, dead code?
-        private: this.charge.private
+        note: 'third',
+        date: '3'
       })
     },
     closeCharge () {
