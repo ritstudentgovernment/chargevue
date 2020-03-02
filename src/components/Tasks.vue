@@ -12,7 +12,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="tasks_title">Tasks</div>
         </div>
         <div class="column">
-          <button class="tasks_button button is-primary" @click="showCreateTaskModal">New</button>
+          <button class="tasks_button button is-primary" @click="showCreateTaskModal" v-if="isPrivileged">New</button>
         </div>
       </div>
       <div class="taskbar">
@@ -69,7 +69,7 @@ export default {
     }
   },
   sockets: {
-    get_members: function (data) {
+    get_members (data) {
       this.members = data.members
     }
   },
@@ -77,12 +77,18 @@ export default {
     this.$socket.emit('get_members', this.committee)
   },
   computed: {
-    filteredTasks: function () {
+    filteredTasks () {
       return this.tasks.filter(task => task.status === this.active_task)
     },
-    ...mapGetters({
-      taskId: 'taskId'
-    })
+    isPrivileged () {
+      let isHead = this.members.some(member => member.id === this.username && member.role === 'CommitteeHead')
+      return this.admin || isHead
+    },
+    ...mapGetters([
+      'taskId',
+      'admin',
+      'username'
+    ])
   },
   watch: {
     tasks (newTasks, oldTasks) {
