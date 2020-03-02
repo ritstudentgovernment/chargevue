@@ -81,8 +81,8 @@ export default {
       return this.tasks.filter(task => task.status === this.active_task)
     },
     isPrivileged () {
-      let isHead = this.members.some(member => member.id === this.username && member.role === 'CommitteeHead')
-      return this.admin || isHead
+      let isMember = this.members.some(member => member.id === this.username)
+      return this.admin || isMember
     },
     ...mapGetters([
       'taskId',
