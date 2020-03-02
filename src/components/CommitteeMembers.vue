@@ -109,6 +109,6 @@ export default {
     font-size: 0.7rem;
     letter-spacing: 0.05rem;
     padding: 0.2rem;
-    margin: 10px 0 10px 10px;
+    margin: 10px 0 10px 0;
   }
 </style>
