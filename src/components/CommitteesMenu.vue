@@ -102,4 +102,10 @@ export default {
   .navbar-item:hover {
     background-color: #ccc;
   }
+
+  @media screen and (max-width: 1024px) {
+    button {
+      font-size: 1.5rem;
+    }
+  }
 </style>
