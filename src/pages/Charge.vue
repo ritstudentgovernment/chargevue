@@ -14,8 +14,8 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="charge_header">
       <div class="charge_header_text">{{ charge.title }}</div>
       <div class="charge_header_tag">
-        <span><button class="redirect_button" @click="redirect('committee')">{{ this.charge.committee }}</button></span>
-        <span v-if="this.charge.paw_links"><button class="redirect_button" @click="redirect('paw_links')">Paw Links</button></span>
+        <span><button class="redirect_button" @click="redirect('committee')">{{ charge.committee }}</button></span>
+        <span v-if="charge.paw_links"><button class="redirect_button" @click="redirect('paw_links')">Paw Links</button></span>
       </div>
     </div>
     <ChargeAdmin v-if="isPrivileged" @updateCharge="updateCharge" :charge="charge"/>
