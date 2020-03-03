@@ -13,7 +13,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <nav class="navbar" role="navigation" aria-label="committee navigation">
         <div class="navbar-menu is-active">
           <div class="navbar-start"></div>
-          <a class='navbar-item' v-if="item.enabled" is-hoverable v-bind:key="index" v-for="(item, index) in committees"><button @click="redirect(item.id)">{{item.title}}</button></a>
+          <a class='navbar-item' is-hoverable v-bind:key="index" v-for="(item, index) in committees"><button @click="redirect(item.id)">{{item.title}}</button></a>
           <div class="navbar-end"></div>
         </div>
       </nav> 
@@ -34,6 +34,7 @@ export default {
     get_committees: function (data) {
       this.committees = data
       this.loading = false
+      this.committees.filter((item) => { item.enabled === true })
     }
   },
   beforeMount () {
@@ -42,13 +43,6 @@ export default {
   methods: {
     redirect (itemId) {
       this.$router.push('/committee/' + itemId)
-    }
-  },
-  computed: {
-    enabled: function (item) {
-      if (item.enabled) {
-        return item
-      }
     }
   }
 }
@@ -92,7 +86,7 @@ export default {
     border: none;
     padding: 0!important;
     text-transform: uppercase;
-    font-size: 1.5em;
+    font-size: 1rem;
     /*optional*/
     font-family: 'Montserrat', Helvetica, Arial, sans-serif;
     /*input has OS specific font-family*/
