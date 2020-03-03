@@ -298,7 +298,13 @@ export default {
       editImage: null,
       editImageName: '(no file selected)',
       removeMemberCommittee: null,
-      minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
+      minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'],
+      header: {name: 'NAME', description: 'DESCRIPTION', timestamp: 'CREATED_AT', assignment: 'ASSIGNED_TO', status: 'STATUS'},
+      header2: {title: 'TITLE', relatedCharges: 'RELATED CHARGES', name: 'COMMITTEE NAME', timestamp: 'CREATED_AT'},
+      itemsFormatted: [],
+      itemsFormatted2: [],
+      fileTitle: 'charges',
+      fileTitle2: 'minutes'
     }
   },
   methods: {
@@ -359,34 +365,6 @@ export default {
           token: token,
           committee_id: id
         })
-      }).then(() => {
-        var header = {name: 'NAME', description: 'DESCRIPTION', timestamp: 'CREATED_AT', assignment: 'ASSIGNED_TO', status: 'STATUS'}
-        var header2 = {title: 'TITLE', relatedCharges: 'RELATED CHARGES', name: 'COMMITTEE NAME', timestamp: 'CREATED_AT'}
-
-        var itemsFormatted = []
-        var itemsFormatted2 = []
-
-        // format the data
-        this.committeeCharges.forEach((charge) => {
-          itemsFormatted.push({name: charge.title, description: charge.description, timestamp: charge.created_at, assignment: charge.committee, status: charge.status})
-        })
-        this.committeeMinutes.forEach((minute) => {
-          var chargesIds = 'N/A'
-          if (minute.charges.length > 0) {
-            chargesIds = ''
-            minute.charges.forEach((charge) => {
-              chargesIds += `${charge.id} `
-            })
-          }
-          let date = new Date(parseInt(minute.date))
-          let fdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
-          itemsFormatted2.push({title: minute.title, relatedCharges: chargesIds, name: minute.committee_id, timestamp: fdate})
-        })
-        var fileTitle = 'charges'
-        var fileTitle2 = 'minutes'
-
-        this.exportCSVFile(header, itemsFormatted, fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
-        this.exportCSVFile(header2, itemsFormatted2, fileTitle2) // call the exportCSVFile() function to process the JSON and trigger the download
       })
     },
     createFileSelected (file) {
@@ -530,9 +508,27 @@ export default {
   sockets: {
     get_charges: function (data) {
       this.committeeCharges = data
+      this.committeeCharges.forEach((charge) => {
+        this.itemsFormatted.push({name: charge.title, description: charge.description, timestamp: charge.created_at, assignment: charge.committee, status: charge.status})
+      })
     },
     get_minutes: function (data) {
       this.committeeMinutes = data
+      this.committeeMinutes.forEach((minute) => {
+        var chargesIds = 'N/A'
+        if (minute.charges.length > 0) {
+          chargesIds = ''
+          minute.charges.forEach((charge) => {
+            chargesIds += `${charge.id} `
+          })
+        }
+        let date = new Date(parseInt(minute.date))
+        let fdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
+        this.itemsFormatted2.push({title: minute.title, relatedCharges: chargesIds, name: minute.committee_id, timestamp: fdate})
+      })
+
+      this.exportCSVFile(this.header, this.itemsFormatted, this.fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
+      this.exportCSVFile(this.header2, this.itemsFormatted2, this.fileTitle2) // call the exportCSVFile() function to process the JSON and trigger the download
     },
     get_committees: function (data) {
       this.committees = data
