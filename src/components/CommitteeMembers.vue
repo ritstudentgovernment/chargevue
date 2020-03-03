@@ -89,7 +89,7 @@ export default {
     color: #fff;
     font-size: 14pt;
     font-weight: 300;
-    display: inline-block;
+    display: inline-flex;
   }
   .head-container {
     background-color: #f36e21;
@@ -109,6 +109,6 @@ export default {
     font-size: 0.7rem;
     letter-spacing: 0.05rem;
     padding: 0.2rem;
-    margin: 10px 0 10px 10px;
+    margin: 10px 0 10px 0;
   }
 </style>
