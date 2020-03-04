@@ -63,13 +63,6 @@ author: Gabe Landau <gll1872@rit.edu>
               </div>
             </div>
 
-            <div class="field">
-              <label class="label">Progress Note</label>
-              <div class="control">
-                <input class="input" type="text" v-model="localCharge.progressNote">
-              </div>
-            </div>
-
             <div class = "field">
               <label class="label">Status</label>
               <div class="select">
