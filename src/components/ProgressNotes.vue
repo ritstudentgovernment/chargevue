@@ -11,14 +11,18 @@ author: Gabe Landau <gll1872@rit.edu>
   <div class="description">
     <div class="columns">
       <div class="column">
-        <div class="description_title">Progress Notes</div>
+        <div class="description_title">Charge progress notes</div>
       </div>
       <div class="column">
-        <div class="description_date">{{ charge.description }}</div>
+        <button class="button is-primary">Add Note</button>
       </div>
     </div>
     <div class="divider"></div>
-    <div class="description_content">{{ charge.title }}</div>
+    <div class="rows">
+        <li v-for="value in charge.progress_notes" v-bind:key = value>
+            {{ value }}
+  </li>
+    </div>
   </div>
 </template>
 
@@ -66,4 +70,9 @@ export default {
   .divider {
     border-top: 1px solid #000;
   }
+
+  .button {
+      float: right;
+  }
+
 </style>
