@@ -39,7 +39,6 @@ author: Gabe Landau <gll1872@rit.edu>
               </div>
             </span>
           </div>
-          
         </div>
 
       </div>

@@ -10,8 +10,8 @@
         <input v-model="minute.title" type="text" placeholder="Insert Minute Title"/>
       </div>
     </div>
-    <MinutesControls @updateCharges ="updateCharges" v-if="minute.committee_id" v-bind:committee_id="minute.committee_id" v-bind:currentMode="currentMode" v-bind:existing_charges="minute.charges"/>
-    <article class="message" v-if="saveMinuteResponse.show" v-bind:class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
+    <MinutesControls @updateCharges="updateCharges" v-if="minute.committee_id" :committee_id="minute.committee_id" :currentMode="currentMode" :existing_charges="minute.charges"/>
+    <article class="message" v-if="saveMinuteResponse.show" :class="saveMinuteResponse.success ? 'is-success' : 'is-danger'">
       <div class="message-body">{{ saveMinuteResponse.message }}</div>
     </article>
     <div class="minute-body">
@@ -46,10 +46,10 @@ export default {
   name: 'minutes',
   mixins: [Auth],
   components: {
-    'HeaderMenu': HeaderMenu,
-    'CommitteesMenu': CommitteesMenu,
-    'MinutesControls': MinutesControls,
-    'TextEditor': TextEditor
+    HeaderMenu,
+    CommitteesMenu,
+    MinutesControls,
+    TextEditor
   },
   data () {
     return {

@@ -14,20 +14,12 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="overview_description">In Progress</div>
     </div>
     <div class="column">
-      <div class="overview_count">{{ incompleteCount }}</div>
-      <div class="overview_description">Incomplete</div>
-    </div>
-    <div class="column">
       <div class="overview_count">{{ completedCount }}</div>
       <div class="overview_description">Completed</div>
     </div>
     <div class="column">
       <div class="overview_count">{{ indefiniteCount }}</div>
       <div class="overview_description">Indefinite</div>
-    </div>
-    <div class="column last">
-      <div class="overview_count">{{ stoppedCount }}</div>
-      <div class="overview_description">Stopped</div>
     </div>
   </div>
 </template>
@@ -37,10 +29,8 @@ export default {
   name: 'committeeoverview',
   props: [
     'inProgressCount',
-    'incompleteCount',
     'completedCount',
-    'indefiniteCount',
-    'stoppedCount'
+    'indefiniteCount'
   ],
   data () {
     return {

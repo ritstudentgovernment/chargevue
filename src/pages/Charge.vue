@@ -14,13 +14,14 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="charge_header">
       <div class="charge_header_text">{{ charge.title }}</div>
       <div class="charge_header_tag">
-        <button class="redirect_button" @click="redirect()">{{ charge.committee }}</button>
+        <span><button class="redirect_button" @click="redirect('committee')">{{ this.charge.committee }}</button></span>
+        <span v-if="this.charge.paw_links"><button class="redirect_button" @click="redirect('paw_links')">Paw Links</button></span>
       </div>
     </div>
-    <ChargeAdmin @updateCharge="updateCharge" :charge="charge"/>
+    <ChargeAdmin @updateCharge ="updateCharge" :charge="charge"/>
     <ChargeStatusBar :actions="actions"/>
     <Purpose :chargeDesc="charge.description" :createdAt="charge.created_at" />
-    <Tasks v-if="charge.committee" :tasks="actions" :committee="charge.committee" />
+    <Tasks v-if="charge.committee != ''" :tasks="actions" :committee="charge.committee" />
   </div>
 </template>
 
@@ -90,8 +91,15 @@ export default {
     next()
   },
   methods: {
-    redirect () {
-      this.$router.push('/committee/' + this.charge.committee)
+    redirect (destination) {
+      if (destination === 'committee') {
+        this.$router.push('/committee/' + this.charge.committee)
+      } else if (destination === 'paw_links') {
+        if (!this.charge.paw_links.includes('https://')) {
+          this.charge.paw_links = 'https://' + this.charge.paw_links
+        }
+        window.location.assign(this.charge.paw_links)
+      }
     },
     updateCharge (updatedCharge) {
       this.charge = updatedCharge
