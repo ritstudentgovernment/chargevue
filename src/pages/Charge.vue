@@ -60,7 +60,6 @@ export default {
   },
   sockets: {
     get_charge: function (data) {
-      console.log(data)
       this.charge = data
       this.charge.created_at = this.charge.created_at.substring(5, 7) + '/' + this.charge.created_at.substring(8, 10) + '/' + this.charge.created_at.substring(0, 4)
     },
