@@ -10,8 +10,8 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <div class="description">
 
-      <div class="modal" v-bind:class="{ 'is-active': showNewNoteModal }">
-        <div class="modal-background" v-on:click="closeModals()"></div>
+      <div class="modal" :class="{ 'is-active': showNewNoteModal }">
+        <div class="modal-background" @click="closeModals()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Add new progress note</p>
@@ -27,9 +27,55 @@ author: Gabe Landau <gll1872@rit.edu>
 
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="addNote()">Save note</button>
-            <button class="button" v-on:click="closeModals()">Cancel</button>
+            <button class="button is-primary" @click="addNote()">Save note</button>
+            <button class="button" @click="closeModals()">Cancel</button>
           </footer>
+            <article class="message" v-if="editChargeResponse.show" :class="editChargeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ editChargeResponse.message }}</div>
+            </article>
+        </div>
+    </div>
+
+    <div class="modal" :class="{ 'is-active': showEditNoteModal }">
+        <div class="modal-background" @click="closeModals()"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Edit a progress note</p>
+          </header>
+          <section class="modal-card-body">
+
+            <div class="field">
+              <label class="label">Note</label>
+              <div class="control">
+                <input class="input" type="text" v-model="currentString">
+              </div>
+            </div>
+
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" @click="editNote()">Save note</button>
+            <button class="button" @click="closeModals()">Cancel</button>
+          </footer>
+            <article class="message" v-if="editChargeResponse.show" :class="editChargeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ editChargeResponse.message }}</div>
+            </article>
+        </div>
+    </div>
+
+    <div class="modal" :class="{ 'is-active': showDeleteNoteModal }">
+        <div class="modal-background" @click="closeModals()"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Are you sure you want to delete this progress note?</p>
+          </header>
+    
+          <footer class="modal-card-foot">
+            <button class="button is-primary" @click="deleteNote()">Delete note</button>
+            <button class="button" @click="closeModals()">Cancel</button>
+          </footer>
+            <article class="message" v-if="editChargeResponse.show" :class="editChargeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ editChargeResponse.message }}</div>
+            </article>
         </div>
     </div>
 
@@ -43,22 +89,37 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
     <div class="divider"></div>
     <div class="rows">
-        <li v-for="value in charge.progress_notes" v-bind:key = value>
-            {{ value }}
+        <li class="columns" v-for="value in charge.progress_notes" :key = value>
+          <div class="column">
+            <div class="note">{{ value[0] }}</div>
+            <div class="date">{{ value[1] }}</div>
+          </div>
+          <div class="column">
+            <button v-if="canAlterNotes" class="note_controls button is-primary" @click="openDeleteModal(value[2])">Delete</button>
+            <button v-if="canAlterNotes" class="note_controls button is-primary" @click="openEditModal(value)">Edit</button>
+          </div>
         </li>
     </div>
   </div>
 </template>
 
 <script>
+import Auth from '../mixins/auth'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'progress_notes',
   props: ['charge'],
+  mixins: [Auth],
   components: {},
   data () {
     return {
-      localCharge: {},
+      committee: null,
+      localNotes: {},
       newNote: '',
+      currentString: null,
+      noteToEdit: null,
+      noteToDelete: null,
       showNewNoteModal: false,
       showEditNoteModal: false,
       showDeleteNoteModal: false,
@@ -71,17 +132,63 @@ export default {
   },
   methods: {
     addNote () {
-      console.log(this.newNote)
-      console.log(this.charge.progress_notes.length)
+      this.$socket.emit('edit_charge', {
+        token: this.getToken(),
+        charge: this.charge.id,
+        title: this.charge.title,
+        add_note: {note: this.newNote, date: this.getFormattedDate()}
+      })
+    },
+    deleteNote (noteId) {
+      this.$socket.emit('edit_charge', {
+        token: this.getToken(),
+        charge: this.charge.id,
+        title: this.charge.title,
+        delete_note: {id: this.noteToDelete}
+      })
+    },
+    editNote () {
+      this.$socket.emit('edit_charge', {
+        token: this.getToken(),
+        charge: this.charge.id,
+        title: this.charge.title,
+        edit_note: {note: this.currentString, date: this.getFormattedDate(), id: this.noteToEdit}
+      })
     },
     openAddModal () {
-      console.log('gottem')
       this.showNewNoteModal = true
+    },
+    openEditModal (note) {
+      this.localNotes = JSON.parse(JSON.stringify(this.charge.progress_notes))
+      this.noteToEdit = note[2]
+      this.currentString = (this.localNotes.find((element) => {
+        return element[2] === note[2]
+      }))[0]
+      this.showEditNoteModal = true
+    },
+    openDeleteModal (noteId) {
+      console.log(this)
+      this.noteToDelete = noteId
+      this.showDeleteNoteModal = true
+    },
+    getFormattedDate () {
+      var date = new Date()
+      var year = date.getFullYear()
+      var month = (1 + date.getMonth()).toString()
+      month = month.length > 1 ? month : '0' + month
+      var day = date.getDate().toString()
+      day = day.length > 1 ? day : '0' + day
+      return month + '/' + day + '/' + year
     },
     closeModals () {
       this.showNewNoteModal = false
       this.showEditNoteModal = false
       this.showDeleteNoteModal = false
+      this.editChargeResponse.show = false
+      this.editChargeResponse.message = null
+      this.editChargeResponse.success = null
+      this.editChargeResponse.error = null
+      this.newNote = ''
     },
     handleChargeEdits (data) {
       if (data.success) {
@@ -106,7 +213,24 @@ export default {
       if (data.success) {
         this.$emit('updateCharge', this.localCharge)
       }
+    },
+    get_committee: function (data) {
+      this.committee = data
     }
+  },
+  beforeMount () {
+    this.$socket.emit('get_committee', this.charge.committee)
+    // this.$socket.emit('get_committee', 'testing')
+  },
+  computed: {
+    canAlterNotes () {
+      return this.admin || (this.committee.head === this.username)
+    },
+    ...mapGetters([
+      'taskId',
+      'admin',
+      'username'
+    ])
   }
 }
 </script>
@@ -150,6 +274,34 @@ export default {
 
   .field {
       padding-right: 20px;
+  }
+
+  .note_controls {
+    display: inline-block;
+    float: right;
+    margin: 2px;
+  }
+
+  .rows {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .columns {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+  }
+
+  .note {
+    display: inline-block;
+    font-size: 1.25rem;
+    color: #f36e21
+  }
+
+  .date {
+    display: inline-block;
+    font-size: .8rem;
   }
 
 </style>

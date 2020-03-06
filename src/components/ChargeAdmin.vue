@@ -174,6 +174,7 @@ export default {
       this.editChargeResponse.show = false
       this.editChargeResponse.message = null
       this.editChargeResponse.success = null
+      this.editChargeResponse.error = null
     },
     openConfirmModal () {
       this.showConfirmModal = true

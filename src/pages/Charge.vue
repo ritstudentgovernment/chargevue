@@ -21,7 +21,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <ChargeAdmin @updateCharge ="updateCharge" :charge="charge"/>
     <ChargeStatusBar :actions="actions"/>
     <Purpose :chargeDesc="charge.description" :createdAt="charge.created_at" />
-    <ProgressNotes :charge="charge" />
+    <ProgressNotes @updateCharge ="updateCharge" :charge="charge" />
     <Tasks v-if="charge.committee != ''" :tasks="actions" :committee="charge.committee" />
   </div>
 </template>
