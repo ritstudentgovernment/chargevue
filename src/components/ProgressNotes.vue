@@ -167,7 +167,6 @@ export default {
       this.showEditNoteModal = true
     },
     openDeleteModal (noteId) {
-      console.log(this)
       this.noteToDelete = noteId
       this.showDeleteNoteModal = true
     },
