@@ -529,6 +529,8 @@ export default {
 
       this.exportCSVFile(this.header, this.itemsFormatted, this.fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
       this.exportCSVFile(this.header2, this.itemsFormatted2, this.fileTitle2) // call the exportCSVFile() function to process the JSON and trigger the download
+      this.itemsFormatted = []
+      this.itemsFormatted2 = []
     },
     get_committees: function (data) {
       this.committees = data
