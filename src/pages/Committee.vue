@@ -16,7 +16,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <h1>{{ committee.title }}</h1>
     </div>
 
-    <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
+    <CommitteeOverview v-on:click="emitCharges" :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
     <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee"/>
     <CommitteeMembers />
     <div class="tabs is-boxed is-centered">
@@ -52,6 +52,7 @@ import CommitteeAdmin from '../components/CommitteeAdmin'
 import MinutesThumbnail from '../components/MinutesThumbnail'
 import { mapGetters } from 'vuex'
 import Auth from '../mixins/auth'
+import { EventBus } from '../components/EventBus'
 
 export default {
   name: 'dashboard',
@@ -125,6 +126,14 @@ export default {
           token: token,
           committee_id: this.$router.history.current.params['committee']
         })
+      })
+    },
+    emitCharges () {
+      EventBus.$emit('get-charges', this.charges)
+    },
+    filterCharges () {
+      EventBus.$on('send-filtered', charges => {
+        this.charges = charges
       })
     }
   },

@@ -10,29 +10,41 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <div class="columns">
     <div class="column">
-      <div class="overview_count">{{ inProgressCount }}</div>
-      <div class="overview_description">In Progress</div>
+      <a v-on:click="filterCharges(0)">
+        <div class="overview_count">{{ inProgressCount }}</div>
+        <div class="overview_description">In Progress</div>
+      </a>
     </div>
     <div class="column">
-      <div class="overview_count">{{ incompleteCount }}</div>
-      <div class="overview_description">Incomplete</div>
+      <a v-on:click="filterCharges(1)">
+        <div class="overview_count">{{ incompleteCount }}</div>
+        <div class="overview_description">Incomplete</div>
+      </a>
     </div>
     <div class="column">
-      <div class="overview_count">{{ completedCount }}</div>
-      <div class="overview_description">Completed</div>
+      <a v-on:click="filterCharges(2)">
+        <div class="overview_count">{{ completedCount }}</div>
+        <div class="overview_description">Completed</div>
+      </a>
     </div>
     <div class="column">
-      <div class="overview_count">{{ indefiniteCount }}</div>
-      <div class="overview_description">Indefinite</div>
+      <a v-on:click="filterCharges(3)">
+        <div class="overview_count">{{ indefiniteCount }}</div>
+        <div class="overview_description">Indefinite</div>
+      </a>
     </div>
     <div class="column last">
-      <div class="overview_count">{{ stoppedCount }}</div>
-      <div class="overview_description">Stopped</div>
+      <a v-on:click="filterCharges(4)">
+        <div class="overview_count">{{ stoppedCount }}</div>
+        <div class="overview_description">Stopped</div>
+      </a>
     </div>
   </div>
 </template>
 
 <script>
+import { EventBus } from './EventBus'
+
 export default {
   name: 'committeeoverview',
   props: [
@@ -44,6 +56,27 @@ export default {
   ],
   data () {
     return {
+      charges: []
+    }
+  },
+  sockets: {
+    get_all_charges: function (data) {
+      this.charges = data
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_all_charges', 'technology')
+  },
+  methods: {
+    filterCharges (type) {
+      EventBus.$on('get-charges', emittedCharges => {
+        this.charges = emittedCharges.filter(charge => charge.status === type)
+        console.log(this.charges)
+      })
+      this.sendFiltered()
+    },
+    sendFiltered () {
+      EventBus.$emit('send-filtered', this.charges)
     }
   }
 }
