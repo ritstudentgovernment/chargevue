@@ -1,9 +1,9 @@
 <!--
 
-filename: Purpose.vue
-description: Tasks
+filename: ProgressNotes.vue
+description: ProgressNotes
 
-author: Gabe Landau <gll1872@rit.edu>
+author: Eli Parrish <ep5756@rit.edu>
 
 -->
 
@@ -89,14 +89,16 @@ author: Gabe Landau <gll1872@rit.edu>
     </div>
     <div class="divider"></div>
     <div class="rows">
-        <li class="columns" v-for="value in charge.progress_notes" :key = value>
-          <div class="column">
-            <div class="note">{{ value[0] }}</div>
-            <div class="date">{{ value[1] }}</div>
+        <li class="columns" v-for="value in charge.progress_notes" :key = value[2]>
+          <div class="column note">
+            <div>{{ value[0] }}</div>
+          </div>
+          <div class="column date">
+            <div>{{ value[1] }}</div>
           </div>
           <div class="column">
-            <button v-if="canAlterNotes" class="note_controls button is-primary" @click="openDeleteModal(value[2])">Delete</button>
-            <button v-if="canAlterNotes" class="note_controls button is-primary" @click="openEditModal(value)">Edit</button>
+            <button class="note_controls button is-primary" @click="openDeleteModal(value[2])">Delete</button>
+            <button class="note_controls button is-primary" @click="openEditModal(value)">Edit</button>
           </div>
         </li>
     </div>
@@ -294,13 +296,15 @@ export default {
 
   .note {
     display: inline-block;
+    min-width: 50%;
     font-size: 1.25rem;
     color: #f36e21
   }
 
   .date {
     display: inline-block;
-    font-size: .8rem;
+    text-align: center;
+    font-size: 1rem;
   }
 
 </style>
