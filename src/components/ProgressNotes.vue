@@ -9,7 +9,9 @@ author: Eli Parrish <ep5756@rit.edu>
 
 <template>
   <div class="description">
-
+    <article class="message" v-if="cannotAlter.show" :class="cannotAlter.success ? 'is-success' : 'is-danger'">
+      <div class="message-body">{{ cannotAlter.message }}</div>
+    </article>
       <div class="modal" :class="{ 'is-active': showNewNoteModal }">
         <div class="modal-background" @click="closeModals()"></div>
         <div class="modal-card">
@@ -84,7 +86,8 @@ author: Eli Parrish <ep5756@rit.edu>
         <div class="description_title">Charge progress notes</div>
       </div>
       <div class="column">
-        <button class="button is-primary" @click="openAddModal()">Add Note</button>
+        <button v-if="!controlsShowing" class="button is-primary" @click="showControls()">Note Controls</button>
+        <button v-if="controlsShowing" class="button is-primary" @click="openAddModal()">Add Note</button>
       </div>
     </div>
     <div class="divider"></div>
@@ -97,8 +100,8 @@ author: Eli Parrish <ep5756@rit.edu>
             <div>{{ value[1] }}</div>
           </div>
           <div class="column">
-            <button class="note_controls button is-primary" @click="openDeleteModal(value[2])">Delete</button>
-            <button class="note_controls button is-primary" @click="openEditModal(value)">Edit</button>
+            <button v-if="controlsShowing" class="note_controls button is-primary" @click="openDeleteModal(value[2])">Delete</button>
+            <button v-if="controlsShowing" class="note_controls button is-primary" @click="openEditModal(value)">Edit</button>
           </div>
         </li>
     </div>
@@ -116,6 +119,12 @@ export default {
   components: {},
   data () {
     return {
+      controlsShowing: false,
+      cannotAlter: {
+        show: false,
+        success: null,
+        message: ''
+      },
       committee: null,
       localNotes: {},
       newNote: '',
@@ -133,6 +142,19 @@ export default {
     }
   },
   methods: {
+    canAlterNotes () {
+      return this.admin || (this.committee.head === this.username)
+    },
+    showControls () {
+      this.$socket.emit('get_committee', this.charge.committee)
+      if (this.canAlterNotes) {
+        this.controlsShowing = true
+      } else {
+        this.cannotAlter.show = true
+        this.cannotAlter.success = false
+        this.cannotAlter.message = 'User not authorized to edit progress notes.'
+      }
+    },
     addNote () {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
@@ -216,17 +238,11 @@ export default {
       }
     },
     get_committee: function (data) {
+      console.log(data)
       this.committee = data
     }
   },
-  beforeMount () {
-    this.$socket.emit('get_committee', this.charge.committee)
-    // this.$socket.emit('get_committee', 'testing')
-  },
   computed: {
-    canAlterNotes () {
-      return this.admin || (this.committee.head === this.username)
-    },
     ...mapGetters([
       'taskId',
       'admin',
