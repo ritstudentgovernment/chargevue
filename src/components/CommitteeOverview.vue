@@ -43,7 +43,7 @@ author: Gabe Landau <gll1872@rit.edu>
 </template>
 
 <script>
-import { EventBus } from './EventBus'
+import EventBus from './EventBus'
 
 export default {
   name: 'committeeoverview',
@@ -71,9 +71,11 @@ export default {
     filterCharges (type) {
       EventBus.$on('get-charges', emittedCharges => {
         this.charges = emittedCharges.filter(charge => charge.status === type)
+        console.log('current charges')
         console.log(this.charges)
       })
       this.sendFiltered()
+      console.log(`filtered ${type}`)
     },
     sendFiltered () {
       EventBus.$emit('send-filtered', this.charges)
@@ -102,4 +104,8 @@ export default {
   .overview_description
     margin: 10px 0 0 0
     font-weight: 300
+  
+  a
+    cursor: pointer
+
 </style>

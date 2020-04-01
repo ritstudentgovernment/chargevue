@@ -52,7 +52,7 @@ import CommitteeAdmin from '../components/CommitteeAdmin'
 import MinutesThumbnail from '../components/MinutesThumbnail'
 import { mapGetters } from 'vuex'
 import Auth from '../mixins/auth'
-import { EventBus } from '../components/EventBus'
+import EventBus from '../components/EventBus'
 
 export default {
   name: 'dashboard',
