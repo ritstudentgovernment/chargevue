@@ -1,8 +1,8 @@
 <template>
   <modal 
     class="add-task"
-    :response-message="addTaskResponse.message"
-    :response-success="addTaskResponse.success"
+    :response-message="createTaskResponse.message"
+    :response-success="createTaskResponse.success"
     :show-modal="showModal"
     @close-modal="hide"
   >
@@ -10,6 +10,15 @@
       <label class="label">Task Name</label>
       <div class="control">
         <input class="input" type="text" placeholder="Task Name" v-model="taskData.title" maxlength="255">
+      </div>
+    </div>
+    
+    <div class="field">
+      <label class="label">Charge</label>
+      <div class="select">
+        <select v-model="selectedChargeId">
+          <option v-for="charge in charges" :key="charge.id" :value="charge.id">{{ charge.title }}</option>
+        </select>
       </div>
     </div>
 
@@ -46,27 +55,30 @@ import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs'
 import 'vue-simple-suggest/dist/styles.css'
 
 export default {
-  name: 'CreateTaskModal',
+  name: 'MinuteTaskModal',
   mixins: [Auth],
   components: {
     VueSimpleSuggest,
     Modal
   },
   props: {
-    members: {
-      type: Array,
+    committeeId: {
+      type: String,
       required: true
     }
   },
   data () {
     return {
       showModal: false,
+      charges: [],
+      members: [],
+      selectedChargeId: null,
       taskData: {
         description: '',
         assignee: '',
         title: ''
       },
-      addTaskResponse: {
+      createTaskResponse: {
         success: true,
         message: ''
       }
@@ -86,34 +98,56 @@ export default {
       })
       this.$socket.emit('create_action', {
         token: this.getToken(),
-        charge: this.$router.history.current.params['charge'],
+        charge: this.selectedChargeId,
         assigned_to: this.taskData.assignee,
         title: this.taskData.title,
         description: this.taskData.description
       })
     },
+    getCharges () {
+      this.checkAuth().then((token) => {
+        this.$socket.emit('get_charges', {
+          token: token,
+          committee_id: this.committeeId
+        })
+      })
+    },
+    getMembers () {
+      this.$socket.emit('get_members', this.committeeId)
+    },
     hide () {
       this.taskData.description = ''
       this.taskData.assignee = ''
       this.taskData.title = ''
-      this.addTaskResponse.success = true
-      this.addTaskResponse.message = ''
+      this.createTaskResponse.success = true
+      this.createTaskResponse.message = ''
       this.showModal = false
+      this.charges = []
+      this.members = []
+      this.selectedChargeId = null
     },
     show () {
       this.showModal = true
+      this.getCharges()
+      this.getMembers()
     }
   },
   sockets: {
     create_action: function (data) {
       if (data.success) {
-        this.addTaskResponse.success = true
-        this.addTaskResponse.message = data.success
+        this.createTaskResponse.success = true
+        this.createTaskResponse.message = data.success
         setTimeout(() => { this.hide() }, 2000)
       } else if (data.error) {
-        this.addTaskResponse.success = false
-        this.addTaskResponse.message = data.error
+        this.createTaskResponse.success = false
+        this.createTaskResponse.message = data.error
       }
+    },
+    get_charges: function (data) {
+      this.charges = data
+    },
+    get_members: function (data) {
+      this.members = data.members
     }
   },
   computed: {
@@ -138,9 +172,5 @@ export default {
   }
   .control {
     padding-right: 20px;
-  }
-
-  .modal-content {
-    width: 60%;
   }
 </style>

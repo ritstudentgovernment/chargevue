@@ -52,35 +52,59 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.title]]" @change="updateProp('title', $event)">
+                <input class="input" type="text" v-model="localCharge.title" maxlength="255">
               </div>
             </div>
 
             <div class="field">
-              <label class="label">Description</label>
+              <label class="label">Purpose</label>
               <div class="control">
-                <input class="input" type="text" :value="[[this.charge.description]]" @change="updateProp('description', $event)">
+                <input class="input" type="text" v-model="localCharge.description" maxlength="255">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Progress Note</label>
+              <div class="control">
+                <input class="input" type="text" v-model="localCharge.progressNote">
+              </div>
+            </div>
+
+            <div class = "field">
+              <label class="label">Status</label>
+              <div class="select">
+                <select v-model="localCharge.status">
+                  <option selected disabled>Select an Option</option>
+                  <option :value="0">In Progress</option>
+                  <option :value="1">Completed</option>
+                  <option :value="2">Indefinite</option>
+                </select>
               </div>
             </div>
 
             <div class="field">
               <label class="label">PawPrints Link</label>
                 <div class="control">
-                  <input class="input" type="text" :value="[[this.charge.paw_links]]" @change="updateProp('pawlink', $event)">
+                  <input class="input" type="text" v-model="localCharge.paw_links">
                 </div>
             </div>
 
             <div class="field">
-              <label class="label">Committee</label>
-              <div class="control">
-                <input class="input" type="text" :value="[[this.charge.committee]]" @change="updateProp('committee', $event)">
-              </div>
+              <label class="label">Change Committee</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="localCharge.committee">
+                </div>
             </div>
 
-            <div class="field">
-              <label class="container label"> Make this charge public?  
-                <input type="checkbox" class="is-primary" autocomplete="off" :checked="[[this.charge.private]]" @change="updateProp('private', $event)">
-                <span class="checkmark is-primary"></span>
+            <div class="field" style="display: inline-flex;">
+              <label class="container label">Public  
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="false">
+                <span class="radio is-primary"></span>
+              </label>
+
+              <label class="container label" style="margin-left: 25px;">Private  
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="true">
+                <span class="radio is-primary"></span>
               </label>
             </div>
 
@@ -97,12 +121,15 @@ author: Gabe Landau <gll1872@rit.edu>
 
 <script>
 import Auth from '../mixins/auth'
+
 export default {
   name: 'charge-admin',
   mixins: [Auth],
   props: ['charge'],
   data () {
     return {
+      localCharge: {},
+      updateValue: null,
       showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
@@ -113,23 +140,39 @@ export default {
     }
   },
   methods: {
+    handleChargeEdits (data) {
+      if (data.success) {
+        this.editChargeResponse.show = true
+        this.editChargeResponse.success = true
+        this.editChargeResponse.message = data.success
+        var that = this
+        setTimeout(function () {
+          that.closeModals()
+        }, 2000)
+      } else if (data.error) {
+        this.editChargeResponse.show = true
+        this.editChargeResponse.success = false
+        this.editChargeResponse.message = data.error
+      }
+    },
     editCharge () {
       this.$socket.emit('edit_charge', {
         token: this.getToken(),
-        charge: this.charge.id, // The user cannot edit this field
-        title: this.charge.title,
-        description: this.charge.description,
-        committee: this.charge.committee,
-        // TODO status and priority, dead code?
-        private: this.charge.private
+        charge: this.localCharge.id, // The user cannot edit this field
+        title: this.localCharge.title,
+        description: this.localCharge.description,
+        committee: this.localCharge.committee,
+        status: this.localCharge.status,
+        paw_links: this.localCharge.paw_links,
+        private: this.localCharge.private
       })
     },
     closeCharge () {
-      this.$socket.emit('edit_charge', {
+      this.$socket.emit('close_charge', {
         token: this.getToken(),
-        title: this.charge.title,
         charge: this.charge.id,
-        status: 5 // This status saves the charge as closed
+        committee_id: this.charge.committee,
+        status: 5 // This status closes the charge
       })
     },
     closeModals () {
@@ -143,27 +186,23 @@ export default {
       this.showConfirmModal = true
     },
     openEditModal () {
+      this.localCharge = JSON.parse(JSON.stringify(this.charge))
       this.showEditModal = true
-    },
-    // Dynamically emits updates to the parent component, updating the prop as the user types
-    updateProp (field, event) {
-      this.$emit('updateCharge', Object.assign({}, this.charge, {[field]: event.target.value}))
     }
   },
   sockets: {
     edit_charge: function (data) {
+      this.handleChargeEdits(data)
+      // Only update the prop if the edit was successful
       if (data.success) {
-        this.editChargeResponse.show = true
-        this.editChargeResponse.success = true
-        this.editChargeResponse.message = data.success
-        var that = this
-        setTimeout(function () {
-          that.$router.push({path: '/committee/' + that.charge.committee})
-        }, 2000)
-      } else if (data.error) {
-        this.editChargeResponse.show = true
-        this.editChargeResponse.success = false
-        this.editChargeResponse.message = data.error
+        this.$emit('updateCharge', this.localCharge)
+      }
+    },
+    close_charge: function (data) {
+      this.handleChargeEdits(data)
+      // If the user closes the charge or requests a close, then redirect
+      if (data.success) {
+        setTimeout(() => { this.$router.push('/committee/' + this.charge.committee) }, 2000)
       }
     }
   }
@@ -191,5 +230,9 @@ export default {
 
   .content {
     padding: 20px;
+  }
+
+  .field {
+    padding-right: 20px;
   }
 </style>
