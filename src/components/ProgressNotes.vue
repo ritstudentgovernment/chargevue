@@ -9,9 +9,11 @@ author: Eli Parrish <ep5756@rit.edu>
 
 <template>
   <div class="description">
+
     <article class="message" v-if="cannotAlter.show" :class="cannotAlter.success ? 'is-success' : 'is-danger'">
       <div class="message-body">{{ cannotAlter.message }}</div>
     </article>
+    
       <div class="modal" :class="{ 'is-active': showNewNoteModal }">
         <div class="modal-background" @click="closeModals()"></div>
         <div class="modal-card">
