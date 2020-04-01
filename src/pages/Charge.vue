@@ -14,11 +14,11 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="charge_header">
       <div class="charge_header_text">{{ charge.title }}</div>
       <div class="charge_header_tag">
-        <span><button class="redirect_button" @click="redirect('committee')">{{ this.charge.committee }}</button></span>
-        <span v-if="this.charge.paw_links"><button class="redirect_button" @click="redirect('paw_links')">Paw Links</button></span>
+        <span><button class="redirect_button" @click="redirect('committee')">{{ charge.committee }}</button></span>
+        <span v-if="charge.paw_links"><button class="redirect_button" @click="redirect('paw_links')">Paw Links</button></span>
       </div>
     </div>
-    <ChargeAdmin @updateCharge ="updateCharge" :charge="charge"/>
+    <ChargeAdmin v-if="isPrivileged" @updateCharge="updateCharge" :charge="charge"/>
     <ChargeStatusBar :actions="actions"/>
     <Purpose :chargeDesc="charge.description" :createdAt="charge.created_at" />
     <Tasks v-if="charge.committee != ''" :tasks="actions" :committee="charge.committee" />
@@ -33,6 +33,7 @@ import Tasks from '../components/Tasks'
 import Purpose from '../components/Purpose'
 import ChargeAdmin from '../components/ChargeAdmin'
 import moment from 'moment'
+import { mapGetters } from 'vuex'
 import Auth from '../mixins/auth'
 
 export default {
@@ -52,21 +53,25 @@ export default {
         title: '',
         committee: ''
       },
-      actions: []
+      actions: [],
+      members: []
     }
   },
   sockets: {
-    get_charge: function (data) {
+    get_charge (data) {
       this.charge = data
       this.charge.created_at = this.charge.created_at.substring(5, 7) + '/' + this.charge.created_at.substring(8, 10) + '/' + this.charge.created_at.substring(0, 4)
     },
-    get_actions: function (data) {
+    get_actions (data) {
       this.actions = data
       for (let action of this.actions) {
         this.$socket.emit('get_notes', action.id)
       }
     },
-    get_notes: function (data) {
+    get_members (data) {
+      this.members = data.error ? [] : data.members
+    },
+    get_notes (data) {
       if (data.length > 0) {
         for (let note of data) {
           note.created_at = moment(note.created_at).format('L @ h:mma')
@@ -104,6 +109,7 @@ export default {
       this.charge = updatedCharge
     },
     updatePage (chargeId) {
+      this.$socket.emit('get_members', this.charge.committee)
       this.checkAuth().then((token) => {
         this.$socket.emit('get_charge', {
           token: token,
@@ -111,6 +117,16 @@ export default {
         })
         this.$socket.emit('get_actions', chargeId)
       })
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'admin',
+      'username'
+    ]),
+    isPrivileged () {
+      let isHead = this.members.some(member => member.id === this.username && member.role === 'CommitteeHead')
+      return this.admin || isHead
     }
   }
 }

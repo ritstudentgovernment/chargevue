@@ -52,14 +52,14 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="field">
               <label class="label">Title</label>
               <div class="control">
-                <input class="input" type="text" v-model="localCharge.title">
+                <input class="input" type="text" v-model="localCharge.title" maxlength="255">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Purpose</label>
               <div class="control">
-                <input class="input" type="text" v-model="localCharge.description">
+                <input class="input" type="text" v-model="localCharge.description" maxlength="255">
               </div>
             </div>
 

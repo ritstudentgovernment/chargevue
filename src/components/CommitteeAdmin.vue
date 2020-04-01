@@ -34,7 +34,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="field">
             <label class="label">Title</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Title" v-model="createChargeTitle">
+              <input class="input" type="text" placeholder="Title" v-model="createChargeTitle" maxlength="255">
             </div>
           </div>
 
