@@ -50,6 +50,17 @@ module.exports = {
         include: [resolve('src'), resolve('test')]
       },
       {
+        test: /ckeditor-[^\/\\]+[\/\\].+\.js$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [require('babel-preset-env')]
+            }
+          }
+        ]
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {

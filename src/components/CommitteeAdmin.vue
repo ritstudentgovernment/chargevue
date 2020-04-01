@@ -14,9 +14,9 @@ author: Gabe Landau <gll1872@rit.edu>
       <div class="title">Committee Controls</div>
       <div class="divider"></div>
       <div class="content">
-        <button class="button is-primary" @click="openAddNewCharge()">Create Charge</button>
-        <button class="button is-primary" @click="openAddCommitteeMember()">Add Member</button>
-        <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm()">Remove Member</button>
+        <button class="button is-primary" v-if="isPrivileged" @click="openAddNewCharge()">Create Charge</button>
+        <button class="button is-primary" v-if="isPrivileged" @click="openAddCommitteeMember()">Add Member</button>
+        <button class="button is-primary" v-if="isPrivileged" @click="openRemoveMemberFromCommitteeForm()">Remove Member</button>
         <button class="button is-primary" @click="showAddMeetingMinutes()">New Minutes</button>
       </div>
     </div>
@@ -39,9 +39,9 @@ author: Gabe Landau <gll1872@rit.edu>
           </div>
 
           <div class="field">
-            <label class="label">Description</label>
+            <label class="label">Purpose</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Description" v-model="createChargeDescription" maxlength="255">
+              <input class="input" type="text" placeholder="Purpose" v-model="createChargeDescription" maxlength="255">
             </div>
           </div>
 
@@ -50,14 +50,9 @@ author: Gabe Landau <gll1872@rit.edu>
             <div class="select">
               <select v-model="createChargeStatus">
                 <option selected disabled>Select an Option</option>
-                  <option value="0">Unapproved</option>
-                  <option value="1">Failed</option>
-                  <option value="2">InProgress</option>
-                  <option value="3">Indefinite</option>
-                  <option value="4">Unknown</option>
-                  <option value="5">Completed</option>
-                  <option value="6">NotStarted</option>
-                  <option value="7">Stopped</option>
+                  <option value="0">In Progress</option>
+                  <option value="1">Completed</option>
+                  <option value="2">Indefinite</option>
               </select>
             </div>
           </div>
@@ -89,10 +84,10 @@ author: Gabe Landau <gll1872@rit.edu>
       </div>
     </div>
     <div v-if="showAddMemberToCommitteeForm">
-      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.committee.id" v-bind:allMembers="this.allMembers"/>
+      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" :addMemberCommittee="committee.id" :allMembers="allMembers"/>
     </div>
     <div v-if="showRemoveMemberFromCommitteeForm">
-      <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee" />
+      <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" :members="members" :removeMemberCommittee="removeMemberCommittee" />
     </div>
   </div>
 </template>
@@ -106,14 +101,23 @@ export default {
   name: 'committee-admin',
   components: {AddCommitteeMemberModal: AddCommitteeMember, RemoveCommitteeMemberModal: RemoveCommitteeMember},
   mixins: [Auth],
-  props: ['committee'],
+  props: {
+    committee: {
+      type: Object,
+      required: true
+    },
+    isPrivileged: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       showAddNewCharge: false,
       members: null,
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
-      createChargeStatus: 1, // TODO remember input validation
+      createChargeStatus: 0,
       createChargeTitle: null,
       createChargePriority: 1,
       createChargeDescription: null,
@@ -182,6 +186,7 @@ export default {
         this.createChargeResponse.success = true
         this.createChargeResponse.message = data.success
         setTimeout(() => { this.closeAddNewCharge() }, 2000)
+        this.$emit('chargeCreated')
       } else if (data.error) {
         this.createChargeResponse.show = true
         this.createChargeResponse.success = false
