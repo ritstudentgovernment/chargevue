@@ -9,7 +9,7 @@
     <div class="field">
       <label class="label">Task Name</label>
       <div class="control">
-        <input class="input" type="text" placeholder="Task Name" v-model="taskData.title">
+        <input class="input" type="text" placeholder="Task Name" v-model="taskData.title" maxlength="255">
       </div>
     </div>
     
