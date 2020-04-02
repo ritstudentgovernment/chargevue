@@ -66,7 +66,28 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <div class="field">
               <label class="label">Username</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="adminUsername">
+                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userId">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">First Name</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userFirstName">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Last Name</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userLastName">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">email</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userEmail">
               </div>
             </div>
 
@@ -287,7 +308,6 @@ export default {
       userFirstName: 'Jordyn',
       userLastName: 'Bartlett',
       userEmail: 'somedumbemail@yahoo.com',
-      userIsAdmin: false,
       showAddAdminForm: false,
       committees: null,
       members: null,
@@ -414,7 +434,7 @@ export default {
         first_name: this.userFirstName,
         last_name: this.userLastName,
         email: this.userEmail,
-        is_admin: this.userIsAdmin
+        is_admin: true
       })
     },
     editCommittee () {
