@@ -72,7 +72,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
 
           </section>
           <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="addAdmin()" v-bind:class="{ 'is-loading' : createDisabled }">Add Admin</button>
+            <button class="button is-primary" v-on:click="addAdmin()">Add Admin</button>
             <button class="button" v-on:click="closeAddAdmin()">Cancel</button>
           </footer>
         </div>
@@ -283,7 +283,11 @@ export default {
   },
   data () {
     return {
-      adminUsername: 'JarJarBinks',
+      userId: 'JarJarBinks',
+      userFirstName: 'Jordyn',
+      userLastName: 'Bartlett',
+      userEmail: 'somedumbemail@yahoo.com',
+      userIsAdmin: false,
       showAddAdminForm: false,
       committees: null,
       members: null,
@@ -405,13 +409,13 @@ export default {
       this.addAdminResponse.success = null
     },
     addAdmin () {
-      console.log('Gottem')
-      this.addAdminResponse.show = true
-      this.addAdminResponse.message = 'On the way to adding JarJarBinks'
-      this.addAdminResponse.success = true
-      // Check backend for correct socket
-      // Add auth checks to only allow admins to create admins
-      // this.$sockets.emit('add_user', this.adminUsername)
+      this.$socket.emit('add_user', {
+        id: this.userId,
+        first_name: this.userFirstName,
+        last_name: this.userLastName,
+        email: this.userEmail,
+        is_admin: this.userIsAdmin
+      })
     },
     editCommittee () {
       this.editCommitteeResponse.show = false
@@ -535,7 +539,7 @@ export default {
       this.allMembers = data
       this.showAddMemberToCommitteeForm = true
     },
-    addAdmin: function (data) {
+    add_user: function (data) {
       if (data.success) {
         this.addAdminResponse.show = true
         this.addAdminResponse.success = true
