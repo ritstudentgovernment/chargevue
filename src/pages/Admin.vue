@@ -59,9 +59,9 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <p class="modal-card-title">Add Admin</p>
           </header>
           <section class="modal-card-body" @keyup.enter="addAdmin()">
-            <!-- <article class="message" v-if="addAdminResponse.show" v-bind:class="addAdminResponse.success ? 'is-success' : 'is-danger'">
+            <article class="message" v-if="addAdminResponse.show" v-bind:class="addAdminResponse.success ? 'is-success' : 'is-danger'">
               <div class="message-body">{{ addAdminResponse.message }}</div>
-            </article> -->
+            </article>
 
             <div class="field">
               <label class="label">Username</label>
@@ -298,6 +298,11 @@ export default {
         message: null,
         success: null
       },
+      addAdminResponse: {
+        show: false,
+        message: null,
+        success: null
+      },
       editCommitteeResponse: {
         show: false,
         message: null,
@@ -332,7 +337,6 @@ export default {
   methods: {
     createFileSelected (file) {
       this.createDisabled = true
-
       this.createImageName = file[file.length - 1].name
       this.convert(file).then((image) => {
         this.createImage = image
@@ -344,7 +348,6 @@ export default {
     },
     editFileSelected (file) {
       this.editDisabled = true
-
       this.editImageName = file[file.length - 1].name
       this.convert(file).then((image) => {
         this.editImage = image
@@ -358,7 +361,6 @@ export default {
       let timeDateObj = this.convertFrontendToBackend(this.createMeetingAmPm, this.createMeetingHour, this.createMeetingMinute, this.createMeetingDay)
       let time = timeDateObj.time
       let day = timeDateObj.day
-
       if (this.createImage) {
         this.$socket.emit('create_committee', {
           token: this.getToken(),
@@ -398,6 +400,18 @@ export default {
     },
     closeAddAdmin () {
       this.showAddAdminForm = false
+      this.addAdminResponse.show = false
+      this.addAdminResponse.message = null
+      this.addAdminResponse.success = null
+    },
+    addAdmin () {
+      console.log('Gottem')
+      this.addAdminResponse.show = true
+      this.addAdminResponse.message = 'On the way to adding JarJarBinks'
+      this.addAdminResponse.success = true
+      // Check backend for correct socket
+      // Add auth checks to only allow admins to create admins
+      // this.$sockets.emit('add_user', this.adminUsername)
     },
     editCommittee () {
       this.editCommitteeResponse.show = false
@@ -520,6 +534,17 @@ export default {
     get_all_users: function (data) {
       this.allMembers = data
       this.showAddMemberToCommitteeForm = true
+    },
+    addAdmin: function (data) {
+      if (data.success) {
+        this.addAdminResponse.show = true
+        this.addAdminResponse.success = true
+        this.addAdminResponse.message = data.success
+      } else if (data.error) {
+        this.addAdminResponse.show = true
+        this.addAdminResponse.success = false
+        this.addAdminResponse.message = data.error
+      }
     }
   },
   beforeMount () {
