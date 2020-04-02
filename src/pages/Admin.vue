@@ -13,6 +13,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
     <div class="box" id="admin_forms">
       <h3 class="title is-3">Actions</h3>
       <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
+      <button class="button is-primary" v-on:click="showAddAdminForm = true">Add Admin</button>
     </div>
 
     <div class="box" id="committee_table">
@@ -49,6 +50,34 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
       </article>
       </div>
     </div>
+
+    <!-- MODAL BEGINS HERE -->
+    <div class="modal" v-bind:class="{ 'is-active': showAddAdminForm }">
+        <div class="modal-background" v-on:click="closeAddAdmin()"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Add Admin</p>
+          </header>
+          <section class="modal-card-body" @keyup.enter="addAdmin()">
+            <!-- <article class="message" v-if="addAdminResponse.show" v-bind:class="addAdminResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ addAdminResponse.message }}</div>
+            </article> -->
+
+            <div class="field">
+              <label class="label">Username</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="adminUsername">
+              </div>
+            </div>
+
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" v-on:click="addAdmin()" v-bind:class="{ 'is-loading' : createDisabled }">Add Admin</button>
+            <button class="button" v-on:click="closeAddAdmin()">Cancel</button>
+          </footer>
+        </div>
+      </div>
+      <!-- MODAL ENDS HERE -->
 
     <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
         <div class="modal-background" v-on:click="closeCreateCommittee()"></div>
@@ -254,6 +283,8 @@ export default {
   },
   data () {
     return {
+      adminUsername: 'JarJarBinks',
+      showAddAdminForm: false,
       committees: null,
       members: null,
       allMembers: null,
@@ -364,6 +395,9 @@ export default {
       this.createImageName = '(no file selected)'
       this.createCommitteeResponse.show = false
       this.showCreateCommitteeForm = false
+    },
+    closeAddAdmin () {
+      this.showAddAdminForm = false
     },
     editCommittee () {
       this.editCommitteeResponse.show = false
