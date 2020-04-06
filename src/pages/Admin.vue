@@ -421,6 +421,10 @@ export default {
       this.showCreateCommitteeForm = false
     },
     closeAddAdmin () {
+      this.userId = null
+      this.userFirstName = null
+      this.userLastName = null
+      this.userEmail = null
       this.showAddAdminForm = false
       this.addAdminResponse.show = false
       this.addAdminResponse.message = null
