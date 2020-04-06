@@ -8,25 +8,23 @@ author: Gabe Landau <gll1872@rit.edu>
 -->
 
 <template>
-  <div class="task">
-    <div @click="taskClicked">
-      <div><h3 class="title is-3">{{task.title}}</h3></div>
-      <div>
-        <p>{{task.description}}</p>
-      </div>
+  <div class="task" @click="taskClicked">
+    <div><h3 class="title is-3">{{task.title}}</h3></div>
+    <div>
+      <p>{{task.description}}</p>
+    </div>
 
-      <p class="updates-header">Notes ({{task.notes ? task.notes.length : 0}})</p>
-      <div class="update" v-for="note in recentNotes" :key="note.id">
-        <div class="update-image">
-          <img src="../assets/avatar.png" />
+    <p class="updates-header">Notes ({{task.notes ? task.notes.length : 0}})</p>
+    <div class="update" v-for="note in recentNotes" :key="note.id">
+      <div class="update-image">
+        <img src="../assets/avatar.png" />
+      </div>
+      <div class="update-body">
+        <div class="update-header">
+          <span class="update-name">{{note.author}}</span>
+          <span class="update-timestamp">Posted on {{note.created_at}}</span>
         </div>
-        <div class="update-body">
-          <div class="update-header">
-            <span class="update-name">{{note.author}}</span>
-            <span class="update-timestamp">Posted on {{note.created_at}}</span>
-          </div>
-          <p class="update-body-text">{{note.description}}</p>
-        </div>
+        <p class="update-body-text">{{note.description}}</p>
       </div>
     </div>
   </div>
