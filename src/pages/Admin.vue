@@ -13,7 +13,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
     <div class="box" id="admin_forms">
       <h3 class="title is-3">Actions</h3>
       <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
-      <button class="button is-primary" v-on:click="showAddAdminForm = true">Add Admin</button>
+      <button class="button is-primary" v-on:click="showAddAdminForm = true">Create Admin</button>
     </div>
 
     <div class="box" id="committee_table">
@@ -51,12 +51,11 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
       </div>
     </div>
 
-    <!-- MODAL BEGINS HERE -->
     <div class="modal" v-bind:class="{ 'is-active': showAddAdminForm }">
         <div class="modal-background" v-on:click="closeAddAdmin()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
-            <p class="modal-card-title">Add Admin</p>
+            <p class="modal-card-title">Create new admin user</p>
           </header>
           <section class="modal-card-body" @keyup.enter="addAdmin()">
             <article class="message" v-if="addAdminResponse.show" v-bind:class="addAdminResponse.success ? 'is-success' : 'is-danger'">
@@ -66,28 +65,28 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <div class="field">
               <label class="label">Username</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userId">
+                <input class="input" type="text" placeholder="RIT email ID" maxlength="255" v-model="userId">
               </div>
             </div>
 
             <div class="field">
               <label class="label">First Name</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userFirstName">
+                <input class="input" type="text" placeholder="First Name" maxlength="255" v-model="userFirstName">
               </div>
             </div>
 
             <div class="field">
               <label class="label">Last Name</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userLastName">
+                <input class="input" type="text" placeholder="Last Name" maxlength="255" v-model="userLastName">
               </div>
             </div>
 
             <div class="field">
               <label class="label">email</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Title" maxlength="255" v-model="userEmail">
+                <input class="input" type="text" placeholder="Email" maxlength="255" v-model="userEmail">
               </div>
             </div>
 
@@ -98,7 +97,6 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
           </footer>
         </div>
       </div>
-      <!-- MODAL ENDS HERE -->
 
     <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
         <div class="modal-background" v-on:click="closeCreateCommittee()"></div>
@@ -304,10 +302,10 @@ export default {
   },
   data () {
     return {
-      userId: 'JarJarBinks',
-      userFirstName: 'Jordyn',
-      userLastName: 'Bartlett',
-      userEmail: 'somedumbemail@yahoo.com',
+      userId: null,
+      userFirstName: null,
+      userLastName: null,
+      userEmail: null,
       showAddAdminForm: false,
       committees: null,
       members: null,
@@ -564,6 +562,10 @@ export default {
         this.addAdminResponse.show = true
         this.addAdminResponse.success = true
         this.addAdminResponse.message = data.success
+        var that = this
+        setTimeout(function () {
+          that.closeAddAdmin()
+        }, 2000)
       } else if (data.error) {
         this.addAdminResponse.show = true
         this.addAdminResponse.success = false
