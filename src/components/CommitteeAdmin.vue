@@ -212,6 +212,10 @@ export default {
     margin: 25px auto 10px auto;
   }
 
+  .button {
+    margin-bottom: 5px;
+  }
+
   .title {
     text-align: left;
     font-size: 18pt;
