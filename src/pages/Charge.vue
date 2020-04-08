@@ -21,11 +21,13 @@ author: Gabe Landau <gll1872@rit.edu>
     <ChargeAdmin v-if="isPrivileged" @updateCharge="updateCharge" :charge="charge"/>
     <ChargeStatusBar :actions="actions"/>
     <Purpose :chargeDesc="charge.description" :createdAt="charge.created_at" />
-    <Tasks v-if="charge.committee" :tasks="actions" :committee="charge.committee" />
+    <ProgressNotes @updateCharge ="updateCharge" :charge="charge" />
+    <Tasks v-if="charge.committee != ''" :tasks="actions" :committee="charge.committee" />
   </div>
 </template>
 
 <script>
+import ProgressNotes from '../components/ProgressNotes'
 import HeaderMenu from '../components/HeaderMenu'
 import CommitteesMenu from '../components/CommitteesMenu'
 import ChargeStatusBar from '../components/ChargeStatusBar'
@@ -45,7 +47,8 @@ export default {
     'ChargeStatusBar': ChargeStatusBar,
     'Tasks': Tasks,
     'Purpose': Purpose,
-    'ChargeAdmin': ChargeAdmin
+    'ChargeAdmin': ChargeAdmin,
+    'ProgressNotes': ProgressNotes
   },
   data () {
     return {
