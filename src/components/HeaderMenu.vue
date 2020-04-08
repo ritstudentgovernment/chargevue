@@ -30,12 +30,13 @@ author: Gabe Landau <gll1872@rit.edu>
           <div id="notificationDropdown" class="dropdown-content form-control" name="people">
             <span>
               <div>
-                <a class="notification" :key="notification.id" v-for="notification in notifications" :value="notification">{{notification.message}}
-                  <ul class="notificationButtons">
-                    <li class="delete"><button class="delete" @click="openDeleteModal(notification)">Delete</button></li>
-                    <li class="open"><button class="open" @click="goToDestination(notification)">Open</button></li>
-                  </ul>
-                </a>
+                <div class="notification row" :key="notification.id" v-for="notification in notifications" :value="notification">
+                  <div class = "notificationMessage column1">{{notification.message}}</div>
+                  <div class = "notificationButtons column2">
+                    <div class = "delete row"><button class="delete" @click="openDeleteModal(notification)">Delete</button></div>
+                    <div class = "open row"><button class="open" @click="goToDestination(notification)">Open</button></div>
+                  </div>
+                </div>
               </div>
             </span>
           </div>
@@ -201,6 +202,24 @@ export default {
 <style scoped>
   @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400');
 
+  .column1 {
+    flex: 90%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .column2 {
+    flex: 10%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .row {
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     padding-top: 58px;
   }
@@ -353,6 +372,7 @@ export default {
   position: relative;
   margin: 0 0 0 0;
   border-bottom: 1px solid #f36e21;
+  border-right: 1px solid #f36e21;
 }
 
 .notificationButtons {
@@ -365,12 +385,10 @@ export default {
 .delete, .open {
   display: block;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   background: none;
-  border: 1px solid rgb(189, 189, 189);
   padding: 0!important;
   font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-  border-radius: 20%
 }
 
 .delete :hover {
@@ -391,7 +409,7 @@ export default {
 }
 
 .open {
-  float: left;
+  float: right;
   color: green;
 }
 </style>
