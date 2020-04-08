@@ -1,5 +1,5 @@
 <template>
-  <div class="modal is-active" >
+  <div class="modal is-active">
     <div class="modal-background" v-on:click="closeRemoveMember()"></div>
     <div class="modal-card">
       <header class="modal-card-head">
