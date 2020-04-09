@@ -13,7 +13,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
     <div class="box" id="admin_forms">
       <h3 class="title is-3">Actions</h3>
       <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
-      <button class="button is-primary" v-on:click="showAddAdminForm = true">Create Admin</button>
+      <button class="button is-primary" v-on:click="openAddAdminForm()">Create Admin</button>
       <button class="button is-primary" v-on:click="openPromoteUserForm()">Promote User</button>
     </div>
 
@@ -51,53 +51,6 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
       </article>
       </div>
     </div>
-
-    <div class="modal" v-bind:class="{ 'is-active': showAddAdminForm }">
-        <div class="modal-background" v-on:click="closeModals()"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Create new admin user</p>
-          </header>
-          <section class="modal-card-body" @keyup.enter="addAdmin()">
-            <article class="message" v-if="addAdminResponse.show" v-bind:class="addAdminResponse.success ? 'is-success' : 'is-danger'">
-              <div class="message-body">{{ addAdminResponse.message }}</div>
-            </article>
-
-            <div class="field">
-              <label class="label">Username</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="RIT email ID" maxlength="255" v-model="userId">
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">First Name</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="First Name" maxlength="255" v-model="userFirstName">
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Last Name</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="Last Name" maxlength="255" v-model="userLastName">
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">email</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="Email" maxlength="255" v-model="userEmail">
-              </div>
-            </div>
-
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="addAdmin()">Add Admin</button>
-            <button class="button" v-on:click="closeModals()">Cancel</button>
-          </footer>
-        </div>
-      </div>
 
     <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
         <div class="modal-background" v-on:click="closeModals()"></div>
@@ -276,6 +229,9 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
         </div>
       </div>
 
+    <div v-if="showAddAdminForm">
+      <add-admin-modal v-on:closeModal="closeModals()"/>
+    </div>
     <div v-if="showPromoteUserForm">
       <promote-user-modal  v-on:closeModal="closeModals()" v-bind:users="this.allUsers"/>
     </div>
@@ -289,6 +245,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
 </template>
 
 <script>
+import AddAdminModal from '@/components/AddAdminModal.vue'
 import HeaderMenu from '@/components/HeaderMenu.vue'
 import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
 import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
@@ -301,6 +258,7 @@ export default {
   name: 'admin',
   mixins: [Auth, Base64, Time],
   components: {
+    AddAdminModal: AddAdminModal,
     HeaderMenu: HeaderMenu,
     AddCommitteeMemberModal: AddCommitteeMember,
     RemoveCommitteeMemberModal: RemoveCommitteeMember,
@@ -309,10 +267,6 @@ export default {
   data () {
     return {
       userToPromote: null,
-      userId: null,
-      userFirstName: null,
-      userLastName: null,
-      userEmail: null,
       showAddAdminForm: false,
       committees: null,
       members: null,
@@ -323,17 +277,7 @@ export default {
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
       showPromoteUserForm: false,
-      promoteUserResponse: {
-        show: false,
-        message: null,
-        success: null
-      },
       createCommitteeResponse: {
-        show: false,
-        message: null,
-        success: null
-      },
-      addAdminResponse: {
         show: false,
         message: null,
         success: null
@@ -370,6 +314,9 @@ export default {
     }
   },
   methods: {
+    openAddAdminForm () {
+      this.showAddAdminForm = true
+    },
     createFileSelected (file) {
       this.createDisabled = true
       this.createImageName = file[file.length - 1].name
@@ -418,15 +365,6 @@ export default {
           head: this.createCommitteeHead
         })
       }
-    },
-    addAdmin () {
-      this.$socket.emit('add_user', {
-        id: this.userId,
-        first_name: this.userFirstName,
-        last_name: this.userLastName,
-        email: this.userEmail,
-        is_admin: true
-      })
     },
     editCommittee () {
       this.editCommitteeResponse.show = false
@@ -588,21 +526,6 @@ export default {
     },
     get_all_users: function (data) {
       this.allUsers = data
-    },
-    add_user: function (data) {
-      if (data.success) {
-        this.addAdminResponse.show = true
-        this.addAdminResponse.success = true
-        this.addAdminResponse.message = data.success
-        var that = this
-        setTimeout(function () {
-          that.closeAddAdmin()
-        }, 2000)
-      } else if (data.error) {
-        this.addAdminResponse.show = true
-        this.addAdminResponse.success = false
-        this.addAdminResponse.message = data.error
-      }
     }
   },
   beforeMount () {
