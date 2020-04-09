@@ -52,34 +52,6 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
       </div>
     </div>
 
-    <!-- Modal begins here -->
-    <div class="modal" v-bind:class="{ 'is-active': showPromoteUserForm }">
-        <div class="modal-background" v-on:click="closeModals()"></div>
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Promote a user to Admin status</p>
-          </header>
-          <section class="modal-card-body" @keyup.enter="promoteUser()">
-            <article class="message" v-if="promoteUserResponse.show" v-bind:class="promoteUserResponse.success ? 'is-success' : 'is-danger'">
-              <div class="message-body">{{ promoteUserResponse.message }}</div>
-            </article>
-
-            <div class="field">
-              <label class="label">User</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="Username" maxlength="255" v-model="userToPromote">
-              </div>
-            </div>
-
-          </section>
-          <footer class="modal-card-foot">
-            <button class="button is-primary" v-on:click="promoteUser()">Promote User</button>
-            <button class="button" v-on:click="closeModals()">Cancel</button>
-          </footer>
-        </div>
-      </div>
-      <!-- modal ends -->
-
     <div class="modal" v-bind:class="{ 'is-active': showAddAdminForm }">
         <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
