@@ -52,6 +52,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
       </div>
     </div>
 
+    <!-- Modal starts here -->
     <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
         <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
@@ -142,6 +143,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
           </footer>
         </div>
       </div>
+      <!-- Modal ends here -->
 
     <div class="modal" v-bind:class="{ 'is-active': showEditCommitteeForm }">
         <div class="modal-background" v-on:click="closeModals()"></div>

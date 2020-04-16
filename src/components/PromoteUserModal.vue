@@ -80,7 +80,7 @@ export default {
 
 <style scoped>
 
-  .input {
+  .field {
     padding-right: 20px;
   }
 

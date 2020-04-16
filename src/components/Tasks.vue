@@ -129,6 +129,8 @@ export default {
   .tasks_button {
     float: right;
     margin-top: 6.5px;
+    margin-bottom: 6.5px;
+    margin-right: 6.5px;
   }
   .columns, .column {
     padding: 0;
