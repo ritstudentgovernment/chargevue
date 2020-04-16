@@ -230,16 +230,16 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
       </div>
 
     <div v-if="showAddAdminForm">
-      <add-admin-modal v-on:closeModal="closeModals()"/>
+      <add-admin-modal v-on:closeModal="closeModals"/>
     </div>
     <div v-if="showPromoteUserForm">
-      <promote-user-modal  v-on:closeModal="closeModals()" v-bind:users="this.allUsers"/>
+      <promote-user-modal  @closeModal="closeModals"/>
     </div>
     <div v-if="showAddMemberToCommitteeForm">
-      <add-committee-member-modal  v-on:close-add-member="closeModals()" v-bind:addMemberCommittee="this.addMemberCommittee" v-bind:allMembers="this.allUsers"/>
+      <add-committee-member-modal  @close-add-member="closeModals" :addMemberCommittee="this.addMemberCommittee" :allMembers="this.allUsers"/>
     </div>
     <div v-if="showRemoveMemberFromCommitteeForm">
-      <remove-committee-member-modal v-on:close-remove-member="closeModals()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee"/>
+      <remove-committee-member-modal @close-remove-member="closeModals" :members = "this.members" :removeMemberCommittee = "this.removeMemberCommittee"/>
     </div>
   </div>
 </template>
@@ -266,17 +266,17 @@ export default {
   },
   data () {
     return {
-      userToPromote: null,
       showAddAdminForm: false,
+      showPromoteUserForm: false,
       committees: null,
       members: null,
       allUsers: null,
+      nonAdminUsers: [],
       addMemberCommittee: null,
       showCreateCommitteeForm: false,
       showEditCommitteeForm: false,
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
-      showPromoteUserForm: false,
       createCommitteeResponse: {
         show: false,
         message: null,
@@ -420,9 +420,9 @@ export default {
       this.showEditCommitteeForm = true
     },
     openAddMemberToCommitteeForm (id) {
+      this.$socket.emit('get_all_users')
       this.addMemberCommittee = id
       this.showAddMemberToCommitteeForm = true
-      this.$socket.emit('get_all_users')
     },
     openRemoveMemberFromCommitteeForm (id) {
       this.$socket.emit('get_members', id)
@@ -430,6 +430,8 @@ export default {
       this.showRemoveMemberFromCommitteeForm = true
     },
     closeModals () {
+      this.showPromoteUserForm = false
+      //
       this.showRemoveMemberFromCommitteeForm = false
       //
       this.showAddMemberToCommitteeForm = false
@@ -439,14 +441,7 @@ export default {
       this.showEditCommitteeForm = false
       this.editCommitteeResponse.show = false
       //
-      this.userId = null
-      this.userFirstName = null
-      this.userLastName = null
-      this.userEmail = null
       this.showAddAdminForm = false
-      this.addAdminResponse.show = false
-      this.addAdminResponse.message = null
-      this.addAdminResponse.success = null
       //
       this.createTitle = null
       this.createDescription = null
@@ -460,29 +455,9 @@ export default {
       this.createImageName = '(no file selected)'
       this.createCommitteeResponse.show = false
       this.showCreateCommitteeForm = false
-      //
-      this.showPromoteUserForm = false
-      this.promoteUserResponse.show = false
-      this.promoteUserResponse.message = null
-      this.promoteUserResponse.success = null
     }
   },
   sockets: {
-    edit_user: function (data) {
-      if (data.sucess) {
-        this.promoteUserResponse.show = true
-        this.promoteUserResponse.message = data.success0
-        this.promoteUserResponse.success = true
-      } else if (data.error) {
-        this.promoteUserResponse.show = true
-        this.promoteUserResponse.message = data.error
-        this.promoteUserResponse.sucess = false
-        var that = this
-        setTimeout(function () {
-          that.closePromoteUser()
-        }, 2000)
-      }
-    },
     get_committees: function (data) {
       this.committees = data
     },

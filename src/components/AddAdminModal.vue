@@ -1,6 +1,6 @@
 <template>
   <div class="modal is-active">
-    <div class='modal-background' v-on:click="closeModals()"></div>
+    <div class='modal-background' v-on:click="closeModal()"></div>
     <div class='modal-card'>
       <header class='modal-card-head'>
         <p class='modal-card-title'>Create new admin user</p>
@@ -67,7 +67,7 @@
       </section>
       <footer class='modal-card-foot'>
         <button class='button is-primary' v-on:click="addAdmin()">Add Admin</button>
-        <button class='button' v-on:click="closeModals()">Cancel</button>
+        <button class='button' v-on:click="closeModal()">Cancel</button>
       </footer>
     </div>
   </div>
@@ -81,7 +81,6 @@ export default {
   mixins: [Auth],
   data () {
     return {
-      showAddAdminForm: false,
       userId: null,
       userFirstName: null,
       userLastName: null,
@@ -98,11 +97,11 @@ export default {
       this.addAdminResponse.show = false
       this.addAdminResponse.message = null
       this.addAdminResponse.success = null
-      this.showAddAdminForm = false
       this.$emit('closeModal')
     },
     addAdmin () {
       this.$socket.emit('add_user', {
+        token: this.getToken(),
         id: this.userId,
         first_name: this.userFirstName,
         last_name: this.userLastName,
