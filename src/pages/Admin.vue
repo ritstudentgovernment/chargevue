@@ -35,6 +35,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
             <button class="button is-primary" @click="openRemoveMemberFromCommitteeForm(committee.id)">Remove Member</button>
             <button v-if="committee.enabled" class="button is-danger" @click="deactivateCommittee(committee.id)">Deactivate</button>
             <button v-if="!committee.enabled" class="button reactivate" @click="activateCommittee(committee.id)">Reactivate</button>
+            <button class="button is-success" @click="printCSV(committee.id)">Get CSV</button>
           </td>
         </tr>
         </tbody>
@@ -255,6 +256,8 @@ export default {
   data () {
     return {
       committees: null,
+      committeeCharges: null,
+      committeeMinutes: null,
       members: null,
       allMembers: null,
       addMemberCommittee: null,
@@ -295,10 +298,75 @@ export default {
       editImage: null,
       editImageName: '(no file selected)',
       removeMemberCommittee: null,
-      minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
+      minutes: ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'],
+      header: {name: 'NAME', description: 'DESCRIPTION', timestamp: 'CREATED_AT', assignment: 'ASSIGNED_TO', status: 'STATUS'},
+      header2: {title: 'TITLE', relatedCharges: 'RELATED CHARGES', name: 'COMMITTEE NAME', timestamp: 'CREATED_AT'},
+      itemsFormatted: [],
+      itemsFormatted2: [],
+      fileTitle: 'charges',
+      fileTitle2: 'minutes'
     }
   },
   methods: {
+    convertToCSV (objArray) {
+      var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
+      var str = ''
+
+      for (var i = 0; i < array.length; i++) {
+        var line = ''
+        for (var index in array[i]) {
+          if (line !== '') line += ','
+
+          line += array[i][index]
+        }
+
+        str += line + '\r\n'
+      }
+
+      return str
+    },
+    exportCSVFile (headers, items, fileTitle) {
+      if (headers) {
+        items.unshift(headers)
+      }
+
+      // Convert Object to JSON
+      var jsonObject = JSON.stringify(items)
+
+      var csv = this.convertToCSV(jsonObject)
+
+      var exportedFilename = fileTitle + '.csv' || 'export.csv'
+
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+      if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilename)
+      } else {
+        var link = document.createElement('a')
+        if (link.download !== undefined) { // feature detection
+          // Browsers that support HTML5 download attribute
+          var url = URL.createObjectURL(blob)
+          link.setAttribute('href', url)
+          link.setAttribute('download', exportedFilename)
+          link.style.visibility = 'hidden'
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      }
+    },
+    printCSV (id) {
+      this.$socket.emit('get_committee', id)
+      this.checkAuth().then((token) => {
+        this.$socket.emit('get_charges', {
+          token: token,
+          committee_id: id
+        })
+        this.$socket.emit('get_minutes', {
+          token: token,
+          committee_id: id
+        })
+      })
+    },
     createFileSelected (file) {
       this.createDisabled = true
 
@@ -438,6 +506,32 @@ export default {
     }
   },
   sockets: {
+    get_charges: function (data) {
+      this.committeeCharges = data
+      this.committeeCharges.forEach((charge) => {
+        this.itemsFormatted.push({name: charge.title, description: charge.description, timestamp: charge.created_at, assignment: charge.committee, status: charge.status})
+      })
+    },
+    get_minutes: function (data) {
+      this.committeeMinutes = data
+      this.committeeMinutes.forEach((minute) => {
+        var chargesIds = 'N/A'
+        if (minute.charges.length > 0) {
+          chargesIds = ''
+          minute.charges.forEach((charge) => {
+            chargesIds += `${charge.id} `
+          })
+        }
+        let date = new Date(parseInt(minute.date))
+        let fdate = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear()
+        this.itemsFormatted2.push({title: minute.title, relatedCharges: chargesIds, name: minute.committee_id, timestamp: fdate})
+      })
+
+      this.exportCSVFile(this.header, this.itemsFormatted, this.fileTitle) // call the exportCSVFile() function to process the JSON and trigger the download
+      this.exportCSVFile(this.header2, this.itemsFormatted2, this.fileTitle2) // call the exportCSVFile() function to process the JSON and trigger the download
+      this.itemsFormatted = []
+      this.itemsFormatted2 = []
+    },
     get_committees: function (data) {
       this.committees = data
     },
