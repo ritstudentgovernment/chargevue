@@ -16,7 +16,7 @@ author: Gabe Landau <gll1872@rit.edu>
       <h1>{{ committee.title }}</h1>
     </div>
 
-    <CommitteeOverview v-on:click="emitCharges" :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
+    <CommitteeOverview :inProgressCount="inProgressCount" :incompleteCount="incompleteCount" :completedCount="completedCount" :indefiniteCount="indefiniteCount" :stoppedCount="stoppedCount" />
     <CommitteeAdmin v-if="committee.head === username || admin" v-bind:committee="this.committee"/>
     <CommitteeMembers />
     <div class="tabs is-boxed is-centered">
@@ -110,6 +110,15 @@ export default {
   beforeMount () {
     this.updatePage()
   },
+  mounted () {
+    EventBus.$emit('get-charges', this.charges)
+    console.log(this.charges)
+    EventBus.$on('send-filtered', charges => {
+      console.log('filtered charges')
+      // this.charges = charges
+      console.log(this.charges)
+    })
+  },
   beforeRouteUpdate (to, from, next) {
     this.updatePage()
     next()
@@ -126,14 +135,6 @@ export default {
           token: token,
           committee_id: this.$router.history.current.params['committee']
         })
-      })
-    },
-    emitCharges () {
-      EventBus.$emit('get-charges', this.charges)
-    },
-    filterCharges () {
-      EventBus.$on('send-filtered', charges => {
-        this.charges = charges
       })
     }
   },
