@@ -49,8 +49,12 @@ let functions = {
             this.pageReloaded(localStorage.getItem('token'), data.admin, data.username)
             resolve(localStorage.getItem('token'))
           } else {
-            reject()
-            this.logout()
+            if (this.isAuthenticated()) {
+              reject()
+              this.logout()
+            } else {
+              resolve(null)
+            }
           }
         }
         var token = (process.env.AUTH_METHOD === 'LDAP') ? {token: localStorage.getItem('token')} : {}

@@ -12,11 +12,14 @@ author: Gabe Landau <gll1872@rit.edu>
     <div class="committee_admin">
       <div class="title">Charge Controls</div>
       <div class="divider"></div>
-      <div class="content"><button class="button is-primary" @click="openConfirmModal()">Close Charge</button></div>
+      <div class="content">
+        <button class="button is-primary" @click="openConfirmModal()">Close Charge</button>
+        <button class="button is-primary" @click="openEditModal()">Edit Charge</button>
+      </div>
     </div>
 
     <div class="modal" v-bind:class="{ 'is-active': showConfirmModal }">
-        <div class="modal-background" v-on:click="closeConfirmModal()"></div>
+        <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Close Charge</p>
@@ -29,21 +32,105 @@ author: Gabe Landau <gll1872@rit.edu>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="closeCharge()">Close Charge</button>
-            <button class="button" v-on:click="closeConfirmModal()">Cancel</button>
+            <button class="button" v-on:click="closeModals()">Cancel</button>
           </footer>
         </div>
     </div>
+
+    <div class="modal" v-bind:class="{ 'is-active': showEditModal }">
+        <div class="modal-background" v-on:click="closeModals()"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Edit Charge</p>
+          </header>
+          <section class="modal-card-body">
+
+            <article class="message" v-if="editChargeResponse.show" v-bind:class="editChargeResponse.success ? 'is-success' : 'is-danger'">
+              <div class="message-body">{{ editChargeResponse.message }}</div>
+            </article>
+
+            <div class="field">
+              <label class="label">Title</label>
+              <div class="control">
+                <input class="input" type="text" v-model="localCharge.title">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Purpose</label>
+              <div class="control">
+                <input class="input" type="text" v-model="localCharge.description">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Progress Note</label>
+              <div class="control">
+                <input class="input" type="text" v-model="localCharge.progressNote">
+              </div>
+            </div>
+
+            <div class = "field">
+              <label class="label">Status</label>
+              <div class="select">
+                <select v-model="localCharge.status">
+                  <option selected disabled>Select an Option</option>
+                  <option :value="0">In Progress</option>
+                  <option :value="1">Completed</option>
+                  <option :value="2">Indefinite</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">PawPrints Link</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="localCharge.paw_links">
+                </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Change Committee</label>
+                <div class="control">
+                  <input class="input" type="text" v-model="localCharge.committee">
+                </div>
+            </div>
+
+            <div class="field" style="display: inline-flex;">
+              <label class="container label">Public  
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="false">
+                <span class="radio is-primary"></span>
+              </label>
+
+              <label class="container label" style="margin-left: 25px;">Private  
+                <input type="radio" class="is-primary" v-model="localCharge.private" :value="true">
+                <span class="radio is-primary"></span>
+              </label>
+            </div>
+
+          </section>
+          <footer class="modal-card-foot">
+            <button class="button is-primary" v-on:click="editCharge()">Confirm Edit</button>
+            <button class="button" v-on:click="closeModals()">Cancel</button>
+          </footer>
+        </div>
+      </div>
+      
   </div>
 </template>
 
 <script>
 import Auth from '../mixins/auth'
+
 export default {
   name: 'charge-admin',
   mixins: [Auth],
   props: ['charge'],
   data () {
     return {
+      localCharge: {},
+      updateValue: null,
+      showEditModal: false,
       showConfirmModal: false,
       editChargeResponse: {
         show: false,
@@ -53,37 +140,69 @@ export default {
     }
   },
   methods: {
-    closeCharge () {
-      this.$socket.emit('edit_charge', {
-        token: this.getToken(),
-        charge: this.charge.id,
-        status: 5
-      })
-    },
-    closeConfirmModal () {
-      this.showConfirmModal = false
-      this.editChargeResponse.show = false
-      this.editChargeResponse.message = null
-      this.editChargeResponse.success = null
-    },
-    openConfirmModal () {
-      this.showConfirmModal = true
-    }
-  },
-  sockets: {
-    edit_charge: function (data) {
+    handleChargeEdits (data) {
       if (data.success) {
         this.editChargeResponse.show = true
         this.editChargeResponse.success = true
         this.editChargeResponse.message = data.success
         var that = this
         setTimeout(function () {
-          that.$router.push({path: '/committee/' + that.charge.committee})
+          that.closeModals()
         }, 2000)
       } else if (data.error) {
         this.editChargeResponse.show = true
         this.editChargeResponse.success = false
         this.editChargeResponse.message = data.error
+      }
+    },
+    editCharge () {
+      this.$socket.emit('edit_charge', {
+        token: this.getToken(),
+        charge: this.localCharge.id, // The user cannot edit this field
+        title: this.localCharge.title,
+        description: this.localCharge.description,
+        committee: this.localCharge.committee,
+        status: this.localCharge.status,
+        paw_links: this.localCharge.paw_links,
+        private: this.localCharge.private
+      })
+    },
+    closeCharge () {
+      this.$socket.emit('close_charge', {
+        token: this.getToken(),
+        charge: this.charge.id,
+        committee_id: this.charge.committee,
+        status: 5 // This status closes the charge
+      })
+    },
+    closeModals () {
+      this.showConfirmModal = false
+      this.showEditModal = false
+      this.editChargeResponse.show = false
+      this.editChargeResponse.message = null
+      this.editChargeResponse.success = null
+    },
+    openConfirmModal () {
+      this.showConfirmModal = true
+    },
+    openEditModal () {
+      this.localCharge = JSON.parse(JSON.stringify(this.charge))
+      this.showEditModal = true
+    }
+  },
+  sockets: {
+    edit_charge: function (data) {
+      this.handleChargeEdits(data)
+      // Only update the prop if the edit was successful
+      if (data.success) {
+        this.$emit('updateCharge', this.localCharge)
+      }
+    },
+    close_charge: function (data) {
+      this.handleChargeEdits(data)
+      // If the user closes the charge or requests a close, then redirect
+      if (data.success) {
+        setTimeout(() => { this.$router.push('/committee/' + this.charge.committee) }, 2000)
       }
     }
   }
@@ -111,5 +230,9 @@ export default {
 
   .content {
     padding: 20px;
+  }
+
+  .field {
+    padding-right: 20px;
   }
 </style>

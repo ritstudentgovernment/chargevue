@@ -20,19 +20,7 @@
                 :min-length="1">
               </vue-simple-suggest>
           </div>
-        </div>
-
-        <label class="label">Role</label>
-        <div class="control">
-          <div class="select">
-            <select v-model="addMemberRole">
-              <option selected disabled>Select an Option</option>
-              <option value="NormalMember">Normal Member</option>
-              <option value="ActiveMember">Active Member</option>
-              <option value="MinuteTaker">Minute Taker</option>
-            </select>
-          </div>
-        </div>        
+        </div>     
     
       </section>
       <footer class="modal-card-foot">
@@ -61,7 +49,6 @@
       return {
         showAddMemberToCommitteeForm: true,
         addMemberMember: null,
-        addMemberRole: null,
         addMemberResponse: {
           show: false,
           message: null,
@@ -75,7 +62,6 @@
         this.addMemberResponse.message = null
         this.addMemberResponse.success = null
         this.addMemberMember = null
-        this.addMemberRole = null
         this.showAddMemberToCommitteeForm = false
         document.documentElement.style.overflow = 'visible'
         this.$emit('close-add-member')
@@ -95,7 +81,7 @@
           token: this.getToken(),
           user_id: userId,
           committee_id: this.addMemberCommittee,
-          role: this.addMemberRole
+          role: 'ActiveMember'
         })
       }
     },

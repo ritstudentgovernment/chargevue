@@ -49,10 +49,8 @@ export default {
   name: 'committeeoverview',
   props: [
     'inProgressCount',
-    'incompleteCount',
     'completedCount',
-    'indefiniteCount',
-    'stoppedCount'
+    'indefiniteCount'
   ],
   data () {
     return {
