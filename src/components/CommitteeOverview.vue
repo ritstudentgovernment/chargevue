@@ -56,8 +56,7 @@ export default {
   ],
   data () {
     return {
-      charges: [],
-      type: 0
+      charges: []
     }
   },
   sockets: {
@@ -68,20 +67,15 @@ export default {
   beforeMount () {
     this.$socket.emit('get_all_charges', 'technology')
   },
-  mounted () {
-    document.querySelectorAll('.column')[0].classList.add('active')
-    EventBus.$on('get-charges', emittedCharges => {
-      console.log('current charges')
-      console.log(this.charges)
-      // this.filterCharges()
-    })
-  },
   methods: {
     filterCharges (type, e) {
-      this.type = type
-      EventBus.$emit('send-filtered', this.charges)
+      // EventBus.$on('get-charges', emittedCharges => {
+      //   console.log('emitted charges')
+      //   console.log(emittedCharges)
+      //   this.charges = emittedCharges
+      // })
+      EventBus.$emit('send-filtered', type)
       console.log(`filtered ${type}`)
-      console.log(document.querySelectorAll('.column'))
       for (let i = 0; i < document.querySelectorAll('.column').length; i++) {
         document.querySelectorAll('.column')[i].classList.remove('active')
       }

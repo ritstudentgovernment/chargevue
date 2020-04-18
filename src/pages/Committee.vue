@@ -28,7 +28,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <div id='projects' v-if="showProjects">
       <h1>Charges In Progress</h1>
       <h2>Charges that are currently in progress.</h2>
-      <div v-for="charge in charges" :key="charge.id">
+      <div v-for="charge in filteredCharges" :key="charge.id">
         <ProjectThumbnail v-if="charge.status != 5" v-bind:charge="charge" />
       </div>
     </div>
@@ -75,6 +75,7 @@ export default {
       showLoadingIndicator: true,
       showProjects: true,
       charges: [],
+      filteredCharges: [],
       minutes: []
     }
   },
@@ -111,13 +112,17 @@ export default {
     this.updatePage()
   },
   mounted () {
-    EventBus.$emit('get-charges', this.charges)
-    console.log(this.charges)
-    EventBus.$on('send-filtered', charges => {
-      console.log('filtered charges')
-      // this.charges = charges
+    this.filteredCharges = this.charges
+    EventBus.$on('send-filtered', type => {
+      // console.log('sent charges')
+      // console.log(charges)
+      console.log('unfiltered charges')
       console.log(this.charges)
+      this.filteredCharges = this.charges.filter(x => x.status === type)
+      console.log('filtered charges')
+      console.log(this.filteredCharges)
     })
+    // EventBus.$emit('get-charges', this.charges)
   },
   beforeRouteUpdate (to, from, next) {
     this.updatePage()
