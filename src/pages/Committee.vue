@@ -114,15 +114,12 @@ export default {
   mounted () {
     this.filteredCharges = this.charges
     EventBus.$on('send-filtered', type => {
-      // console.log('sent charges')
-      // console.log(charges)
       console.log('unfiltered charges')
       console.log(this.charges)
       this.filteredCharges = this.charges.filter(x => x.status === type)
       console.log('filtered charges')
       console.log(this.filteredCharges)
     })
-    // EventBus.$emit('get-charges', this.charges)
   },
   beforeRouteUpdate (to, from, next) {
     this.updatePage()

@@ -69,17 +69,14 @@ export default {
   },
   methods: {
     filterCharges (type, e) {
-      // EventBus.$on('get-charges', emittedCharges => {
-      //   console.log('emitted charges')
-      //   console.log(emittedCharges)
-      //   this.charges = emittedCharges
-      // })
       EventBus.$emit('send-filtered', type)
       console.log(`filtered ${type}`)
       for (let i = 0; i < document.querySelectorAll('.column').length; i++) {
         document.querySelectorAll('.column')[i].classList.remove('active')
       }
-      e.target.parentElement.parentElement.classList.add('active')
+      if (!e.target.parentElement.parentElement.classList.contains('columns')) {
+        e.target.parentElement.parentElement.classList.add('active')
+      }
     }
   }
 }
