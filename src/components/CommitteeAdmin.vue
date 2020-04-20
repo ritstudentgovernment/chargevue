@@ -230,5 +230,9 @@ export default {
   .field {
     padding-right: 20px;
   }
+
+  .button {
+    margin: 2px;
+  }
   
 </style>

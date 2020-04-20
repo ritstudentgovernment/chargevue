@@ -12,7 +12,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <header>
       <div class="left">
         <div class="link" id="site">
-          <router-link to="/" tag="span">Go to Site</router-link>
+          <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
         </div>
       </div>
       <p class="title"><router-link to="/">TigerTracker</router-link></p>
@@ -21,7 +21,6 @@ author: Gabe Landau <gll1872@rit.edu>
         <span class="link" @click="submitLogout()" v-if="authenticated && isLdap">Logout</span>
         <span class="link" v-if="!authenticated && !isLdap"><a href="/saml/login">Login</a></span>
         <span class="link" v-if="authenticated && !isLdap"><a href="/saml/logout">Logout</a></span>
-        <router-link to="/admin" class="link" v-if="admin">Admin</router-link>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div class="dropdown"> 
