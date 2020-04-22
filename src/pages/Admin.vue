@@ -325,10 +325,9 @@ export default {
     }
   },
   methods: {
-<<<<<<< HEAD
     openAddAdminForm () {
       this.showAddAdminForm = true
-=======
+    },
     convertToCSV (objArray) {
       var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
       var str = ''
@@ -387,7 +386,6 @@ export default {
           committee_id: id
         })
       })
->>>>>>> fda919b082f0b024ec3a48f5041be43a1c318ea6
     },
     createFileSelected (file) {
       this.createDisabled = true
