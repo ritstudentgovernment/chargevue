@@ -12,7 +12,11 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="tasks_title">Tasks</div>
         </div>
         <div class="column">
+<<<<<<< HEAD
           <button class="tasks_button button is-primary" @click="openModal" v-if="isPrivileged">New</button>
+=======
+          <button class="tasks_button button is-primary" @click="showCreateTaskModal" v-if="isPrivileged">New</button>
+>>>>>>> fda919b082f0b024ec3a48f5041be43a1c318ea6
         </div>
       </div>
       <div class="taskbar">
