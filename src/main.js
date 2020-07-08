@@ -10,7 +10,7 @@ if (window.location.hostname === 'localhost') {
 } else if (window.location.hostname.includes('ngrok.io')) {
   Vue.use(VueSocketIO, socketio(window.location.hostname))
 } else {
-  Vue.use(VueSocketIO, socketio('https://tigertrackerstage.rit.edu'))
+  Vue.use(VueSocketIO, socketio('https://' + window.location.hostname))
 }
 
 Vue.config.productionTip = false
