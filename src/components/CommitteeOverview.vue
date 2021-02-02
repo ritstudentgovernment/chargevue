@@ -10,21 +10,41 @@ author: Gabe Landau <gll1872@rit.edu>
 <template>
   <div class="columns">
     <div class="column">
-      <div class="overview_count">{{ inProgressCount }}</div>
-      <div class="overview_description">In Progress</div>
+      <a v-on:click="filterCharges(0, $event)">
+        <div class="overview_count">{{ inProgressCount }}</div>
+        <div class="overview_description">In Progress</div>
+      </a>
     </div>
     <div class="column">
-      <div class="overview_count">{{ completedCount }}</div>
-      <div class="overview_description">Completed</div>
+      <a v-on:click="filterCharges(1, $event)">
+        <div class="overview_count">{{ incompleteCount }}</div>
+        <div class="overview_description">Incomplete</div>
+      </a>
     </div>
     <div class="column">
-      <div class="overview_count">{{ indefiniteCount }}</div>
-      <div class="overview_description">Indefinite</div>
+      <a v-on:click="filterCharges(2, $event)">
+        <div class="overview_count">{{ completedCount }}</div>
+        <div class="overview_description">Completed</div>
+      </a>
+    </div>
+    <div class="column">
+      <a v-on:click="filterCharges(3, $event)">
+        <div class="overview_count">{{ indefiniteCount }}</div>
+        <div class="overview_description">Indefinite</div>
+      </a>
+    </div>
+    <div class="column last">
+      <a v-on:click="filterCharges(4, $event)">
+        <div class="overview_count">{{ stoppedCount }}</div>
+        <div class="overview_description">Stopped</div>
+      </a>
     </div>
   </div>
 </template>
 
 <script>
+import EventBus from './EventBus'
+
 export default {
   name: 'committeeoverview',
   props: [
@@ -34,6 +54,27 @@ export default {
   ],
   data () {
     return {
+      charges: []
+    }
+  },
+  sockets: {
+    get_all_charges: function (data) {
+      this.charges = data
+    }
+  },
+  beforeMount () {
+    this.$socket.emit('get_all_charges', 'technology')
+  },
+  methods: {
+    filterCharges (type, e) {
+      EventBus.$emit('send-filtered', type)
+      console.log(`filtered ${type}`)
+      for (let i = 0; i < document.querySelectorAll('.column').length; i++) {
+        document.querySelectorAll('.column')[i].classList.remove('active')
+      }
+      if (!e.target.parentElement.parentElement.classList.contains('columns')) {
+        e.target.parentElement.parentElement.classList.add('active')
+      }
     }
   }
 }
@@ -59,4 +100,11 @@ export default {
   .overview_description
     margin: 10px 0 0 0
     font-weight: 300
+
+  .active
+    color: #f36e21
+  
+  a
+    cursor: pointer
+
 </style>

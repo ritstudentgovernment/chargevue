@@ -48,7 +48,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class = "field">
             <label class="label">Status</label>
             <div class="select">
-              <select v-model="createChargeStatus">
+              <select id="chargeStatusSelect">
                 <option selected disabled>Select an Option</option>
                   <option value="0">In Progress</option>
                   <option value="1">Completed</option>
@@ -117,7 +117,6 @@ export default {
       members: null,
       showAddMemberToCommitteeForm: false,
       showRemoveMemberFromCommitteeForm: false,
-      createChargeStatus: 0,
       createChargeTitle: null,
       createChargePriority: 1,
       createChargeDescription: null,
@@ -147,11 +146,13 @@ export default {
       this.isPrivate = true
     },
     createNewCharge () {
+      console.log('current value')
+      console.log(document.querySelector('#chargeStatusSelect').value)
       this.$socket.emit('create_charge', {
         token: this.getToken(),
         title: this.createChargeTitle,
         committee: this.committee.id,
-        status: parseInt(this.createChargeStatus),
+        status: parseInt(document.querySelector('#chargeStatusSelect').value),
         priority: parseInt(this.createChargePriority),
         description: this.createChargeDescription,
         paw_links: this.createChargePawLink,

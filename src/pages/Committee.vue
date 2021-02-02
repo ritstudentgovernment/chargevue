@@ -30,7 +30,7 @@ author: Gabe Landau <gll1872@rit.edu>
     <div id='projects' v-if="showProjects">
       <h1>Charges In Progress</h1>
       <h2>Charges that are currently in progress.</h2>
-      <div v-for="charge in charges" :key="charge.id">
+      <div v-for="charge in filteredCharges" :key="charge.id">
         <ProjectThumbnail v-if="charge.status != 5" v-bind:charge="charge" />
       </div>
     </div>
@@ -54,6 +54,7 @@ import CommitteeAdmin from '../components/CommitteeAdmin'
 import MinutesThumbnail from '../components/MinutesThumbnail'
 import { mapGetters } from 'vuex'
 import Auth from '../mixins/auth'
+import EventBus from '../components/EventBus'
 
 export default {
   name: 'committee',
@@ -77,6 +78,7 @@ export default {
       showLoadingIndicator: true,
       showProjects: true,
       charges: [],
+      filteredCharges: [],
       minutes: []
     }
   },
@@ -115,6 +117,16 @@ export default {
   beforeMount () {
     let committeeId = this.$router.history.current.params['committee']
     this.updatePage(committeeId)
+  },
+  mounted () {
+    this.filteredCharges = this.charges
+    EventBus.$on('send-filtered', type => {
+      console.log('unfiltered charges')
+      console.log(this.charges)
+      this.filteredCharges = this.charges.filter(x => x.status === type)
+      console.log('filtered charges')
+      console.log(this.filteredCharges)
+    })
   },
   beforeRouteUpdate (to, from, next) {
     let committeeId = to.params['committee']
