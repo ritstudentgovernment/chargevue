@@ -42,13 +42,13 @@ export default {
 <style lang="sass" scoped>
   .columns
     text-align: center
-    width: 800px
+    width: 70%;
     margin: 20px auto 0 auto
     color: #555
 
   .column
-    border-right: 1px solid #555
-
+    display: inline-block
+    
   .last
     border-right: none !important
 

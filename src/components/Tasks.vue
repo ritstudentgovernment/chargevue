@@ -12,7 +12,7 @@ author: Gabe Landau <gll1872@rit.edu>
           <div class="tasks_title">Tasks</div>
         </div>
         <div class="column">
-          <button class="tasks_button button is-primary" @click="showCreateTaskModal" v-if="isPrivileged">New</button>
+          <button class="tasks_button button is-primary" @click="openModal" v-if="isPrivileged">New</button>
         </div>
       </div>
       <div class="taskbar">
@@ -26,7 +26,7 @@ author: Gabe Landau <gll1872@rit.edu>
 
     <Task v-for="task in filteredTasks" :key="task.id" :task="task" @task-clicked="showTaskModal"/>
     <task-modal ref="taskModal" :task="selectedTask"/>
-    <create-task-modal ref="createTaskModal" :members="members"/>
+    <create-task-modal v-if="showCreateTaskModal" ref="createTaskModal" @closeModal="closeModal" :members="members"/>
   </div>
 </template>
 
@@ -51,12 +51,19 @@ export default {
   },
   data () {
     return {
+      showCreateTaskModal: false,
       active_task: 0,
       selectedTask: {},
       members: []
     }
   },
   methods: {
+    closeModal () {
+      this.showCreateTaskModal = false
+    },
+    openModal () {
+      this.showCreateTaskModal = true
+    },
     makeActive (status) {
       this.active_task = status
     },
@@ -129,6 +136,8 @@ export default {
   .tasks_button {
     float: right;
     margin-top: 6.5px;
+    margin-bottom: 6.5px;
+    margin-right: 6.5px;
   }
   .columns, .column {
     padding: 0;

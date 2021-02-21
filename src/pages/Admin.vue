@@ -13,6 +13,8 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
     <div class="box" id="admin_forms">
       <h3 class="title is-3">Actions</h3>
       <button class="button is-primary" v-on:click="showCreateCommitteeForm = true">Create Committee</button>
+      <button class="button is-primary" v-on:click="openAddAdminForm()">Create Admin</button>
+      <button class="button is-primary" v-on:click="openPromoteUserForm()">Promote User</button>
     </div>
 
     <div class="box" id="committee_table">
@@ -43,7 +45,7 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
     </div>
 
     <div class="modal" v-bind:class="{ 'is-active': editCommitteeResponse.show }">
-      <div class="modal-background" v-on:click="closeEditResponse()"></div>
+      <div class="modal-background" v-on:click="closeModals()"></div>
       <div class="modal-card">
       <article class="message" v-if="editCommitteeResponse.show" v-bind:class="editCommitteeResponse.success ? 'is-success' : 'is-danger'">
         <div class="message-body">{{ editCommitteeResponse.message }}</div>
@@ -51,8 +53,9 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
       </div>
     </div>
 
+    <!-- Modal starts here -->
     <div class="modal" v-bind:class="{ 'is-active': showCreateCommitteeForm }">
-        <div class="modal-background" v-on:click="closeCreateCommittee()"></div>
+        <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Create Committee</p>
@@ -137,13 +140,14 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
           </section>
           <footer class="modal-card-foot">
             <button class="button is-primary" v-on:click="createNewCommittee()" v-bind:class="{ 'is-loading' : createDisabled }">Create Committee</button>
-            <button class="button" v-on:click="closeCreateCommittee()">Cancel</button>
+            <button class="button" v-on:click="closeModals()">Cancel</button>
           </footer>
         </div>
       </div>
+      <!-- Modal ends here -->
 
     <div class="modal" v-bind:class="{ 'is-active': showEditCommitteeForm }">
-        <div class="modal-background" v-on:click="closeEditCommitteeForm()"></div>
+        <div class="modal-background" v-on:click="closeModals()"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Edit Committee</p>
@@ -228,19 +232,27 @@ author: Gabe Landau & Matthew Castronova <gll1872@rit.edu>
         </div>
       </div>
 
+    <div v-if="showAddAdminForm">
+      <add-admin-modal v-on:closeModal="closeModals"/>
+    </div>
+    <div v-if="showPromoteUserForm">
+      <promote-user-modal  @closeModal="closeModals"/>
+    </div>
     <div v-if="showAddMemberToCommitteeForm">
-      <add-committee-member-modal  v-on:close-add-member="closeAddMember()" v-bind:addMemberCommittee="this.addMemberCommittee" v-bind:allMembers="this.allMembers"/>
+      <add-committee-member-modal  @close-add-member="closeModals" :addMemberCommittee="this.addMemberCommittee" :allMembers="this.allUsers"/>
     </div>
     <div v-if="showRemoveMemberFromCommitteeForm">
-      <remove-committee-member-modal v-on:close-remove-member="closeRemoveMember()" v-bind:members = "this.members" v-bind:removeMemberCommittee = "this.removeMemberCommittee"/>
+      <remove-committee-member-modal @close-remove-member="closeModals" :members = "this.members" :removeMemberCommittee = "this.removeMemberCommittee"/>
     </div>
   </div>
 </template>
 
 <script>
+import AddAdminModal from '@/components/AddAdminModal.vue'
 import HeaderMenu from '@/components/HeaderMenu.vue'
 import AddCommitteeMember from '@/components/AddCommitteeMemberModal.vue'
 import RemoveCommitteeMember from '@/components/RemoveCommitteeMemberModal.vue'
+import PromoteUserModal from '@/components/PromoteUserModal.vue'
 import Auth from '../mixins/auth'
 import Base64 from '../mixins/base64'
 import Time from '../mixins/time'
@@ -249,17 +261,22 @@ export default {
   name: 'admin',
   mixins: [Auth, Base64, Time],
   components: {
+    AddAdminModal: AddAdminModal,
     HeaderMenu: HeaderMenu,
     AddCommitteeMemberModal: AddCommitteeMember,
-    RemoveCommitteeMemberModal: RemoveCommitteeMember
+    RemoveCommitteeMemberModal: RemoveCommitteeMember,
+    PromoteUserModal: PromoteUserModal
   },
   data () {
     return {
+      showAddAdminForm: false,
+      showPromoteUserForm: false,
       committees: null,
       committeeCharges: null,
       committeeMinutes: null,
       members: null,
-      allMembers: null,
+      allUsers: null,
+      nonAdminUsers: [],
       addMemberCommittee: null,
       showCreateCommitteeForm: false,
       showEditCommitteeForm: false,
@@ -308,6 +325,9 @@ export default {
     }
   },
   methods: {
+    openAddAdminForm () {
+      this.showAddAdminForm = true
+    },
     convertToCSV (objArray) {
       var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray
       var str = ''
@@ -369,7 +389,6 @@ export default {
     },
     createFileSelected (file) {
       this.createDisabled = true
-
       this.createImageName = file[file.length - 1].name
       this.convert(file).then((image) => {
         this.createImage = image
@@ -381,7 +400,6 @@ export default {
     },
     editFileSelected (file) {
       this.editDisabled = true
-
       this.editImageName = file[file.length - 1].name
       this.convert(file).then((image) => {
         this.editImage = image
@@ -395,7 +413,6 @@ export default {
       let timeDateObj = this.convertFrontendToBackend(this.createMeetingAmPm, this.createMeetingHour, this.createMeetingMinute, this.createMeetingDay)
       let time = timeDateObj.time
       let day = timeDateObj.day
-
       if (this.createImage) {
         this.$socket.emit('create_committee', {
           token: this.getToken(),
@@ -418,20 +435,6 @@ export default {
           head: this.createCommitteeHead
         })
       }
-    },
-    closeCreateCommittee () {
-      this.createTitle = null
-      this.createDescription = null
-      this.createLocation = null
-      this.createCommitteeHead = null
-      this.createMeetingDay = null
-      this.createMeetingAmPm = null
-      this.createMeetingHour = null
-      this.createMeetingMinute = null
-      this.createImage = null
-      this.createImageName = '(no file selected)'
-      this.createCommitteeResponse.show = false
-      this.showCreateCommitteeForm = false
     },
     editCommittee () {
       this.editCommitteeResponse.show = false
@@ -478,31 +481,50 @@ export default {
         enabled: true
       })
     },
+    openPromoteUserForm () {
+      this.$socket.emit('get_all_users')
+      this.showPromoteUserForm = true
+    },
     openEditCommitteeForm (id) {
       this.$socket.emit('get_committee', id)
       this.showEditCommitteeForm = true
     },
     openAddMemberToCommitteeForm (id) {
-      this.addMemberCommittee = id
       this.$socket.emit('get_all_users')
+      this.addMemberCommittee = id
+      this.showAddMemberToCommitteeForm = true
     },
     openRemoveMemberFromCommitteeForm (id) {
       this.$socket.emit('get_members', id)
       this.removeMemberCommittee = id
       this.showRemoveMemberFromCommitteeForm = true
     },
-    closeEditCommitteeForm () {
+    closeModals () {
+      this.showPromoteUserForm = false
+      //
+      this.showRemoveMemberFromCommitteeForm = false
+      //
+      this.showAddMemberToCommitteeForm = false
+      //
+      this.editCommitteeResponse.show = false
+      //
       this.showEditCommitteeForm = false
       this.editCommitteeResponse.show = false
-    },
-    closeEditResponse () {
-      this.editCommitteeResponse.show = false
-    },
-    closeAddMember () {
-      this.showAddMemberToCommitteeForm = false
-    },
-    closeRemoveMember () {
-      this.showRemoveMemberFromCommitteeForm = false
+      //
+      this.showAddAdminForm = false
+      //
+      this.createTitle = null
+      this.createDescription = null
+      this.createLocation = null
+      this.createCommitteeHead = null
+      this.createMeetingDay = null
+      this.createMeetingAmPm = null
+      this.createMeetingHour = null
+      this.createMeetingMinute = null
+      this.createImage = null
+      this.createImageName = '(no file selected)'
+      this.createCommitteeResponse.show = false
+      this.showCreateCommitteeForm = false
     }
   },
   sockets: {
@@ -572,14 +594,9 @@ export default {
     },
     get_members: function (data) {
       this.members = data.members
-      // this.showRemoveMemberFromCommitteeForm = true
-      // this.showRemoveMemberDropdown = true
-      // this.showRemoveMemberDropdownLoading = false
-      // this.removeMemberCommittee = id
     },
     get_all_users: function (data) {
-      this.allMembers = data
-      this.showAddMemberToCommitteeForm = true
+      this.allUsers = data
     }
   },
   beforeMount () {
